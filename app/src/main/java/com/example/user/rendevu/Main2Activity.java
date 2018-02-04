@@ -28,6 +28,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -288,7 +295,10 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE MAIN SCREEN TAB.
      *  Tamim Alekozai
      */
-    public static class MainScreenTabFragment extends Fragment{
+    public static class MainScreenTabFragment extends Fragment implements  OnMapReadyCallback{
+
+        MapView mapView;
+        GoogleMap map;
 
         public MainScreenTabFragment() {
         }
@@ -302,9 +312,51 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.mainscreen_tab, container, false);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+
+            mapView = (MapView) rootView.findViewById(R.id.map);
+            mapView.onCreate(savedInstanceState);
+            mapView.getMapAsync(this);
+
             return rootView;
         }
 
+        @Override
+        public void onMapReady(GoogleMap googleMap){
+            LatLng marker = new LatLng(29.304, -98.524);
+            map = googleMap;
+            map.getUiSettings().setZoomControlsEnabled(false);
+            map.addMarker(new MarkerOptions().position(marker).title("John"));
+        }
+
+        @Override
+        public void onResume(){
+            super.onResume();
+            mapView.onResume();
+        }
+
+        @Override
+        public void onPause(){
+            super.onPause();
+            mapView.onPause();
+        }
+
+        @Override
+        public void onDestroy(){
+            super.onDestroy();
+            mapView.onDestroy();
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState){
+            super.onSaveInstanceState(outState);
+            mapView.onSaveInstanceState(outState);
+        }
+
+        @Override
+        public void onLowMemory(){
+            super.onLowMemory();
+            mapView.onLowMemory();
+        }
     }
 
     /**

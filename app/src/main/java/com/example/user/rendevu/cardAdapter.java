@@ -15,26 +15,23 @@ import java.util.List;
 
 public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHolder> {
 
+    List<User> list;
+
+    public cardAdapter(List<User> list){
+        this.list = list;
+    }
+
     public static class PersonViewHolder extends RecyclerView.ViewHolder{
-
         CardView cardView;
-        TextView personName;
-        TextView personAge;
-        ImageView personPhoto;
-
+        TextView fullname, dob;
         PersonViewHolder(View itemView){
             super(itemView);
             cardView = (CardView)itemView.findViewById(R.id.card_view);
-            personName = (TextView)itemView.findViewById(R.id.person_name);
-            personAge = (TextView)itemView.findViewById(R.id.person_age);
+            fullname = (TextView)itemView.findViewById(R.id.person_name);
+            dob = (TextView)itemView.findViewById(R.id.person_age);
             personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
 
         }
-    }
-
-    List<Person> persons;
-    cardAdapter(List<Person> persons){
-        this.persons = persons;
     }
 
     @Override
