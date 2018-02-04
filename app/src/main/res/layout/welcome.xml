@@ -1,0 +1,32 @@
+<!---
+    Josh Davenport
+-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/construct">
+
+    <ImageButton
+        android:id="@+id/w_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/w_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[Welcome!]"
+        android:textColor="#DAA520"
+        android:textSize="35sp"
+        android:gravity="center"
+        android:background="#0700"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginTop="103dp"
+        android:layout_below="@+id/w_image"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

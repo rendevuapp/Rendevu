@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+    Ricardo Cantu
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/showAlertDialogFragment"
+        android:layout_width="131dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:onClick="onClick"
+        android:visibility="visible"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+    <Button
+        android:id="@+id/showCustomFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="monospace"
+        android:onClick="onClick"
+        android:text="ADD CONTACT"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/sendInvites"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onInviteClicked"
+        android:text="Send Invites"
+        android:textSize="16sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

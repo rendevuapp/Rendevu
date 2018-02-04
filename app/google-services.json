@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "775454441577",
+    "firebase_url": "https://rendevu-29f87.firebaseio.com",
+    "project_id": "rendevu-29f87",
+    "storage_bucket": "rendevu-29f87.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:775454441577:android:c6f754a143c67143",
+        "android_client_info": {
+          "package_name": "com.example.user.rendevu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "775454441577-vbg76mgp1r29llfj180s5hrpps13qvep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoLPwGQrnR104Y0JclFu36LQklIbrTAHc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

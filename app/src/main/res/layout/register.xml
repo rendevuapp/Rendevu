@@ -1,0 +1,164 @@
+<!---
+    Josh Davenport
+-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/construct"
+    >
+
+    <EditText
+        android:id="@+id/dateOfBirth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:cursorVisible="false"
+        android:editable="false"
+        android:ems="10"
+        android:hint="Date of Birth"
+        android:inputType="none"
+        android:maxLength="30"
+        android:textAlignment="center"
+        android:textColor="?attr/colorAccent"
+        android:textColorHint="?attr/colorAccent"
+        android:layout_above="@+id/fullname"
+        android:layout_alignStart="@+id/fullname"
+        android:layout_marginBottom="42dp">
+
+    </EditText>
+
+    <requestFocus />
+
+    <EditText
+        android:id="@+id/email_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/userPhone"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:hint="Email Address"
+        android:inputType="textEmailAddress"
+        android:maxLength="40"
+        android:textColor="?attr/colorAccent"
+        android:textColorHint="?attr/colorAccent">
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/userPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/email_id"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="Phone No."
+        android:inputType="phone"
+        android:maxLength="10"
+        android:textColor="?attr/colorAccent"
+        android:textColorHint="?attr/colorAccent" />
+
+    <EditText
+        android:id="@+id/fullname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/userPhone"
+        android:layout_alignStart="@+id/userPhone"
+        android:ems="10"
+        android:hint="Full Name"
+        android:inputType="textPersonName"
+        android:maxLength="30"
+        android:textColor="?attr/colorAccent"
+        android:textColorHint="?attr/colorAccent">
+
+    </EditText>
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/email_id"
+        android:layout_alignRight="@+id/email_id"
+        android:layout_below="@+id/email_id"
+        android:addStatesFromChildren="true"
+        android:baselineAligned="false"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/show_hide"
+            style="@android:style/Widget.Button.Inset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/rl"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/show" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:ems="10"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:maxLength="40"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="?attr/colorAccent"
+            android:textColorHint="?attr/colorAccent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/show_hide" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#0700"
+        android:textColor="#DAA520"
+        android:onClick="action"
+        android:text="Registration"
+        android:textSize="25sp"
+        android:textAppearance="@android:style/TextAppearance.Large"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/rl"
+        android:layout_alignStart="@+id/rl"
+        android:layout_below="@+id/rl"
+        android:onClick="onClickAction"
+        android:text="Continue.."
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fullname"
+        android:layout_alignStart="@+id/dateOfBirth"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:textColor="?attr/colorAccent"
+        android:textColorHint="?attr/colorAccent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+    Tamim Alekozai
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Friends"
+                android:textSize="10sp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintLeft_toRightOf="@+id/textView3"
+                android:layout_marginLeft="0dp" />
+
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Besties"
+                android:textSize="10sp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintLeft_toRightOf="@+id/checkBox"
+                android:layout_marginLeft="8dp" />
+
+            <CheckBox
+                android:id="@+id/checkBox3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Friends"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="3dp"
+                app:layout_constraintLeft_toRightOf="@+id/textView4"
+                android:layout_marginLeft="8dp" />
+
+            <CheckBox
+                android:id="@+id/checkBox4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Besties"
+                android:textSize="10sp"
+                app:layout_constraintLeft_toRightOf="@+id/checkBox3"
+                android:layout_marginLeft="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="3dp" />
+
+            <ToggleButton
+                android:id="@+id/toggleButton2"
+                android:layout_width="0dp"
+                android:layout_height="59dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="ToggleButton"
+                android:textOff="Unavailable"
+                android:textOn="Available"
+                android:textSize="9sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                android:layout_marginRight="0dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/checkBox4"
+                android:layout_marginLeft="8dp" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="67dp"
+                android:layout_height="15dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:text="Location"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="67dp"
+                android:layout_height="15dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="Availability"
+                android:textSize="12sp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_editor_absoluteY="27dp">
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Friend Filter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ToggleButton
+                android:id="@+id/toggleButton3"
+                android:layout_width="0dp"
+                android:layout_height="39dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="ToggleButton"
+                android:textOff="Friends"
+                android:textOn="Besties"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/textView5"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                android:layout_marginRight="0dp"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="0.32"
+            app:layout_constraintHorizontal_bias="0.461"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+            app:srcCompat="@drawable/maps_placeholder" />
+
+    </LinearLayout>
+</ScrollView>
