@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.app.Activity;
 import android.content.Intent;
-
+import android.widget.Toast;
 public class MainActivity extends Activity {
 
     Intent i=null;
@@ -18,18 +18,23 @@ public class MainActivity extends Activity {
 
     public void login_register(View v)
     {
-        switch(v.getId())
-        {
-            case R.id.log_in:
-                i=new Intent(this,Login.class);
-                startActivityForResult(i, 500);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                break;
-            case R.id.register:
-                i=new Intent(this,Register.class);
-                startActivityForResult(i, 500);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);;
-                break;
+        try {
+            switch(v.getId())
+            {
+                case R.id.log_in:
+                    i=new Intent(this,Login.class);
+                    startActivityForResult(i, 500);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    break;
+                case R.id.register:
+                    i=new Intent(this,Register.class);
+                    startActivityForResult(i, 500);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    break;
+            }
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Error switching pages", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 

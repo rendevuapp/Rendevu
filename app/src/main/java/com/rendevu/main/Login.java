@@ -60,85 +60,111 @@ public class Login extends AppCompatActivity {
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
-        //to go back to the register page
-        btnSignup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Login.this, Register.class));
-            }
-        });
-
-        btnReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Login.this, ResetPassword.class));
-            }
-        });
-
-        //show or hide the password
-        hidePass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-
-                if(flag==false)
-                {
-                    hidePass.setImageResource(R.drawable.hide);
-                    loginPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    flag=true;
+        /*
+        * Josh
+        * adding try/catch to navigation and button actions
+        * */
+        try {
+            //to go back to the register page
+            btnSignup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Login.this, Register.class));
+                    finish(); //closes current activity before moving to the next.
                 }
-                else
-                {
-                    hidePass.setImageResource(R.drawable.show);
-                    loginPass.setInputType(129);
-                    flag=false;
+            });
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Error switching pages", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
 
+        try {
+            btnReset.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Login.this, ResetPassword.class));
+                    finish(); //closes current activity before moving to the next.
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Error switching pages", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
 
-        start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = loginEmail.getText().toString();
-                final String password = loginPass.getText().toString();
+        try {
+            //show or hide the password
+            hidePass.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
 
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    return;
+                    if(flag==false)
+                    {
+                        hidePass.setImageResource(R.drawable.hide);
+                        loginPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        flag=true;
+                    }
+                    else
+                    {
+                        hidePass.setImageResource(R.drawable.show);
+                        loginPass.setInputType(129);
+                        flag=false;
+
+                    }
                 }
+            });
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Cannot show password", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
 
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        try {
+            start.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String email = loginEmail.getText().toString();
+                    final String password = loginPass.getText().toString();
 
-                //progressBar.setVisibility(View.VISIBLE);
+                    if (TextUtils.isEmpty(email)) {
+                        Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                //authenticate user with firebase
-                auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
-                                //progressBar.setVisibility(View.GONE);
-                                if (!task.isSuccessful()) {
-                                    // there was an error
-                                    if (password.length() < 6) {
-                                        loginPass.setError("Invalid Password!");
+                    if (TextUtils.isEmpty(password)) {
+                        Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    //progressBar.setVisibility(View.VISIBLE);
+
+                    //authenticate user with firebase
+                    auth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    // If sign in fails, display a message to the user. If sign in succeeds
+                                    // the auth state listener will be notified and logic to handle the
+                                    // signed in user can be handled in the listener.
+                                    //progressBar.setVisibility(View.GONE);
+                                    if (!task.isSuccessful()) {
+                                        // there was an error
+                                        if (password.length() < 6) {
+                                            loginPass.setError("Invalid Password!");
+                                        } else {
+                                            Toast.makeText(Login.this, "Authentication failed, check your email or password...", Toast.LENGTH_LONG).show();
+                                        }
                                     } else {
-                                        Toast.makeText(Login.this, "Authentication failed, check your email or password...", Toast.LENGTH_LONG).show();
+                                        Intent intent = new Intent(Login.this, Main2Activity.class);
+                                        startActivity(intent);
+                                        finish();
                                     }
-                                } else {
-                                    Intent intent = new Intent(Login.this, Main2Activity.class);
-                                    startActivity(intent);
-                                    finish();
                                 }
-                            }
-                        });
-            }
-        });
+                            });
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Authentication process failed, cannot login", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
     @Override

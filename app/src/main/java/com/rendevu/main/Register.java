@@ -49,20 +49,23 @@ public class Register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
+        try {
+            //Get Firebase auth instance
+            auth = FirebaseAuth.getInstance();
 
-        //Get Firebase auth instance
-        auth = FirebaseAuth.getInstance();
+            /**
+             * Josh
+             * Adding persistence for data stored in firebase.
+             * also gets unique id for current user
+             * */
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            myDatabaseReference=FirebaseDatabase.getInstance().getReference("User");
+            userId= myDatabaseReference.push().getKey();
+        } catch (Exception e) {
 
-        /**
-         * Josh
-         * Adding persistence for data stored in firebase.
-         * also gets unique id for current user
-         * */
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        myDatabaseReference=FirebaseDatabase.getInstance().getReference("User");
-        userId= myDatabaseReference.push().getKey();
-
-
+            Toast.makeText(getApplicationContext(), "Firebase error", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
         hidePass = findViewById(R.id.show_hide);
         fullName = findViewById(R.id.fullname);
         inputEmail = findViewById(R.id.email_id);
@@ -73,111 +76,125 @@ public class Register extends AppCompatActivity {
         btnSignUp = findViewById(R.id.register);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
+        try {
+            dateofBirth.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // calender class's instance and get current date , month and year from calender
+                    final Calendar c = Calendar.getInstance();
+                    int mYear = c.get(Calendar.YEAR); // current year
+                    int mMonth = c.get(Calendar.MONTH); // current month
+                    int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
 
-        dateofBirth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // calender class's instance and get current date , month and year from calender
-                final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR); // current year
-                int mMonth = c.get(Calendar.MONTH); // current month
-                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+                    // date picker dialog
+                    datePickerDialog = new DatePickerDialog(Register.this, android.R.style.Theme_Holo_Dialog,
+                            new DatePickerDialog.OnDateSetListener() {
 
-                // date picker dialog
-                datePickerDialog = new DatePickerDialog(Register.this, android.R.style.Theme_Holo_Dialog,
-                        new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year,
+                                                      int monthOfYear, int dayOfMonth) {
+                                    // set day of month , month and year value in the edit text
+                                    dateofBirth.setText((monthOfYear + 1) + "/"
+                                            + dayOfMonth + "/" + year);
 
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                // set day of month , month and year value in the edit text
-                                dateofBirth.setText((monthOfYear + 1) + "/"
-                                        + dayOfMonth + "/" + year);
+                                    //Set max limit for no future dates.
 
-                                //Set max limit for no future dates.
-
-                            }
-                        }, mYear, mMonth, mDay);  //Use month/day/year to calculate age
-                datePickerDialog.show();
-                //}
-            }
-        });
-
-        hidePass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-
-                if(flag==false)
-                {
-                    hidePass.setImageResource(R.drawable.hide);
-                    loginPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    flag=true;
-                }
-                else
-                {
-                    hidePass.setImageResource(R.drawable.show);
-                    loginPass.setInputType(129);
-                    flag=false;
-
-                }
-            }
-        });
-
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String email = inputEmail.getText().toString().trim();
-                String password = loginPass.getText().toString().trim();
-
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (password.length() < 6) {
-                    Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-				progressBar.setVisibility(View.VISIBLE);
-
-                /*
-                * create user and store data in authorization database
-                * */
-                auth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                Toast.makeText(Register.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
-								progressBar.setVisibility(View.GONE);
-
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
-                                if (!task.isSuccessful()) {
-                                    Toast.makeText(Register.this, "Authentication failed." + task.getException(),
-                                            Toast.LENGTH_SHORT).show();
-                                } else {
-                                    startActivity(new Intent(Register.this, Main2Activity.class));
-                                    finish();
                                 }
-                            }
-                        });
+                            }, mYear, mMonth, mDay);  //Use month/day/year to calculate age
+                    datePickerDialog.show();
+                    //}
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Cannot set date of birth", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
 
-                addUser(((EditText)findViewById(R.id.fullname)).getText().toString(),
-                        ((EditText)findViewById(R.id.username)).getText().toString(),
-                        ((EditText)findViewById(R.id.email_id)).getText().toString(),
-                        ((EditText)findViewById(R.id.dateOfBirth)).getText().toString(),
-                        Integer.parseInt(((EditText)findViewById(R.id.userPhone)).getText().toString()));
+        try {
+            hidePass.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
 
-            }
-        });
+                    if(flag==false)
+                    {
+                        hidePass.setImageResource(R.drawable.hide);
+                        loginPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        flag=true;
+                    }
+                    else
+                    {
+                        hidePass.setImageResource(R.drawable.show);
+                        loginPass.setInputType(129);
+                        flag=false;
+
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Cannot show password", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+
+        try {
+            btnSignUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String email = inputEmail.getText().toString().trim();
+                    String password = loginPass.getText().toString().trim();
+
+                    if (TextUtils.isEmpty(email)) {
+                        Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (TextUtils.isEmpty(password)) {
+                        Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (password.length() < 6) {
+                        Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    progressBar.setVisibility(View.VISIBLE);
+
+                    /*
+                    * create user and store data in authorization database
+                    * */
+                    auth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    Toast.makeText(Register.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                                    progressBar.setVisibility(View.GONE);
+
+                                    // If sign in fails, display a message to the user. If sign in succeeds
+                                    // the auth state listener will be notified and logic to handle the
+                                    // signed in user can be handled in the listener.
+                                    if (!task.isSuccessful()) {
+                                        Toast.makeText(Register.this, "Authentication failed." + task.getException(),
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        startActivity(new Intent(Register.this, Main2Activity.class));
+                                        finish();
+                                    }
+                                }
+                            });
+
+                    addUser(((EditText)findViewById(R.id.fullname)).getText().toString(),
+                            ((EditText)findViewById(R.id.username)).getText().toString(),
+                            ((EditText)findViewById(R.id.email_id)).getText().toString(),
+                            ((EditText)findViewById(R.id.dateOfBirth)).getText().toString(),
+                            Integer.parseInt(((EditText)findViewById(R.id.userPhone)).getText().toString()));
+
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Registration failure", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
 
