@@ -294,10 +294,12 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE MAIN SCREEN TAB.
      *  Tamim Alekozai
      */
-    public static class MainScreenTabFragment extends Fragment{
+
+    public static class MainScreenTabFragment extends Fragment implements  OnMapReadyCallback{
 
         MapView mapView;
         GoogleMap map;
+
         public MainScreenTabFragment() {
         }
 
@@ -312,16 +314,18 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
             mapView = (MapView) rootView.findViewById(R.id.map);
+
+
             mapView.onCreate(savedInstanceState);
             mapView.getMapAsync(this);
 
             return rootView;
         }
-	
-	@Override
+
+        @Override
         public void onMapReady(GoogleMap googleMap){
             LatLng marker = new LatLng(29.304, -98.524);
-            map = googleMap;
+            this.map = googleMap;
             map.getUiSettings().setZoomControlsEnabled(false);
             map.addMarker(new MarkerOptions().position(marker).title("John"));
         }
@@ -355,7 +359,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
             super.onLowMemory();
             mapView.onLowMemory();
         }
-
     }
 
     /**
