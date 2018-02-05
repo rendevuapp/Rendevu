@@ -13,8 +13,15 @@ import android.widget.TextView;
 
 import java.util.List;
 
+
+
 public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHolder> {
 
+    List<Person> list;
+
+    public cardAdapter(List<Person> list){
+        this.list = list;
+    }
 
     public static class PersonViewHolder extends RecyclerView.ViewHolder{
 
@@ -32,10 +39,6 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
 
         }
     }
-   List<Person> persons;
-    cardAdapter(List<Person> persons){
-        this.persons = persons;
-}
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView){
@@ -51,15 +54,15 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
 
     @Override
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i){
-        personViewHolder.personName.setText(persons.get(i).name);
-        personViewHolder.personAge.setText(persons.get(i).age);
-        personViewHolder.personPhoto.setImageResource(persons.get(i).photoID);
+        personViewHolder.personName.setText(list.get(i).getFullName());
+        personViewHolder.personAge.setText(list.get(i).getAge());
+        personViewHolder.personPhoto.setImageResource(list.get(i).photoID);
 
     }
 
     @Override
     public int getItemCount(){
-        return persons.size();
+        return list.size();
     }
 }
 
