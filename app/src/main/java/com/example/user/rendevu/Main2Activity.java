@@ -181,6 +181,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
     }
 
 
+
     /*
     * Josh
     *
@@ -197,7 +198,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
             e.printStackTrace();
         }
     }
-
 
 
     /*
