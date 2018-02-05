@@ -1,4 +1,4 @@
-package com.example.user.rendevu;
+package com.rendevu.main;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.user.rendevu", appContext.getPackageName());
+        assertEquals("com.rendevu.main", appContext.getPackageName());
     }
 }

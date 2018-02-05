@@ -1,4 +1,4 @@
-package com.example.user.rendevu;
+package com.rendevu.main;
 
 /**
  * Josh Davenport

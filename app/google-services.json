@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:775454441577:android:c6f754a143c67143",
         "android_client_info": {
-          "package_name": "com.example.user.rendevu"
+          "package_name": "com.rendevu.main"
         }
       },
       "oauth_client": [

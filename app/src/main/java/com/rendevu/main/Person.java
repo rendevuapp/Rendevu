@@ -1,4 +1,4 @@
-package com.example.user.rendevu;
+package com.rendevu.main;
 /*
     Ricardo Cantu
     This class creates a 'Person' Object that is used by the card view.

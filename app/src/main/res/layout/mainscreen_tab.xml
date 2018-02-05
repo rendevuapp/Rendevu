@@ -2,7 +2,11 @@
 <!---
     Tamim Alekozai
 -->
+<<<<<<< HEAD
 <ScrollView
+=======
+<ScrollView 
+>>>>>>> new_structure
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,8 +16,13 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
+<<<<<<< HEAD
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+=======
+    <LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+>>>>>>> new_structure
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"

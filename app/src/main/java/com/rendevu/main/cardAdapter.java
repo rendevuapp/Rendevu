@@ -1,4 +1,4 @@
-package com.example.user.rendevu;
+package com.rendevu.main;
 /*
     Ricardo Cantu
     This class holds adapter configurations for the recycle view
@@ -33,6 +33,13 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
 
         }
     }
+<<<<<<< HEAD:app/src/main/java/com/example/user/rendevu/cardAdapter.java
+=======
+   List<Person> persons;
+    cardAdapter(List<Person> persons){
+        this.persons = persons;
+}
+>>>>>>> new_structure:app/src/main/java/com/rendevu/main/cardAdapter.java
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView){
@@ -51,6 +58,7 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
         personViewHolder.personName.setText(persons.get(i).name);
         personViewHolder.personAge.setText(persons.get(i).age);
         personViewHolder.personPhoto.setImageResource(persons.get(i).photoID);
+
     }
 
     @Override
