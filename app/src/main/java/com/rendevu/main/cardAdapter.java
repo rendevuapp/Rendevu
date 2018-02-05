@@ -31,7 +31,10 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
 
         }
     }
-
+   List<Person> persons;
+    cardAdapter(List<Person> persons){
+        this.persons = persons;
+}
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView){
