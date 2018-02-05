@@ -15,6 +15,11 @@ import java.util.List;
 
 public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHolder> {
 
+    List<User> list;
+
+    public cardAdapter(List<User> list){
+        this.list = list;
+    }
     public static class PersonViewHolder extends RecyclerView.ViewHolder{
 
         CardView cardView;
