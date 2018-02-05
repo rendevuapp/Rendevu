@@ -34,22 +34,27 @@ public class MyDialogFragment extends DialogFragment implements TextView.OnEdito
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_addcontact, container);
-        nameEditText = (EditText) view.findViewById(R.id.addName);
-        numberEditText = (EditText) view.findViewById(R.id.addNum);
+        View view = null;
+        try {
+            view = inflater.inflate(R.layout.fragment_addcontact, container);
+            nameEditText = (EditText) view.findViewById(R.id.addName);
+            numberEditText = (EditText) view.findViewById(R.id.addNum);
 
-        // set this instance as callback for editor action
-        nameEditText.setOnEditorActionListener(this);
-        nameEditText.requestFocus();
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        getDialog().setTitle("Please enter username");
+            // set this instance as callback for editor action
+            nameEditText.setOnEditorActionListener(this);
+            nameEditText.requestFocus();
+            getDialog().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            getDialog().setTitle("Please enter username");
 
-        numberEditText.setOnEditorActionListener(this);
-        numberEditText.requestFocus();
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        getDialog().setTitle("Please enter phone number");
+            numberEditText.setOnEditorActionListener(this);
+            numberEditText.requestFocus();
+            getDialog().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            getDialog().setTitle("Please enter phone number");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         return view;
@@ -59,8 +64,12 @@ public class MyDialogFragment extends DialogFragment implements TextView.OnEdito
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         // Return input text to activity
-        UserNameListener activity = (UserNameListener) getActivity();
-        activity.onFinishUserDialog(nameEditText.getText().toString(), numberEditText.getText().toString());
+        try {
+            UserNameListener activity = (UserNameListener) getActivity();
+            activity.onFinishUserDialog(nameEditText.getText().toString(), numberEditText.getText().toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         this.dismiss();
         return true;

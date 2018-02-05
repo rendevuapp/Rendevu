@@ -41,40 +41,49 @@ public class ResetPassword extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        btnReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String email = inputEmail.getText().toString().trim();
-
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplication(), "Enter your registered email address", Toast.LENGTH_SHORT).show();
-                    return;
+        try {
+            btnBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
                 }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-                progressBar.setVisibility(View.VISIBLE);
-                auth.sendPasswordResetEmail(email)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(ResetPassword.this, "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(ResetPassword.this, "Failed to send reset email!", Toast.LENGTH_SHORT).show();
+        try {
+            btnReset.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String email = inputEmail.getText().toString().trim();
+
+                    if (TextUtils.isEmpty(email)) {
+                        Toast.makeText(getApplication(), "Enter your registered email address", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    progressBar.setVisibility(View.VISIBLE);
+                    auth.sendPasswordResetEmail(email)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(ResetPassword.this, "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(ResetPassword.this, "Failed to send reset email!", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    progressBar.setVisibility(View.GONE);
                                 }
-
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        });
-            }
-        });
+                            });
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Password reset failed", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
 }

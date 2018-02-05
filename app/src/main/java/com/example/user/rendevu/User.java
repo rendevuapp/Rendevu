@@ -15,50 +15,77 @@ public class User {
 
     public User(String fullname, String username,
                 String email, String dob, int userPhone) {
-        this.fullname = fullname;
-        this.userPhone = userPhone;
-        this.username = username;
-        this.email = email;
-        this.dob = dob;
+        try {
+            this.fullname = fullname;
+            this.userPhone = userPhone;
+            this.username = username;
+            this.email = email;
+            this.dob = dob;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    /*
+    * Setters and getters for user data
+    * */
     public String getFullName() {
-        return fullname;
+            return fullname;
     }
 
     public void setFullName(String fullname) {
-        this.fullname = fullname;
+        try {
+            this.fullname = fullname;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getUsername() {
-        return username;
+            return username;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        try {
+            this.username = username;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getEmail() {
-        return email;
+            return email;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        try {
+            this.email = email;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getDOB() {
-        return dob;
+            return dob;
     }
 
     public void setDOB(String dob) {
-        this.dob = dob;
+        try {
+            this.dob = dob;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public int getPhoneNumber() {
-        return userPhone;
+            return userPhone;
     }
 
     public void setPhoneNumber(int userPhone) {
-        this.userPhone = userPhone;
+        try {
+            this.userPhone = userPhone;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

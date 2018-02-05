@@ -39,21 +39,34 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView){
-        super.onAttachedToRecyclerView(recyclerView);
+        try {
+            super.onAttachedToRecyclerView(recyclerView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public PersonViewHolder onCreateViewHolder(ViewGroup viewGroup, int i){
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_item, viewGroup, false);
-        PersonViewHolder personViewHolder = new PersonViewHolder(view);
+        PersonViewHolder personViewHolder = null;
+        try {
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_item, viewGroup, false);
+            personViewHolder = new PersonViewHolder(view);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return personViewHolder;
     }
 
     @Override
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i){
-        personViewHolder.personName.setText(persons.get(i).name);
-        personViewHolder.personAge.setText(persons.get(i).age);
-        personViewHolder.personPhoto.setImageResource(persons.get(i).photoID);
+        try {
+            personViewHolder.personName.setText(persons.get(i).name);
+            personViewHolder.personAge.setText(persons.get(i).age);
+            personViewHolder.personPhoto.setImageResource(persons.get(i).photoID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

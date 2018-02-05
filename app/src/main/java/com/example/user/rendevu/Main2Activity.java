@@ -65,40 +65,27 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main2);
+            // Create the adapter that will return a fragment for each of the three
+            // primary sections of the activity.
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        setSupportActionBar(toolbar);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+            setSupportActionBar(toolbar);
+            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+            // Set up the ViewPager with the sections adapter.
+            mViewPager = (ViewPager) findViewById(R.id.container);
+            mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(mViewPager);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-
-        /**
-         * Josh
-        * Adding persistence for data stored in firebase.
-        * also gets unique id for current user
-        * */
-        /*FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        myDatabaseReference=FirebaseDatabase.getInstance().getReference("Person");
-        personId= myDatabaseReference.push().getKey();*/
-
-        /*(findViewById(R.id.confcontact)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addPerson(((EditText)findViewById(R.id.addName)).getText().toString(),
-                        Integer.parseInt(((EditText)findViewById(R.id.addNum)).getText().toString()));
-            }
-        });*/
 
     }
 
@@ -109,13 +96,21 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         * to be inserted into firebase.
         * */
 
-        Toast.makeText(this, "ADDED: " + addedName, Toast.LENGTH_SHORT).show();
+        try {
+            Toast.makeText(this, "ADDED: " + addedName, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main2, menu);
+        try {
+            getMenuInflater().inflate(R.menu.menu_main2, menu);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -124,11 +119,15 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        try {
+            int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            //noinspection SimplifiableIfStatement
+            if (id == R.id.action_settings) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return super.onOptionsItemSelected(item);
@@ -142,6 +141,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
     *
     * */
     public void onInviteClicked (View v){
+        try {
             Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
                     .setMessage(getString(R.string.invitation_message))
                     .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
@@ -149,29 +149,55 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                     .setCallToActionText(getString(R.string.invitation_cta))
                     .build();
             startActivityForResult(intent, REQUEST_INVITE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        String TAG = "";
-        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+        try {
+            super.onActivityResult(requestCode, resultCode, data);
+            String TAG = "";
+            Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
 
-        if (requestCode == REQUEST_INVITE) {
-            if (resultCode == RESULT_OK) {
-                // Get the invitation IDs of all sent messages
-                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-                for (String id : ids) {
-                    Log.d(TAG, "onActivityResult: sent invitation " + id);
+            if (requestCode == REQUEST_INVITE) {
+                if (resultCode == RESULT_OK) {
+                    // Get the invitation IDs of all sent messages
+                    String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                    for (String id : ids) {
+                        Log.d(TAG, "onActivityResult: sent invitation " + id);
+                    }
+                } else {
+                    // Sending failed or it was canceled, show failure message to the user
+                    // ...
+                    Toast.makeText(getApplicationContext(), "Failed Invite!", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-            } else {
-                // Sending failed or it was canceled, show failure message to the user
-                // ...
-                Toast.makeText(getApplicationContext(), "Failed Invite!", Toast.LENGTH_SHORT).show();
-                return;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
+
+    /*
+    * Josh
+    *
+    * When logout button is pressed,
+    * user is sent back to the main screen.
+    * */
+    public void onLogoutClick(View vu){
+        try {
+            Intent intent = new Intent(Main2Activity.this, MainActivity.class);
+            startActivity(intent);
+            finish();  //closes current activity before moving to the next.
+            Toast.makeText(getApplicationContext(), "You Are Now Logged Out......Goodbye", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     /*
@@ -182,22 +208,26 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
     * */
     public void onClick(View view) {
         // close existing dialog fragments
-        android.app.FragmentManager manager = getFragmentManager();
-        android.app.Fragment frag = manager.findFragmentByTag("fragment_edit_name");
-        if (frag != null) {
-            manager.beginTransaction().remove(frag).commit();
-        }
-        switch (view.getId()) {
-            case R.id.showCustomFragment:
-                MyDialogFragment editNameDialog = new MyDialogFragment();
-                editNameDialog.show(manager, "fragment_edit_name");
-                break;
+        try {
+            android.app.FragmentManager manager = getFragmentManager();
+            android.app.Fragment frag = manager.findFragmentByTag("fragment_edit_name");
+            if (frag != null) {
+                manager.beginTransaction().remove(frag).commit();
+            }
+            switch (view.getId()) {
+                case R.id.showCustomFragment:
+                    MyDialogFragment editNameDialog = new MyDialogFragment();
+                    editNameDialog.show(manager, "fragment_edit_name");
+                    break;
 
-            //generic alert fragment
-            case R.id.showAlertDialogFragment:
-                MyAlertDialogFragment alertDialogFragment = new MyAlertDialogFragment();
-                alertDialogFragment.show(manager, "fragment_edit_name");
-                break;
+                //generic alert fragment
+                case R.id.showAlertDialogFragment:
+                    MyAlertDialogFragment alertDialogFragment = new MyAlertDialogFragment();
+                    alertDialogFragment.show(manager, "fragment_edit_name");
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -220,18 +250,28 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
          * number.
          */
         public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
+            PlaceholderFragment fragment = null;
+            try {
+                fragment = new PlaceholderFragment();
+                Bundle args = new Bundle();
+                args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+                fragment.setArguments(args);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return fragment;
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main2, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            View rootView = null;
+            try {
+                rootView = inflater.inflate(R.layout.fragment_main2, container, false);
+                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return rootView;
         }
     }
@@ -295,13 +335,22 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+            try {
+                super.onCreate(savedInstanceState);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.mainscreen_tab, container, false);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+            View rootView = null;
+            try {
+                rootView = inflater.inflate(R.layout.mainscreen_tab, container, false);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return rootView;
         }
 
@@ -318,13 +367,22 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+            try {
+                super.onCreate(savedInstanceState);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.settings_tab, container, false);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+            View rootView = null;
+            try {
+                rootView = inflater.inflate(R.layout.settings_tab, container, false);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return rootView;
         }
 
@@ -342,13 +400,17 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
         @Override
         public Fragment getItem(int position) {
-            switch (position){
-                case 0:
-                    return new ContactTabFragment();
-                case 1:
-                    return new MainScreenTabFragment();
-                case 2:
-                    return new SettingsTabFragment();
+            try {
+                switch (position){
+                    case 0:
+                        return new ContactTabFragment();
+                    case 1:
+                        return new MainScreenTabFragment();
+                    case 2:
+                        return new SettingsTabFragment();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             return null;
         }
@@ -361,13 +423,17 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Contacts";
-                case 1:
-                    return "Main";
-                case 2:
-                    return "Settings";
+            try {
+                switch (position) {
+                    case 0:
+                        return "Contacts";
+                    case 1:
+                        return "Main";
+                    case 2:
+                        return "Settings";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             return null;
         }
