@@ -34,10 +34,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-<<<<<<< HEAD:app/src/main/java/com/example/user/rendevu/Main2Activity.java
-
-=======
->>>>>>> new_structure:app/src/main/java/com/rendevu/main/Main2Activity.java
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -298,10 +294,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE MAIN SCREEN TAB.
      *  Tamim Alekozai
      */
-<<<<<<< HEAD:app/src/main/java/com/example/user/rendevu/Main2Activity.java
-=======
-
->>>>>>> new_structure:app/src/main/java/com/rendevu/main/Main2Activity.java
     public static class MainScreenTabFragment extends Fragment implements  OnMapReadyCallback{
 
         MapView mapView;
@@ -321,11 +313,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
             mapView = (MapView) rootView.findViewById(R.id.map);
-<<<<<<< HEAD:app/src/main/java/com/example/user/rendevu/Main2Activity.java
-=======
-
-
->>>>>>> new_structure:app/src/main/java/com/rendevu/main/Main2Activity.java
             mapView.onCreate(savedInstanceState);
             mapView.getMapAsync(this);
 
@@ -335,11 +322,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         @Override
         public void onMapReady(GoogleMap googleMap){
             LatLng marker = new LatLng(29.304, -98.524);
-<<<<<<< HEAD:app/src/main/java/com/example/user/rendevu/Main2Activity.java
             map = googleMap;
-=======
-            this.map = googleMap;
->>>>>>> new_structure:app/src/main/java/com/rendevu/main/Main2Activity.java
             map.getUiSettings().setZoomControlsEnabled(false);
             map.addMarker(new MarkerOptions().position(marker).title("John"));
         }

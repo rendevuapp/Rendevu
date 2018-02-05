@@ -15,31 +15,27 @@ import java.util.List;
 
 public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHolder> {
 
-    List<User> list;
-
-    public cardAdapter(List<User> list){
-        this.list = list;
-    }
 
     public static class PersonViewHolder extends RecyclerView.ViewHolder{
+
         CardView cardView;
-        TextView fullname, dob;
+        TextView personName;
+        TextView personAge;
+        ImageView personPhoto;
+
         PersonViewHolder(View itemView){
             super(itemView);
             cardView = (CardView)itemView.findViewById(R.id.card_view);
-            fullname = (TextView)itemView.findViewById(R.id.person_name);
-            dob = (TextView)itemView.findViewById(R.id.person_age);
+            personName = (TextView)itemView.findViewById(R.id.person_name);
+            personAge = (TextView)itemView.findViewById(R.id.person_age);
             personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
 
         }
     }
-<<<<<<< HEAD:app/src/main/java/com/example/user/rendevu/cardAdapter.java
-=======
    List<Person> persons;
     cardAdapter(List<Person> persons){
         this.persons = persons;
 }
->>>>>>> new_structure:app/src/main/java/com/rendevu/main/cardAdapter.java
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView){
