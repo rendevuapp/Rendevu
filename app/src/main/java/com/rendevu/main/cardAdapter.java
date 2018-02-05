@@ -15,11 +15,6 @@ import java.util.List;
 
 public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHolder> {
 
-    List<User> list;
-
-    public cardAdapter(List<User> list){
-        this.list = list;
-    }
     public static class PersonViewHolder extends RecyclerView.ViewHolder{
 
         CardView cardView;
@@ -37,10 +32,6 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
         }
     }
 
-    List<Person> persons;
-    cardAdapter(List<Person> persons){
-        this.persons = persons;
-    }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView){
@@ -59,6 +50,7 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
         personViewHolder.personName.setText(persons.get(i).name);
         personViewHolder.personAge.setText(persons.get(i).age);
         personViewHolder.personPhoto.setImageResource(persons.get(i).photoID);
+
     }
 
     @Override
