@@ -35,11 +35,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+//import javax.xml.crypto.Data;
 
 
 public class Main2Activity extends AppCompatActivity implements MyDialogFragment.UserNameListener {
@@ -71,7 +76,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        try {
+        try{
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main2);
             // Create the adapter that will return a fragment for each of the three
@@ -88,11 +93,10 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(mViewPager);
-        } catch (Exception e) {
+        }
+        catch(Exception e){
             e.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -102,9 +106,10 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         * to be inserted into firebase.
         * */
 
-        try {
+        try{
             Toast.makeText(this, "ADDED: " + addedName, Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -114,7 +119,8 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         // Inflate the menu; this adds items to the action bar if it is present.
         try {
             getMenuInflater().inflate(R.menu.menu_main2, menu);
-        } catch (Exception e) {
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
         return true;
@@ -125,17 +131,16 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        try {
+        try{
             int id = item.getItemId();
-
             //noinspection SimplifiableIfStatement
             if (id == R.id.action_settings) {
                 return true;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -155,7 +160,8 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                     .setCallToActionText(getString(R.string.invitation_cta))
                     .build();
             startActivityForResult(intent, REQUEST_INVITE);
-        } catch (Exception e) {
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -174,14 +180,15 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                     for (String id : ids) {
                         Log.d(TAG, "onActivityResult: sent invitation " + id);
                     }
-                } else {
+                } else{
                     // Sending failed or it was canceled, show failure message to the user
                     // ...
                     Toast.makeText(getApplicationContext(), "Failed Invite!", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -194,12 +201,13 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
     * user is sent back to the main screen.
     * */
     public void onLogoutClick(View vu){
-        try {
+        try{
             Intent intent = new Intent(Main2Activity.this, MainActivity.class);
             startActivity(intent);
             finish();  //closes current activity before moving to the next.
             Toast.makeText(getApplicationContext(), "You Are Now Logged Out......Goodbye", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
+        }
+        catch(Exception e){
             e.printStackTrace();
         }
     }
@@ -210,7 +218,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
     *
     * */
 
-    public void onClick(View view) {
+    public void onClick(View view){
         // close existing dialog fragments
         try {
             android.app.FragmentManager manager = getFragmentManager();
@@ -230,66 +238,21 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                     alertDialogFragment.show(manager, "fragment_edit_name");
                     break;
             }
-        } catch (Exception e) {
+        }
+        catch(Exception e){
             e.printStackTrace();
         }
     }
 
-
-
-    /**
-     *  A placeholder fragment containing a simple view.  THIS FRAGMENT IS NOT USED.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = null;
-            try {
-                fragment = new PlaceholderFragment();
-                Bundle args = new Bundle();
-                args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-                fragment.setArguments(args);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return fragment;
-        }
-
-        @Override
-        
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = null;
-            try {
-                rootView = inflater.inflate(R.layout.fragment_main2, container, false);
-                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return rootView;
-        }
-
-    }
 
     /**
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE CONTACT TAB.
      *  Ricardo Cantu
      */
     public static class ContactTabFragment extends Fragment {
-
-        private List<Person> persons;
+        FirebaseDatabase database;
+        DatabaseReference contRef;
+        private List<User> list;
 
         public ContactTabFragment() {
         }
@@ -305,29 +268,36 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
             recyclerView.setHasFixedSize(true);
 
-            initializeData();
-            cardAdapter adapter = new cardAdapter(persons);
+            database = FirebaseDatabase.getInstance();
+            contRef = database.getReference("User");
+
+            contRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    list = new ArrayList<User>();
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        User value = dataSnapshot1.getValue(User.class);
+                        User fire = new User();
+                        String fullname = value.getFullName();
+                        String dob = value.getDOB();
+                        fire.setFullName(fullname);
+                        fire.setDOB(dob);
+                        list.add(fire);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.w("Error", "Failed to read Value.", databaseError.toException());
+                }
+            });
+
+            cardAdapter adapter = new cardAdapter(list);
             recyclerView.setAdapter(adapter);
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(linearLayoutManager);
             return rootView;
-        }
-
-        private void initializeData() {
-            persons = new ArrayList<>();
-            persons.add(new Person("Andrew Garfield", "34 years old", R.drawable.contact_pic));
-            persons.add(new Person("Emma Stone", "29 years old", R.drawable.contact_pic));
-            persons.add(new Person("Rhys Ifans", "50 years old", R.drawable.contact_pic));
-            persons.add(new Person("Denis Leary", "60 years old", R.drawable.contact_pic));
-            persons.add(new Person("Martin Sheen", "77 years old", R.drawable.contact_pic));
-            persons.add(new Person("Sally Field", "71 years old", R.drawable.contact_pic));
-            persons.add(new Person("Irrfan Khan", "50 years old", R.drawable.contact_pic));
-            persons.add(new Person("Campbell Scott", "56 years old", R.drawable.contact_pic));
-            persons.add(new Person("Embeth Davidtz", "52 years old", R.drawable.contact_pic));
-            persons.add(new Person("Chris Zylka", "29 years old", R.drawable.contact_pic));
-            persons.add(new Person("Max Charles", "25 years old", R.drawable.contact_pic));
-            persons.add(new Person("C. Thomas Howell", "30 years old", R.drawable.contact_pic));
         }
     }
 
@@ -335,7 +305,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE MAIN SCREEN TAB.
      *  Tamim Alekozai
      */
-    public static class MainScreenTabFragment extends Fragment implements  OnMapReadyCallback{
+    public static class MainScreenTabFragment extends Fragment implements OnMapReadyCallback{
 
         MapView mapView;
         GoogleMap map;
@@ -345,92 +315,96 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
-	    try{
-            super.onCreate(savedInstanceState);
-	    }catch(Exception e){
-		e.printStackTrace();
-	    }
+	        try{
+                super.onCreate(savedInstanceState);
+            }
+            catch(Exception e){
+		        e.printStackTrace();
+	        }
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	    View rootView =null;
-            try {
-
-		 rootView = inflater.inflate(R.layout.mainscreen_tab, container, false);
+	        View rootView = null;
+            //try{
+		        rootView = inflater.inflate(R.layout.mainscreen_tab, container, false);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
                 mapView = (MapView) rootView.findViewById(R.id.map);
                 mapView.onCreate(savedInstanceState);
                 mapView.getMapAsync(this);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+            //} catch (Exception e) {
+            //    e.printStackTrace();
+            //}
             return rootView;
         }
+
         @Override
         public void onMapReady(GoogleMap googleMap){
-	    try {
-            LatLng marker = new LatLng(29.304, -98.524);
-            map = googleMap;
-            map.getUiSettings().setZoomControlsEnabled(false);
-            map.addMarker(new MarkerOptions().position(marker).title("John"));
-	    }catch(Exception e){
-		e.printStackTrace();
-	    }
+	        try {
+                LatLng marker = new LatLng(29.304, -98.524);
+                map = googleMap;
+                map.getUiSettings().setZoomControlsEnabled(false);
+                map.addMarker(new MarkerOptions().position(marker).title("John"));
+	        }
+	        catch(Exception e){
+		        e.printStackTrace();
+	        }
         }
 
         @Override
         public void onResume(){
-	    try{
-            super.onResume();
-            mapView.onResume();
-	    }catch(Exception e){
-		e.printStackTrace();
-	    }
+	        try{
+                super.onResume();
+                mapView.onResume();
+	        }catch(Exception e){
+		        e.printStackTrace();
+	        }
         }
 
         @Override
         public void onPause() {
-            try {
+            try{
                 super.onPause();
                 mapView.onPause();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         @Override
         public void onDestroy(){
-	    try{
-            super.onDestroy();
-            mapView.onDestroy();
-	    }catch(Exception e){
-		e.printStackTrace();
-	    }
+	        try{
+                super.onDestroy();
+                mapView.onDestroy();
+	        }
+	        catch(Exception e){
+		        e.printStackTrace();
+	        }
         }
 
         @Override
         public void onSaveInstanceState(Bundle outState){
-	    try{
-            super.onSaveInstanceState(outState);
-            mapView.onSaveInstanceState(outState);
-	    }catch(Exception e){
-		e.printStackTrace();
-	    }
+	        try{
+                super.onSaveInstanceState(outState);
+                mapView.onSaveInstanceState(outState);
+	        }
+	        catch(Exception e){
+		        e.printStackTrace();
+	        }
         }
 
         @Override
         public void onLowMemory(){
-	    try{
-            super.onLowMemory();
-            mapView.onLowMemory();
-	    }catch(Exception e){
-		e.printStackTrace();
-	    }
-                                                             
+	        try{
+                super.onLowMemory();
+                mapView.onLowMemory();
+	        }
+	        catch(Exception e){
+		       e.printStackTrace();
+	        }
         }
     }
 
@@ -508,3 +482,4 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         }
     }
 }
+
