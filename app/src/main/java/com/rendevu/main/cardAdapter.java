@@ -72,7 +72,7 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
     }
 
     @Override
-    public int getItemCount(){`
+    public int getItemCount(){
         int arr = 0;
         try{
             if(list.size() == 0)
