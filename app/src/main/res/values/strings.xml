@@ -91,5 +91,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_maps">Map</string>
-
+    <string name="google_maps_key">AIzaSyC6-uj8kUd-pEKg4XEUByuEauIHgUYKXQQ</string> 
 </resources>
