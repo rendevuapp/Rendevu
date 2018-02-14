@@ -35,9 +35,6 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Get Firebase auth instance
-        auth = FirebaseAuth.getInstance();
-
         /*if (auth.getCurrentUser() != null) {
             startActivity(new Intent(Login.this, MainActivity.class));
             finish();

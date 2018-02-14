@@ -17,24 +17,24 @@ import java.util.List;
 
 public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHolder> {
 
-    List<Person> list;
+    List<User> list;
 
-    public cardAdapter(List<Person> list){
+    public cardAdapter(List<User> list){
         this.list = list;
     }
 
     public static class PersonViewHolder extends RecyclerView.ViewHolder{
 
         CardView cardView;
-        TextView personName;
-        TextView personAge;
+        TextView fullName;
+        TextView dob;
         ImageView personPhoto;
 
         PersonViewHolder(View itemView){
             super(itemView);
             cardView = (CardView)itemView.findViewById(R.id.card_view);
-            personName = (TextView)itemView.findViewById(R.id.person_name);
-            personAge = (TextView)itemView.findViewById(R.id.person_age);
+            fullName = (TextView)itemView.findViewById(R.id.person_name);
+            dob = (TextView)itemView.findViewById(R.id.person_age);
             personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
 
         }
@@ -64,9 +64,9 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
     @Override
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i){
         try {
-            personViewHolder.personName.setText(list.get(i).name);
-            personViewHolder.personAge.setText(list.get(i).age);
-            personViewHolder.personPhoto.setImageResource(list.get(i).photoID);
+            personViewHolder.fullName.setText(list.get(i).getFullName());
+            personViewHolder.dob.setText(list.get(i).getDOB());
+            personViewHolder.personPhoto.setImageResource(R.drawable.contact_pic);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,7 +74,16 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
 
     @Override
     public int getItemCount(){
-        return list.size();
+        int arr = 0;
+        try{
+            if(list.size() == 0)
+                arr = 0;
+            else
+                arr = list.size();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return arr;
     }
 }
 
