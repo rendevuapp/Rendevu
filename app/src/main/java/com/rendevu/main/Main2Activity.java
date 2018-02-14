@@ -83,8 +83,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
@@ -361,10 +363,11 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         MapView mapView;
         private List<Tracking> list;
         ToggleButton saveLocButton;
+        Button refreshButton;
 
         private FusedLocationProviderClient mFusedLocationClient;
-        final double defaultLatitude = -98.524;
-        final double defaultLongtitude = 20.304;
+        final double defaultLatitude = 29.424503;
+        final double defaultLongtitude = -98.491500;
 
         private static Double latitude, longtitude;
         protected Location mLastLocation;
@@ -387,6 +390,13 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                 String uid = user.getUid();
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("UserData").child(uid);
                 rDatabase = FirebaseDatabase.getInstance().getReference().child("UserData");
+
+                if(!checkPermission()){
+                    requestPermissions();
+
+                }else{
+                    getLastLocation();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -396,27 +406,30 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = null;
             try {
-
-                if(!checkPermission()){
-                    requestPermissions();
-
-                }else{
-                    getLastLocation();
-                }
                 rootView = inflater.inflate(R.layout.mainscreen_tab, container, false);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
                 saveLocButton = (ToggleButton) rootView.findViewById(R.id.toggleButton2);
+
                 saveLocButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        String sLat, sLng;
+                        if(!checkPermission()){
+                            requestPermissions();
+
+                        }else{
+                            getLastLocation();
+                        }
                         if(isChecked){
-                            double lat = 123.12;
-                            double lng = 123.12;
-                            //@SuppressLint("MissingPermission") double lat = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
-                            //@SuppressLint("MissingPermission") double lng = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
-                            String sLat = Double.toString(lat);
-                            String sLng = Double.toString(lng);
+                            if(latitude != null && longtitude != null){
+                                sLat = Double.toString(latitude);
+                                sLng = Double.toString(longtitude);
+                                }
+                            else{
+                                sLat = Double.toString(defaultLatitude);
+                                sLng = Double.toString(defaultLongtitude);
+                            }
                             DatabaseReference newPush = mDatabase;
                             newPush.child("avail").setValue("true");
                             newPush.child("lat").setValue(sLat);
@@ -572,60 +585,75 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                 }
             }
         }
+
+        @SuppressLint("MissingPermission")
         @Override
         public void onMapReady(GoogleMap googleMap) {
             try {
 
                 final GoogleMap mMap = googleMap;
+                final Map<String,Marker> markers = new HashMap();
+                //mMap.setMyLocationEnabled(true);
 
-                LatLng userMarker = new LatLng(latitude, longtitude);
-                mMap.addMarker(new MarkerOptions().position(userMarker).title("Me"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userMarker, 18));
+
+
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 mMap.getUiSettings().setZoomControlsEnabled(true);
 
-                rDatabase.addValueEventListener(new ValueEventListener() {
+                rDatabase.addChildEventListener(new ChildEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                            String lat = dataSnapshot1.child("lat").getValue(String.class);
-                            String lng = dataSnapshot1.child("lng").getValue(String.class);
-                            String displayName = dataSnapshot1.child("displayName").getValue(String.class);
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        String available = dataSnapshot.child("avail").getValue(String.class);
+                        MarkerOptions markerOptions = new MarkerOptions();
+
+                        if(available.equals("true")) {
+                            String lat = dataSnapshot.child("lat").getValue(String.class);
+                            String lng = dataSnapshot.child("lng").getValue(String.class);
+                            String displayName = dataSnapshot.child("displayName").getValue(String.class);
                             Double dLat = Double.parseDouble(lat);
                             Double dLng = Double.parseDouble(lng);
 
-                            LatLng newLocation = new LatLng(dLat,dLng);
-                            mMap.addMarker(new MarkerOptions().position(newLocation).title(displayName));
+                            LatLng newLocation = new LatLng(dLat, dLng);
+
+                            markerOptions.position(newLocation);
+                            markerOptions.title(displayName);
+                            markerOptions.snippet(available);
+                            Marker mMarker = mMap.addMarker(markerOptions);
+                            markers.put(dataSnapshot.getKey(), mMarker);
                         }
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.w("Error", "Failed to read Value.", databaseError.toException());
-                    }
-                });
-               /**
-                rDatabase.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        String lat = dataSnapshot.child("lat").getValue(String.class);
-                        String lng = dataSnapshot.child("lng").getValue(String.class);
-
-                        Double dLat = Double.parseDouble(lat);
-                        Double dLng = Double.parseDouble(lng);
-
-                        LatLng newLocation = new LatLng(dLat,dLng);
-                        mMap.addMarker(new MarkerOptions().position(newLocation).title(dataSnapshot.getKey()));
-                    }
-
-                    @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        String available = dataSnapshot.child("avail").getValue(String.class);
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        if (markers.containsKey(dataSnapshot.getKey())) {
+                            markers.get(dataSnapshot.getKey()).remove();
+                        }
+                        if (available.equals("true")) {
+                            String lat = dataSnapshot.child("lat").getValue(String.class);
+                            String lng = dataSnapshot.child("lng").getValue(String.class);
+                            String displayName = dataSnapshot.child("displayName").getValue(String.class);
+                            Double dLat = Double.parseDouble(lat);
+                            Double dLng = Double.parseDouble(lng);
 
+                            LatLng newLocation = new LatLng(dLat, dLng);
+
+                            markerOptions.position(newLocation);
+                            markerOptions.title(displayName);
+                            markerOptions.snippet(available);
+
+                            Marker mMarker = mMap.addMarker(markerOptions);
+                            markers.put(dataSnapshot.getKey(), mMarker);
+                        }
                     }
 
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                        if(markers.containsValue(dataSnapshot.getKey())){
+                            Marker marker = markers.get(dataSnapshot.getKey());
+                            marker.remove();
+                        }
                     }
 
                     @Override
@@ -638,7 +666,38 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
                     }
                 });
-                **/
+                //refreshButton.setOnClickListener(new View.OnClickListener() {
+                //    @Override
+                //    public void onClick(View view) {
+                //        rDatabase.addValueEventListener(new ValueEventListener() {
+                //            Marker mMarker;
+                //
+                //            @Override
+                //            public void onDataChange(DataSnapshot dataSnapshot) {
+                //                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                //                    String available = dataSnapshot1.child("avail").getValue(String.class);
+                //                    if(available.equals("true")) {
+                //                        String lat = dataSnapshot1.child("lat").getValue(String.class);
+                //                        String lng = dataSnapshot1.child("lng").getValue(String.class);
+                //                        String displayName = dataSnapshot1.child("displayName").getValue(String.class);
+                //                        Double dLat = Double.parseDouble(lat);
+                //                        Double dLng = Double.parseDouble(lng);
+                //
+                //                        LatLng newLocation = new LatLng(dLat, dLng);
+                //
+                //                        mMap.addMarker(new MarkerOptions().position(newLocation).title(displayName).snippet(available));
+                //                    }
+                //                }
+                //            }
+                //
+                //            @Override
+                //            public void onCancelled(DatabaseError databaseError) {
+                //                Log.w("Error", "Failed to read Value.", databaseError.toException());
+                //            }
+                //        });
+                //    }
+                //});
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
