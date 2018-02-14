@@ -489,20 +489,20 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
          */
         private boolean checkPermission() {
             int permissionState = ActivityCompat.checkSelfPermission(super.getActivity(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION);
+                    Manifest.permission.ACCESS_FINE_LOCATION);
             return permissionState == PackageManager.PERMISSION_GRANTED;
         }
 
         private void startLocationPermissionRequest() {
             ActivityCompat.requestPermissions(super.getActivity(),
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_REQUEST_LOCATION);
         }
 
         private void requestPermissions() {
             boolean shouldProvideRationale =
                     ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
-                            Manifest.permission.ACCESS_COARSE_LOCATION);
+                            Manifest.permission.ACCESS_FINE_LOCATION);
 
             // Provide an additional rationale to the user. This would happen if the user denied the
             // request previously, but didn't check the "Don't ask again" checkbox.
@@ -647,7 +647,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         private void requestLocationPermission() {
                // Permission has not been granted and must be requested.
                if (ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
-                       Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                       Manifest.permission.ACCESS_FINE_LOCATION)) {
                    // Provide an additional rationale to the user if the permission was not granted
                    // and the user would benefit from additional context for the use of the permission.
                    // Display a SnackBar with a button to request the missing permission.
@@ -657,7 +657,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                        public void onClick(View view) {
                            // Request the permission
                            MainScreenTabFragment.super.getActivity().requestPermissions(
-                                   new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                                   new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                    PERMISSION_REQUEST_LOCATION);
                        }
                    }).show();
@@ -668,7 +668,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                            "Permission is not available. Requesting Location permission.",
                            Snackbar.LENGTH_SHORT).show();
                    // Request the permission. The result will be received in onRequestPermissionResult().
-                   super.getActivity().requestPermissions( new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                   super.getActivity().requestPermissions( new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                            PERMISSION_REQUEST_LOCATION);
                }
         }
