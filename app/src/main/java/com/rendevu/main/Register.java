@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -29,7 +30,7 @@ import java.util.Calendar;
 
 public class Register extends AppCompatActivity {
 
-    private DatabaseReference myDatabaseReference;
+    private DatabaseReference myDatabaseReference, userDatRef;
     private String userId;
 
     private EditText fullName, inputEmail, phoneNum,
@@ -60,7 +61,8 @@ public class Register extends AppCompatActivity {
              * */
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             myDatabaseReference=FirebaseDatabase.getInstance().getReference("User");
-            userId= myDatabaseReference.push().getKey();
+            userDatRef = FirebaseDatabase.getInstance().getReference("UserData");
+            //userId= myDatabaseReference.push().getKey();
         } catch (Exception e) {
 
             Toast.makeText(getApplicationContext(), "Firebase error", Toast.LENGTH_SHORT).show();
@@ -178,16 +180,20 @@ public class Register extends AppCompatActivity {
                                                 Toast.LENGTH_SHORT).show();
                                     } else {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        String uid = user.getUid();
+                                        addUser(uid,((EditText)findViewById(R.id.fullname)).getText().toString(),
+                                                ((EditText)findViewById(R.id.username)).getText().toString(),
+                                                ((EditText)findViewById(R.id.email_id)).getText().toString(),
+                                                ((EditText)findViewById(R.id.dateOfBirth)).getText().toString(),
+                                                Integer.parseInt(((EditText)findViewById(R.id.userPhone)).getText().toString()));
                                         finish();
                                     }
                                 }
                             });
 
-                    addUser(((EditText)findViewById(R.id.fullname)).getText().toString(),
-                            ((EditText)findViewById(R.id.username)).getText().toString(),
-                            ((EditText)findViewById(R.id.email_id)).getText().toString(),
-                            ((EditText)findViewById(R.id.dateOfBirth)).getText().toString(),
-                            Integer.parseInt(((EditText)findViewById(R.id.userPhone)).getText().toString()));
+
+
 
                 }
             });
@@ -198,10 +204,15 @@ public class Register extends AppCompatActivity {
     }
 
 
-    private void addUser(String fullname, String username,
+    private void addUser(String uid, String fullname, String username,
                             String email, String dob, int phoneNumber){
+        String userId = uid;
         User user = new User(fullname, username, email, dob, phoneNumber);
         myDatabaseReference.child(userId).setValue(user);
+        userDatRef.child(userId).child("displayName").setValue(fullname);
+        userDatRef.child(userId).child("avail").setValue("false");
+        userDatRef.child(userId).child("lat").setValue("0");
+        userDatRef.child(userId).child("lng").setValue("0");
     }
 
     @Override

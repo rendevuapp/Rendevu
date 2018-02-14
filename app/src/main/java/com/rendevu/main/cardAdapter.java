@@ -24,16 +24,18 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
     }
 
     public static class PersonViewHolder extends RecyclerView.ViewHolder{
-        TextView fullname, dob;
+
         CardView cardView;
-        ImageView userPhoto;
+        TextView fullName;
+        TextView dob;
+        ImageView personPhoto;
 
         PersonViewHolder(View itemView){
             super(itemView);
             cardView = (CardView)itemView.findViewById(R.id.card_view);
-            fullname = (TextView)itemView.findViewById(R.id.person_name);
+            fullName = (TextView)itemView.findViewById(R.id.person_name);
             dob = (TextView)itemView.findViewById(R.id.person_age);
-            userPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
+            personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
 
         }
     }
@@ -62,10 +64,9 @@ public class cardAdapter extends RecyclerView.Adapter<cardAdapter.PersonViewHold
     @Override
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i){
         try {
-            User mylist = list.get(i);
-            personViewHolder.fullname.setText(mylist.getFullName());
-            personViewHolder.dob.setText(mylist.getDOB());
-            personViewHolder.userPhoto.setImageResource(R.drawable.contact_pic);
+            personViewHolder.fullName.setText(list.get(i).getFullName());
+            personViewHolder.dob.setText(list.get(i).getDOB());
+            personViewHolder.personPhoto.setImageResource(R.drawable.contact_pic);
         } catch (Exception e) {
             e.printStackTrace();
         }

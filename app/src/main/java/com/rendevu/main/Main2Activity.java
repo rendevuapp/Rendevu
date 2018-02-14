@@ -4,12 +4,27 @@ package com.rendevu.main;
     This class holds the configurations for the tab view.
     This implements each of the three fragment.
  */
+
+import android.*;
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,17 +39,38 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+//import com.google.android.gms.awareness.snapshot.LocationResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,39 +80,35 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+
 //import javax.xml.crypto.Data;
 
 
 public class Main2Activity extends AppCompatActivity implements MyDialogFragment.UserNameListener {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
 
+    /**
+     *
+     *referencing firebase for data storage
+     * */
+    private FirebaseDatabase mFireBaseDatabase;
 
-    /*
-    *
-    *referencing firebase for data storage
-    * */
-    private DatabaseReference myDatabaseReference;
-    private String personId;
+    public static final String TAG = Main2Activity.class.getSimpleName();
+
     private static final int REQUEST_INVITE = 0;  //used for sending invites
+
+    private static GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        try{
+        try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main2);
             // Create the adapter that will return a fragment for each of the three
@@ -93,10 +125,27 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(mViewPager);
-        }
-        catch(Exception e){
+
+
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks((GoogleApiClient.ConnectionCallbacks) this)
+                    .addOnConnectionFailedListener((GoogleApiClient.OnConnectionFailedListener) this)
+                    .addApi(LocationServices.API)
+                    .build();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -106,10 +155,9 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         * to be inserted into firebase.
         * */
 
-        try{
+        try {
             Toast.makeText(this, "ADDED: " + addedName, Toast.LENGTH_SHORT).show();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -119,8 +167,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         // Inflate the menu; this adds items to the action bar if it is present.
         try {
             getMenuInflater().inflate(R.menu.menu_main2, menu);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
@@ -131,27 +178,25 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        try{
+        try {
             int id = item.getItemId();
             //noinspection SimplifiableIfStatement
             if (id == R.id.action_settings) {
                 return true;
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-    /*
-    * Josh
-    * Handler for sending invitation when send invite
-    * button is clicked.
-    *
-    * */
-    public void onInviteClicked (View v){
+    /**
+     * Josh
+     * Handler for sending invitation when send invite
+     * button is clicked.
+     *
+     * */
+    public void onInviteClicked(View v) {
         try {
             Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
                     .setMessage(getString(R.string.invitation_message))
@@ -160,8 +205,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                     .setCallToActionText(getString(R.string.invitation_cta))
                     .build();
             startActivityForResult(intent, REQUEST_INVITE);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -180,45 +224,43 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                     for (String id : ids) {
                         Log.d(TAG, "onActivityResult: sent invitation " + id);
                     }
-                } else{
+                } else {
                     // Sending failed or it was canceled, show failure message to the user
                     // ...
                     Toast.makeText(getApplicationContext(), "Failed Invite!", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    /*
-    * Josh
-    *
-    * When logout button is pressed,
-    * user is sent back to the main screen.
-    * */
-    public void onLogoutClick(View vu){
-        try{
+    /**
+     * Josh
+     *
+     * When logout button is pressed,
+     * user is sent back to the main screen.
+     * */
+    public void onLogoutClick(View vu) {
+        try {
             Intent intent = new Intent(Main2Activity.this, MainActivity.class);
             startActivity(intent);
             finish();  //closes current activity before moving to the next.
             Toast.makeText(getApplicationContext(), "You Are Now Logged Out......Goodbye", Toast.LENGTH_SHORT).show();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    /*
-    * Josh
-    * Controls for the pop-up dialog fragment,
-    * could probably be useful for something else
-    *
-    * */
 
-    public void onClick(View view){
+    /**
+     * Josh
+     * Controls for the pop-up dialog fragment,
+     * could probably be useful for something else
+     *
+     * */
+
+    public void onClick(View view) {
         // close existing dialog fragments
         try {
             android.app.FragmentManager manager = getFragmentManager();
@@ -238,12 +280,10 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                     alertDialogFragment.show(manager, "fragment_edit_name");
                     break;
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     /**
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE CONTACT TAB.
@@ -260,22 +300,14 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.contact_tab, container, false);
-            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-            recyclerView.setHasFixedSize(true);
-
             database = FirebaseDatabase.getInstance();
             contRef = database.getReference("User");
 
             contRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    list = new ArrayList<User>();
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    list = new ArrayList<>();
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
                         User value = dataSnapshot1.getValue(User.class);
                         User fire = new User();
                         String fullname = value.getFullName();
@@ -291,6 +323,13 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                     Log.w("Error", "Failed to read Value.", databaseError.toException());
                 }
             });
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.contact_tab, container, false);
+            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+            recyclerView.setHasFixedSize(true);
 
             cardAdapter adapter = new cardAdapter(list);
             recyclerView.setAdapter(adapter);
@@ -305,106 +344,200 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE MAIN SCREEN TAB.
      *  Tamim Alekozai
      */
-    public static class MainScreenTabFragment extends Fragment implements OnMapReadyCallback{
+    public static class MainScreenTabFragment extends Fragment implements OnMapReadyCallback {
 
+        FirebaseDatabase database;
+        private List<Tracking> list;
+
+        Marker marker;
         MapView mapView;
-        GoogleMap map;
 
+        ToggleButton saveLocButton;
+
+        //LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+
+        private DatabaseReference mDatabase, rDatabase;
+
+        @SuppressLint("ValidFragment")
         public MainScreenTabFragment() {
         }
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
-	        try{
+            try {
                 super.onCreate(savedInstanceState);
-            }
-            catch(Exception e){
-		        e.printStackTrace();
-	        }
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	        View rootView = null;
-            //try{
-		        rootView = inflater.inflate(R.layout.mainscreen_tab, container, false);
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-
-                mapView = (MapView) rootView.findViewById(R.id.map);
-                mapView.onCreate(savedInstanceState);
-                mapView.getMapAsync(this);
-
-            //} catch (Exception e) {
-            //    e.printStackTrace();
-            //}
-            return rootView;
-        }
-
-        @Override
-        public void onMapReady(GoogleMap googleMap){
-	        try {
-                LatLng marker = new LatLng(29.304, -98.524);
-                map = googleMap;
-                map.getUiSettings().setZoomControlsEnabled(false);
-                map.addMarker(new MarkerOptions().position(marker).title("John"));
-	        }
-	        catch(Exception e){
-		        e.printStackTrace();
-	        }
-        }
-
-        @Override
-        public void onResume(){
-	        try{
-                super.onResume();
-                mapView.onResume();
-	        }catch(Exception e){
-		        e.printStackTrace();
-	        }
-        }
-
-        @Override
-        public void onPause() {
-            try{
-                super.onPause();
-                mapView.onPause();
-            }
-            catch (Exception e) {
+                database = FirebaseDatabase.getInstance();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = user.getUid();
+                mDatabase = FirebaseDatabase.getInstance().getReference().child("UserData").child(uid);
+                rDatabase = FirebaseDatabase.getInstance().getReference().child("UserData");
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         @Override
-        public void onDestroy(){
-	        try{
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = null;
+            try {
+                rootView = inflater.inflate(R.layout.mainscreen_tab, container, false);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+
+                saveLocButton = (ToggleButton) rootView.findViewById(R.id.toggleButton2);
+                saveLocButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        if(isChecked){
+                            double lat = 123.12;
+                            double lng = 123.12;
+                            //@SuppressLint("MissingPermission") double lat = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
+                            //@SuppressLint("MissingPermission") double lng = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
+                            String sLat = Double.toString(lat);
+                            String sLng = Double.toString(lng);
+                            DatabaseReference newPush = mDatabase;
+                            newPush.child("avail").setValue("true");
+                            newPush.child("lat").setValue(sLat);
+                            newPush.child("lng").setValue(sLng);
+                        }
+                        else{
+                            DatabaseReference newPush = mDatabase;
+                            newPush.child("avail").setValue("false");
+                        }
+                    }
+                });
+
+                mapView = (MapView) rootView.findViewById(R.id.map);
+                mapView.onCreate(savedInstanceState);
+                mapView.getMapAsync(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return rootView;
+        }
+
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            try {
+                final GoogleMap mMap = googleMap;
+
+                LatLng userMarker = new LatLng(29.304, -98.524);
+                mMap.addMarker(new MarkerOptions().position(userMarker).title("Me"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userMarker, 18));
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                mMap.getUiSettings().setZoomControlsEnabled(true);
+
+                rDatabase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                            String lat = dataSnapshot1.child("lat").getValue(String.class);
+                            String lng = dataSnapshot1.child("lng").getValue(String.class);
+                            String displayName = dataSnapshot1.child("displayName").getValue(String.class);
+                            Double dLat = Double.parseDouble(lat);
+                            Double dLng = Double.parseDouble(lng);
+
+                            LatLng newLocation = new LatLng(dLat,dLng);
+                            mMap.addMarker(new MarkerOptions().position(newLocation).title(displayName));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("Error", "Failed to read Value.", databaseError.toException());
+                    }
+                });
+               /**
+                rDatabase.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        String lat = dataSnapshot.child("lat").getValue(String.class);
+                        String lng = dataSnapshot.child("lng").getValue(String.class);
+
+                        Double dLat = Double.parseDouble(lat);
+                        Double dLng = Double.parseDouble(lng);
+
+                        LatLng newLocation = new LatLng(dLat,dLng);
+                        mMap.addMarker(new MarkerOptions().position(newLocation).title(dataSnapshot.getKey()));
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                **/
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onResume() {
+            try {
+                super.onResume();
+                mapView.onResume();
+                mGoogleApiClient.connect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onPause() {
+            try {
+                super.onPause();
+                mapView.onPause();
+                if (mGoogleApiClient.isConnected()) {
+                    mGoogleApiClient.disconnect();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onDestroy() {
+            try {
                 super.onDestroy();
                 mapView.onDestroy();
-	        }
-	        catch(Exception e){
-		        e.printStackTrace();
-	        }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
-        public void onSaveInstanceState(Bundle outState){
-	        try{
+        public void onSaveInstanceState(Bundle outState) {
+            try {
                 super.onSaveInstanceState(outState);
                 mapView.onSaveInstanceState(outState);
-	        }
-	        catch(Exception e){
-		        e.printStackTrace();
-	        }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
-        public void onLowMemory(){
-	        try{
+        public void onLowMemory() {
+            try {
                 super.onLowMemory();
                 mapView.onLowMemory();
-	        }
-	        catch(Exception e){
-		       e.printStackTrace();
-	        }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -412,7 +545,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE SETTINGS TAB.
      *  Alexander Mann
      */
-    public static class SettingsTabFragment extends Fragment{
+    public static class SettingsTabFragment extends Fragment {
 
         public SettingsTabFragment() {
         }
@@ -435,7 +568,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter{
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -444,7 +577,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         @Override
         public Fragment getItem(int position) {
             try {
-                switch (position){
+                switch (position) {
                     case 0:
                         return new ContactTabFragment();
                     case 1:
@@ -482,4 +615,3 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         }
     }
 }
-
