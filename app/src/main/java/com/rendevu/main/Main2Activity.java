@@ -593,7 +593,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
                 final GoogleMap mMap = googleMap;
                 final Map<String,Marker> markers = new HashMap();
-                //mMap.setMyLocationEnabled(true);
+                mMap.setMyLocationEnabled(true);
 
 
 
