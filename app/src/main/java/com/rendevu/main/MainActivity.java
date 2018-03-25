@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
                 if (auth.getCurrentUser() != null) {
-                    Toast.makeText(this, "User: "+auth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Welcome Back  "+auth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
                   startActivity(new Intent(this, Main2Activity.class));
                   finish();
               }
