@@ -3,10 +3,13 @@ package com.rendevu.main;
     Josh Davenport
  */
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
+
+import android.os.Handler;
 
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -15,6 +18,8 @@ import java.util.NoSuchElementException;
 public class MainActivity extends Activity {
 
     Intent i=null;
+
+    final String TAG = this.getClass().getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +72,40 @@ public class MainActivity extends Activity {
 
 
     /*
+    * Josh
     *
-    * Back button minimizes home screen
+    * User asked to press back button twice
+    * to completely shutdown app
     * */
+    boolean twice;
     @Override
     public void onBackPressed() {
         // Add the Back key handler here.
-        this.moveTaskToBack(true);
+
+        Log.d(TAG, "click");
+
+        if(twice){
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+            System.exit(0);
+        }
+
+        twice = true;
+        Log.d(TAG, "twice: " + twice);
+
+        Toast.makeText(getApplicationContext(), "Press BACK again to exit...", Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                twice = false;
+                Log.d(TAG, "twice: " + twice);
+            }
+        }, 3000);
+
+        //this.moveTaskToBack(true);
     }
 
 
