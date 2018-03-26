@@ -252,17 +252,34 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
      * Josh
      *
      * When logout button is pressed,
-     * user is sent back to the main screen.
+     * user is signed out of app, and sent back to the home screen.
      * */
     public void onLogoutClick(View vu) {
         try {
+            FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(Main2Activity.this, MainActivity.class);
             startActivity(intent);
             finish();  //closes current activity before moving to the next.
             Toast.makeText(getApplicationContext(), "You Are Now Logged Out......Goodbye", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Logout error", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    /*
+    * Josh
+    *   Back button when already logged in will minimize the app.
+    * */
+    @Override
+    public void onBackPressed() {
+        // Add the Back key handler here.
+        this.moveTaskToBack(true);
+        /*FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(Main2Activity.this, MainActivity.class);
+        startActivity(intent);
+        finish();*/
     }
 
     /**
