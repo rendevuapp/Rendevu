@@ -28,6 +28,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginRight="7dp"
                 android:layout_marginTop="8dp"
+                android:onClick="onLogoutClick"
                 android:text="Logout"
                 android:textSize="8sp"
                 app:layout_constraintBottom_toBottomOf="parent"
