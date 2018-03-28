@@ -353,7 +353,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
      *
      * */
 
-    public void onClick(View view) {
+    /*public void onClick(View view) {
         // close existing dialog fragments
         try {
             android.app.FragmentManager manager = getFragmentManager();
@@ -367,16 +367,16 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                     editNameDialog.show(manager, "fragment_edit_name");
                     break;
 
-                //generic alert fragment
-                case R.id.showAlertDialogFragment:
+                //generic alert fragment <- NOW THE LOGOUT BUTTON
+                *//*case R.id.showAlertDialogFragment:
                     MyAlertDialogFragment alertDialogFragment = new MyAlertDialogFragment();
                     alertDialogFragment.show(manager, "fragment_edit_name");
-                    break;
+                    break;*//*
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     /**
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE CONTACT TAB.
@@ -912,7 +912,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE SETTINGS TAB.
      *  Alexander Mann
      */
-    public static class SettingsTabFragment extends Fragment {
+    /*public static class SettingsTabFragment extends Fragment {
 
         public SettingsTabFragment() {
         }
@@ -929,7 +929,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
             return rootView;
         }
 
-    }
+    }*/
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -949,8 +949,8 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                         return new ContactTabFragment();
                     case 1:
                         return new MainScreenTabFragment();
-                    case 2:
-                        return new SettingsTabFragment();
+                    /*case 2:
+                        return new SettingsTabFragment();*/
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -961,7 +961,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
 
         @Override
@@ -972,8 +972,8 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                         return "Contacts";
                     case 1:
                         return "Main";
-                    case 2:
-                        return "Settings";
+                    /*case 2:
+                        return "Settings";*/
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -9,14 +9,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/showAlertDialogFragment"
-        android:layout_width="131dp"
+    <Button
+        android:id="@+id/logoutBtn"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:onClick="onClick"
-        android:visibility="visible"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:fontFamily="casual"
+        android:onClick="onLogoutClick"
+        android:text="LOGOUT"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="16dp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/showCustomFragment"
