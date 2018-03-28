@@ -10,7 +10,7 @@ package com.rendevu.main;
 public class User {
 
     private String fullname, username,
-                   email, dob;
+                   email, dob, avail;
     private int userPhone;
 
     public User(){}
@@ -39,6 +39,16 @@ public class User {
         try {
             this.fullname = fullname;
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getAvail(){return avail;}
+
+    public void setAvail(){
+        try{
+            this.avail = avail;
+        }catch (Exception e){
             e.printStackTrace();
         }
     }

@@ -1,8 +1,8 @@
 package com.rendevu.main;
-/*
-    Ricardo Cantu
-    This class holds the configurations for the tab view.
-    This implements each of the three fragment.
+/**
+ *   Ricardo Cantu
+ *  This class holds the configurations for the tab view.
+ *  This implements each of the three fragment.
  */
 
 import android.*;
@@ -40,6 +40,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -48,6 +49,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 //import com.google.android.gms.awareness.snapshot.LocationResult;
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -80,6 +84,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -87,13 +92,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Queue;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 //import javax.xml.crypto.Data;
 
 
-public class Main2Activity extends AppCompatActivity implements MyDialogFragment.UserNameListener, ActivityCompat.OnRequestPermissionsResultCallback {
+public class Main2Activity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final int PERMISSION_REQUEST_LOCATION = 34;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -106,15 +112,12 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
     /**
      *
      *referencing firebase for data storage
-     * */
+     *
+     */
     private FirebaseDatabase mFireBaseDatabase;
-
     public static final String TAG = Main2Activity.class.getSimpleName();
-
     private static final int REQUEST_INVITE = 0;  //used for sending invites
-
     private static GoogleApiClient mGoogleApiClient;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,28 +155,24 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         super.onStart();
 
     }
-
-
-
     @Override
     protected void onStop() {
         super.onStop();
     }
-
-    @Override
-    public void onFinishUserDialog(String addedName, String addedNum) {
-        /*
-        * Contact name and Phone number added in dialog are passed here
-        * to be inserted into firebase.
-        * */
-
-        try {
-            Toast.makeText(this, "ADDED: " + addedName, Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+/**
+ *  @Override
+ *  public void onFinishUserDialog(String addedName) {
+ *
+ *      //Contact name and Phone number added in dialog are passed here
+ *      //to be inserted into firebase.
+ *
+ *      try {
+ *          Toast.makeText(this, "ADDED: " + addedName, Toast.LENGTH_SHORT).show();
+ *      } catch (Exception e) {
+ *          e.printStackTrace();
+ *      }
+ *  }
+ */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -184,7 +183,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         }
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -201,7 +199,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         }
         return super.onOptionsItemSelected(item);
     }
-
     /**
      * Josh
      * Handler for sending invitation when send invite
@@ -221,7 +218,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
             e.printStackTrace();
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
@@ -247,7 +243,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
             e.printStackTrace();
         }
     }
-
     /**
      * Josh
      *
@@ -264,14 +259,12 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
             e.printStackTrace();
         }
     }
-
     /**
      * Josh
      * Controls for the pop-up dialog fragment,
      * could probably be useful for something else
      *
      * */
-
     public void onClick(View view) {
         // close existing dialog fragments
         try {
@@ -281,7 +274,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                 manager.beginTransaction().remove(frag).commit();
             }
             switch (view.getId()) {
-                case R.id.showCustomFragment:
+                case R.id.addContactActivityButton:
                     MyDialogFragment editNameDialog = new MyDialogFragment();
                     editNameDialog.show(manager, "fragment_edit_name");
                     break;
@@ -296,14 +289,17 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
             e.printStackTrace();
         }
     }
-
     /**
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE CONTACT TAB.
      *  Ricardo Cantu
      */
     public static class ContactTabFragment extends Fragment {
         FirebaseDatabase database;
-        DatabaseReference contRef;
+        DatabaseReference databaseReference;
+
+        RecyclerView recyclerView;
+        FirebaseRecyclerAdapter<User, UserHolder> adapter;
+
         private List<User> list;
 
         public ContactTabFragment() {
@@ -312,43 +308,85 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            database = FirebaseDatabase.getInstance();
-            contRef = database.getReference("User");
 
-            contRef.addValueEventListener(new ValueEventListener() {
+            //innDatabaseQuarryRef.orderByChild("InnerCircleMembers").
+            //contRef = database.getReference("User");
+            //contRef.addValueEventListener(new ValueEventListener() {
+            //    @Override
+            //    public void onDataChange(DataSnapshot dataSnapshot) {
+            //        list = new ArrayList<>();
+            //        for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+            //            User value = dataSnapshot1.getValue(User.class);
+            //            User fire = new User();
+            //            String fullname = value.getFullName();
+            //            String dob = value.getDOB();
+            //            fire.setFullName(fullname);
+            //            fire.setDOB(dob);
+            //            list.add(fire);
+            //        }
+            //    }
+            //    @Override
+            //    public void onCancelled(DatabaseError databaseError) {
+            //        Log.w("Error", "Failed to read Value.", databaseError.toException());
+            //    }
+            //});
+        }
+
+        @Override
+        public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+            final View rootView = inflater.inflate(R.layout.contact_tab, container, false);
+
+
+            database = FirebaseDatabase.getInstance();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String uid = user.getUid();
+            databaseReference = database.getReference().child("UserData").child(uid).child("CircleMembers");
+            Query query = databaseReference.orderByKey();
+
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+            recyclerView.setLayoutManager(linearLayoutManager);
+
+            FirebaseRecyclerOptions recyclerOptions = new FirebaseRecyclerOptions.Builder<User>().setQuery(query, User.class).build();
+
+            adapter = new FirebaseRecyclerAdapter<User, UserHolder>(recyclerOptions){
+
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    list = new ArrayList<>();
-                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                        User value = dataSnapshot1.getValue(User.class);
-                        User fire = new User();
-                        String fullname = value.getFullName();
-                        String dob = value.getDOB();
-                        fire.setFullName(fullname);
-                        fire.setDOB(dob);
-                        list.add(fire);
+                protected void onBindViewHolder(@NonNull UserHolder holder, int position, @NonNull User model) {
+                    holder.setName(model.getFullName());
+                    holder.setDOB(model.getDOB());
+                    holder.setAvail(model.getAvail());
+
+                    String avail = holder.setAvail(model.getAvail());
+
+                    if(avail.equals("true")){
+                      holder.setAvail("Available");
+                    }
+                    else if(avail.equals("false")) {
+                        holder.setAvail("Not Available");
                     }
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.w("Error", "Failed to read Value.", databaseError.toException());
+                public UserHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item,parent, false);
+                    return new UserHolder(view);
                 }
-            });
+            };
+            recyclerView.setAdapter(adapter);
+            return rootView;
+        }
+        @Override
+        public void onStart() {
+            super.onStart();
+            adapter.startListening();
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.contact_tab, container, false);
-            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-            recyclerView.setHasFixedSize(true);
-
-            cardAdapter adapter = new cardAdapter(list);
-            recyclerView.setAdapter(adapter);
-
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(linearLayoutManager);
-            return rootView;
+        public void onStop() {
+            super.onStop();
+            adapter.stopListening();
         }
     }
 
@@ -595,21 +633,40 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                 final Map<String,Marker> markers = new HashMap();
                 mMap.setMyLocationEnabled(true);
 
-
-
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 mMap.getUiSettings().setZoomControlsEnabled(true);
 
                 rDatabase.addChildEventListener(new ChildEventListener() {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    String uid = user.getUid();
+                    int isInCircle = 0;
+                    String circle;
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         String available = dataSnapshot.child("avail").getValue(String.class);
                         MarkerOptions markerOptions = new MarkerOptions();
 
-                        if(available.equals("true")) {
+                        String key = dataSnapshot.getKey();
+
+                        rDatabase.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                circle = dataSnapshot.child("Circle").getValue(String.class);
+                                isInCircle = 1;
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        if(available.equals("true") && isInCircle == 1 ) {
                             String lat = dataSnapshot.child("lat").getValue(String.class);
                             String lng = dataSnapshot.child("lng").getValue(String.class);
-                            String displayName = dataSnapshot.child("displayName").getValue(String.class);
+                            String displayName = dataSnapshot.child("fullname").getValue(String.class);
+                            String circle = dataSnapshot.child("Circle").getValue().toString();
                             Double dLat = Double.parseDouble(lat);
                             Double dLng = Double.parseDouble(lng);
 
@@ -617,7 +674,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
                             markerOptions.position(newLocation);
                             markerOptions.title(displayName);
-                            markerOptions.snippet(available);
+                            markerOptions.snippet(circle);
                             Marker mMarker = mMap.addMarker(markerOptions);
                             markers.put(dataSnapshot.getKey(), mMarker);
                         }
@@ -627,13 +684,30 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                         String available = dataSnapshot.child("avail").getValue(String.class);
                         MarkerOptions markerOptions = new MarkerOptions();
+
+                        String key = dataSnapshot.getKey();
+                        rDatabase = database.getReference().child("UserData").child(uid);
+
+                        rDatabase.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                circle = dataSnapshot.child("Circle").getValue().toString();
+                                isInCircle = 1;
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
                         if (markers.containsKey(dataSnapshot.getKey())) {
                             markers.get(dataSnapshot.getKey()).remove();
                         }
-                        if (available.equals("true")) {
+                        if (available.equals("true") && isInCircle == 1) {
                             String lat = dataSnapshot.child("lat").getValue(String.class);
                             String lng = dataSnapshot.child("lng").getValue(String.class);
-                            String displayName = dataSnapshot.child("displayName").getValue(String.class);
+                            String displayName = dataSnapshot.child("fullname").getValue(String.class);
                             Double dLat = Double.parseDouble(lat);
                             Double dLng = Double.parseDouble(lng);
 
@@ -641,8 +715,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
                             markerOptions.position(newLocation);
                             markerOptions.title(displayName);
-                            markerOptions.snippet(available);
-
+                            markerOptions.snippet(circle);
                             Marker mMarker = mMap.addMarker(markerOptions);
                             markers.put(dataSnapshot.getKey(), mMarker);
                         }
@@ -666,38 +739,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
                     }
                 });
-                //refreshButton.setOnClickListener(new View.OnClickListener() {
-                //    @Override
-                //    public void onClick(View view) {
-                //        rDatabase.addValueEventListener(new ValueEventListener() {
-                //            Marker mMarker;
-                //
-                //            @Override
-                //            public void onDataChange(DataSnapshot dataSnapshot) {
-                //                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                //                    String available = dataSnapshot1.child("avail").getValue(String.class);
-                //                    if(available.equals("true")) {
-                //                        String lat = dataSnapshot1.child("lat").getValue(String.class);
-                //                        String lng = dataSnapshot1.child("lng").getValue(String.class);
-                //                        String displayName = dataSnapshot1.child("displayName").getValue(String.class);
-                //                        Double dLat = Double.parseDouble(lat);
-                //                        Double dLng = Double.parseDouble(lng);
-                //
-                //                        LatLng newLocation = new LatLng(dLat, dLng);
-                //
-                //                        mMap.addMarker(new MarkerOptions().position(newLocation).title(displayName).snippet(available));
-                //                    }
-                //                }
-                //            }
-                //
-                //            @Override
-                //            public void onCancelled(DatabaseError databaseError) {
-                //                Log.w("Error", "Failed to read Value.", databaseError.toException());
-                //            }
-                //        });
-                //    }
-                //});
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -731,8 +772,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                            PERMISSION_REQUEST_LOCATION);
                }
         }
-
-
 
         @Override
         public void onResume() {
@@ -791,29 +830,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
     }
 
     /**
-     *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE SETTINGS TAB.
-     *  Alexander Mann
-     */
-    public static class SettingsTabFragment extends Fragment {
-
-        public SettingsTabFragment() {
-        }
-
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.settings_tab, container, false);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-            return rootView;
-        }
-
-    }
-
-    /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
@@ -831,8 +847,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                         return new ContactTabFragment();
                     case 1:
                         return new MainScreenTabFragment();
-                    case 2:
-                        return new SettingsTabFragment();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -843,7 +857,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
 
         @Override
@@ -854,8 +868,6 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                         return "Contacts";
                     case 1:
                         return "Main";
-                    case 2:
-                        return "Settings";
                 }
             } catch (Exception e) {
                 e.printStackTrace();
