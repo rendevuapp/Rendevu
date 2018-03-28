@@ -689,11 +689,14 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
                         rDatabase = database.getReference().child("UserData").child(uid);
 
                         rDatabase.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
+			    try{
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 circle = dataSnapshot.child("Circle").getValue().toString();
                                 isInCircle = 1;
                             }
+			    }
+			    catch(
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
