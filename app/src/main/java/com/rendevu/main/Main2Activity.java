@@ -67,6 +67,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -750,7 +751,6 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
                 rDatabase.addChildEventListener(new ChildEventListener() {
-
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     String uid = user.getUid();
                     int isInCircle = 0;
@@ -760,13 +760,26 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
                         String available = dataSnapshot.child("avail").getValue(String.class);
                         MarkerOptions markerOptions = new MarkerOptions();
 
-                        String key = dataSnapshot.getKey();
+                        final String key = dataSnapshot.getKey();
 
+                        //not needed, what was causing the crash has been removed.
+                        //if(dataSnapshot.hasChild("Circle"))
                         rDatabase.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                circle = dataSnapshot.child("Circle").getValue(String.class);
                                 isInCircle = 1;
+                                final DatabaseReference cirRef = rDatabase.child(uid);
+                                cirRef.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        circle = dataSnapshot.child("Circle").getValue(String.class);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
 
                             @Override
@@ -779,7 +792,7 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
                             String lat = dataSnapshot.child("lat").getValue(String.class);
                             String lng = dataSnapshot.child("lng").getValue(String.class);
                             String displayName = dataSnapshot.child("fullname").getValue(String.class);
-                            String circle = dataSnapshot.child("Circle").getValue().toString();
+                            String circle = dataSnapshot.child("Circle").getValue(String.class);
                             Double dLat = Double.parseDouble(lat);
                             Double dLng = Double.parseDouble(lng);
 
@@ -803,25 +816,34 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
             
 
 
-      //will test this area 
-//                      if(markers.containsValue(dataSnapshot.getKey())){
-//                          Marker marker = markers.get(dataSnapshot.getKey());
-//                          marker.remove();
-//                      }//removes previous marker
+      //  will test this area 
+                        if(markers.containsValue(dataSnapshot.getKey())){
+                            Marker marker = markers.get(dataSnapshot.getKey());
+                            marker.remove();
+                        }//removes previous marker
                               
                         String available = dataSnapshot.child("avail").getValue(String.class);
                         MarkerOptions markerOptions = new MarkerOptions();
 
-                        String key = dataSnapshot.getKey();
-                        rDatabase = database.getReference().child("UserData").child(uid);
-
-                        if(dataSnapshot.hasChild("Circle"))
+                        final String key = dataSnapshot.getKey();
+                        //not needed, what was causing the crash has been removed.
+                        //if(dataSnapshot.hasChild("Circle"))
                         rDatabase.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
-
-                                @Override
-                                public void onDataChange (DataSnapshot dataSnapshot){
-                                circle = dataSnapshot.child("Circle").getValue().toString();
+                            @Override
+                            public void onDataChange (DataSnapshot dataSnapshot){
                                 isInCircle = 1;
+                                final DatabaseReference cirRef = rDatabase.child(uid);
+                                cirRef.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        circle = dataSnapshot.child("Circle").getValue(String.class);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
 
                             @Override
