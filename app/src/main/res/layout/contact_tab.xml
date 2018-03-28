@@ -9,12 +9,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.FloatingActionButton
+    <Button
         android:id="@+id/showAlertDialogFragment"
-        android:layout_width="131dp"
+        android:layout_width="111dp"
+        android:text="Logout"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:onClick="onClick"
+        android:onClick="onLogoutClick"
         android:visibility="visible"
         app:srcCompat="@android:drawable/ic_input_add" />
 
