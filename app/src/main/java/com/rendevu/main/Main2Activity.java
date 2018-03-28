@@ -682,15 +682,19 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+
                         String available = dataSnapshot.child("avail").getValue(String.class);
                         MarkerOptions markerOptions = new MarkerOptions();
 
                         String key = dataSnapshot.getKey();
                         rDatabase = database.getReference().child("UserData").child(uid);
 
+                        if(dataSnapshot.hasChild("Circle"))
                         rDatabase.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                @Override
+                                public void onDataChange (DataSnapshot dataSnapshot){
                                 circle = dataSnapshot.child("Circle").getValue().toString();
                                 isInCircle = 1;
                             }
@@ -700,7 +704,6 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
 
                             }
                         });
-
                         if (markers.containsKey(dataSnapshot.getKey())) {
                             markers.get(dataSnapshot.getKey()).remove();
                         }
