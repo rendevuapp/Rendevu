@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.NoSuchElementException;
+
 public class Login extends AppCompatActivity {
 
     private EditText loginEmail, loginPass;
@@ -60,6 +62,8 @@ public class Login extends AppCompatActivity {
         /*
         * Josh
         * adding try/catch to navigation and button actions
+        *
+        * -> Improved try/catch
         * */
         try {
             //to go back to the register page
@@ -70,8 +74,12 @@ public class Login extends AppCompatActivity {
                     finish(); //closes current activity before moving to the next.
                 }
             });
+        } catch (NoSuchElementException e) {
+            Toast.makeText(getApplicationContext(), "Cannot go directly to registration.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(Login.this, MainActivity.class));
+            finish(); //closes current activity before moving to the next.
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Error switching pages", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "General Exception", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
@@ -164,128 +172,25 @@ public class Login extends AppCompatActivity {
         }
     }
 
+
+    /*
+    * Josh
+    *   Back button from login or register closes firebase,
+    *   and takes you back to home screen.
+    *
+    * */
+    @Override
+    public void onBackPressed() {
+        // Add the Back key handler here.
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(Login.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*import android.app.Activity;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.text.InputType;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-public class Login extends Activity{
-    Intent i=null;
-    ImageView im=null;
-    EditText loginEmail, loginPass;
-    boolean flag=false;
-    SQLiteDatabase db=null;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
-        im=(ImageView)findViewById(R.id.show_hide2);
-        loginEmail=(EditText)findViewById(R.id.loginEmail);
-        loginPass=(EditText)findViewById(R.id.password2);
-        db=openOrCreateDatabase("mydb", MODE_PRIVATE, null);
-        //	db.execSQL("create table if not exists login(name varchar,mobile_no varchar,email_id varchar,password varchar,flag varchar)");
-
-        im.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-
-                if(flag==false)
-                {
-                    im.setImageResource(R.drawable.hide);
-                    loginPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    flag=true;
-                }
-                else
-                {
-                    im.setImageResource(R.drawable.show);
-                    tv4.setInputType(129);
-                    flag=false;
-
-                }
-            }
-        });
-    }
-
-    public void action(View v)
-    {
-        switch(v.getId())
-        {
-            case R.id.signin2:
-                i=new Intent(this,Register.class);
-                startActivityForResult(i, 500);
-                overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
-                finish();
-                break;
-            case R.id.start:
-                String username=tv6.getText().toString();
-                String password=tv4.getText().toString();
-                if(username==null||username==""||username.length()<3)
-                {
-                    show("Please Enter Correct Username.");
-                }
-                else if(password==null||password==""||password.length()<6)
-                {
-                    show("Please Enter Correct Password.");
-                }
-                else
-                {
-                    Cursor c=db.rawQuery("select * from login where username='"+username+"' and password='"+password+"'",null);
-                    c.moveToFirst();
-                    if(c.getCount()>0)
-                    {
-                        i=new Intent(this,Main2Activity.class);
-                        startActivityForResult(i,500);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                        db.close();
-                        finish();
-                    }
-                    else
-                        show("Wrong Username or Password.");
-
-                }
-                break;
-        }
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-    }
-
-    public void show(String str)
-    {
-        Toast.makeText(this, str, Toast.LENGTH_LONG).show();
-    }
-
-}*/

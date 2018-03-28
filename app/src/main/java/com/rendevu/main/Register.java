@@ -3,6 +3,7 @@ package com.rendevu.main;
     Josh Davenport
  */
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -62,7 +63,6 @@ public class Register extends AppCompatActivity {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             myDatabaseReference=FirebaseDatabase.getInstance().getReference("User");
             userDatRef = FirebaseDatabase.getInstance().getReference("UserData");
-            //userId= myDatabaseReference.push().getKey();
         } catch (Exception e) {
 
             Toast.makeText(getApplicationContext(), "Firebase error", Toast.LENGTH_SHORT).show();
@@ -105,6 +105,7 @@ public class Register extends AppCompatActivity {
                             }, mYear, mMonth, mDay);  //Use month/day/year to calculate age
                     datePickerDialog.show();
                     //}
+
                 }
             });
         } catch (Exception e) {
@@ -160,7 +161,7 @@ public class Register extends AppCompatActivity {
                         return;
                     }
 
-                    progressBar.setVisibility(View.VISIBLE);
+                    //progressBar.setVisibility(View.VISIBLE);
 
                     /*
                     * create user and store data in authorization database
@@ -170,7 +171,7 @@ public class Register extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     Toast.makeText(Register.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
-                                    progressBar.setVisibility(View.GONE);
+                                    //progressBar.setVisibility(View.GONE);
 
                                     // If sign in fails, display a message to the user. If sign in succeeds
                                     // the auth state listener will be notified and logic to handle the
@@ -180,6 +181,7 @@ public class Register extends AppCompatActivity {
                                                 Toast.LENGTH_SHORT).show();
                                     } else {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
+                                        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         String uid = user.getUid();
                                         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -189,16 +191,16 @@ public class Register extends AppCompatActivity {
                                                 ((EditText)findViewById(R.id.email_id)).getText().toString(),
                                                 ((EditText)findViewById(R.id.dateOfBirth)).getText().toString(),
                                                 Integer.parseInt(((EditText)findViewById(R.id.userPhone)).getText().toString()));
-                                        finish();
+                                        //finish();
                                     }
                                 }
                             });
 
-
-
-
+                    //finish();
                 }
+
             });
+
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "Registration failure", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -224,6 +226,23 @@ public class Register extends AppCompatActivity {
         super.onResume();
 		progressBar.setVisibility(View.GONE);
     }
+
+
+    /*
+    * Josh
+    *   Back button from login or register closes firebase,
+    *   and takes you back to home screen.
+    *
+    * */
+    @Override
+    public void onBackPressed() {
+        // Add the Back key handler here.
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(Register.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

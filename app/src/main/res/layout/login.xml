@@ -49,17 +49,16 @@
         android:id="@+id/signin2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#0700"
-        android:textColor="#DAA520"
-        android:text="Enter login info"
-        android:onClick="action"
-        android:textSize="25sp"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="53dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="53dp"
+        android:background="#0700"
+        android:text="Enter login info"
+        android:textColor="#DAA520"
+        android:textSize="25sp" />
 
     <Button
         android:id="@+id/btnLogin"
