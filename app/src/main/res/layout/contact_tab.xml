@@ -19,12 +19,12 @@
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <Button
-        android:id="@+id/showCustomFragment"
+        android:id="@+id/addContactActivityButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="monospace"
         android:onClick="onClick"
-        android:text="ADD CONTACT"
+        android:text="@string/add_contact"
         android:textSize="18sp" />
 
     <Button
@@ -32,7 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onInviteClicked"
-        android:text="Send Invites"
         android:textSize="16sp" />
 
     <android.support.v7.widget.RecyclerView

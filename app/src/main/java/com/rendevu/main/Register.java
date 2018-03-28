@@ -182,7 +182,9 @@ public class Register extends AppCompatActivity {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         String uid = user.getUid();
-                                        addUser(uid,((EditText)findViewById(R.id.fullname)).getText().toString(),
+                                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                        String CircleCode = database.getReference().push().getKey();
+                                        addUser(uid, CircleCode, ((EditText)findViewById(R.id.fullname)).getText().toString(),
                                                 ((EditText)findViewById(R.id.username)).getText().toString(),
                                                 ((EditText)findViewById(R.id.email_id)).getText().toString(),
                                                 ((EditText)findViewById(R.id.dateOfBirth)).getText().toString(),
@@ -204,15 +206,17 @@ public class Register extends AppCompatActivity {
     }
 
 
-    private void addUser(String uid, String fullname, String username,
+    private void addUser(String uid, String CircleCode, String fullname, String username,
                             String email, String dob, int phoneNumber){
         String userId = uid;
+        String code = CircleCode;
         User user = new User(fullname, username, email, dob, phoneNumber);
         myDatabaseReference.child(userId).setValue(user);
-        userDatRef.child(userId).child("displayName").setValue(fullname);
+        userDatRef.child(userId).child("fullname").setValue(fullname);
         userDatRef.child(userId).child("avail").setValue("false");
         userDatRef.child(userId).child("lat").setValue("0");
         userDatRef.child(userId).child("lng").setValue("0");
+        userDatRef.child(userId).child("CircleCode").setValue(code);
     }
 
     @Override

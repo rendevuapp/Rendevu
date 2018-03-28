@@ -7,19 +7,20 @@ Josh
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/edit_name"
     android:layout_width="match_parent"
-    android:layout_height="450dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:alpha="20"
-    android:background="?attr/colorAccent">
+    android:background="?attr/colorBackgroundFloating"
+    tools:layout_editor_absoluteY="164dp">
 
     <TextView
         android:id="@+id/lblAddContact"
-        android:layout_width="0dp"
+        android:layout_width="368dp"
         android:layout_height="41dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Enter New Contact Info"
+        android:layout_marginTop="8dp"
+        android:text="Enter New Contact Code"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textSize="20sp"
@@ -28,69 +29,75 @@ Josh
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/addName"
+        android:id="@+id/addCode"
         style="@style/Widget.AppCompat.EditText"
-        android:layout_width="0dp"
+        android:layout_width="368dp"
         android:layout_height="62dp"
-        android:layout_marginBottom="20dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:cursorVisible="true"
-        android:hint="Name"
+        android:hint="Circle Code"
         android:imeOptions="actionDone"
         android:inputType="textPersonName"
         android:singleLine="true"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/addNum"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblAddContact" />
 
-    <EditText
-        android:id="@+id/addNum"
-        style="@style/Widget.AppCompat.EditText"
-        android:layout_width="0dp"
-        android:layout_height="67dp"
-        android:layout_marginBottom="28dp"
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="368dp"
+        android:layout_height="70dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:cursorVisible="true"
-        android:ems="10"
-        android:hint="Phone Number"
-        android:inputType="phone"
-        android:singleLine="true"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/confcontact"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addCode">
+
+        <RadioButton
+            android:id="@+id/radioButton_innerCircle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/innerCircle" />
+
+        <RadioButton
+            android:id="@+id/radioButton_outerCircle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="@string/outerCircle" />
+
+    </RadioGroup>
 
     <Button
-        android:id="@+id/confcontact"
+        android:id="@+id/cancelButton"
+        android:layout_width="123dp"
+        android:layout_height="51dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:text="CANCEL"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <Button
+        android:id="@+id/addContactButton"
         android:layout_width="126dp"
         android:layout_height="52dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="104dp"
+        android:layout_marginTop="8dp"
         android:text="ADD CONTACT"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.764"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button2" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="123dp"
-        android:layout_height="51dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:text="CANCEL"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
 </android.support.constraint.ConstraintLayout>
 
