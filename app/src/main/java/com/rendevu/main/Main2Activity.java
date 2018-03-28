@@ -115,6 +115,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
     private static GoogleApiClient mGoogleApiClient;
 
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,15 +258,27 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
     public void onLogoutClick(View vu) {
         try {
             FirebaseAuth.getInstance().signOut();
+            //auth.signOut();
             Intent intent = new Intent(Main2Activity.this, MainActivity.class);
             startActivity(intent);
             finish();  //closes current activity before moving to the next.
+
+
             Toast.makeText(getApplicationContext(), "You Are Now Logged Out......Goodbye", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Logout error", Toast.LENGTH_SHORT).show();
         }
     }
+
+    /*private void signOut() {
+        mAuth.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // ...
+                    }
+                });
+    }*/
 
 
     /*
@@ -368,6 +381,26 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
             return rootView;
         }
     }
+
+
+
+
+
+    /*
+    *
+    * Notes for Map:
+    * -coordinates update when availability button is pressed
+    * -location marker needs to refresh with change in user location(blue dot)
+    * -old location marker needs to be deleted whenever a new marker is created,
+    *       old marker is currently deleted when unavailable button is pressed.
+    *
+    * -whenever a friend sets them self as available, the other friend's
+    *       screen snaps to their location
+    *
+    * -need to set status as unavailable when user logs out to remove marker.
+    *           *update* user's marker removed on logout, but persists on friend's
+    *           screen until they log out.
+    * */
 
     /**
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE MAIN SCREEN TAB.
@@ -616,6 +649,7 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 mMap.getUiSettings().setZoomControlsEnabled(true);
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
                 rDatabase.addChildEventListener(new ChildEventListener() {
                     @Override
@@ -632,16 +666,25 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
                             LatLng newLocation = new LatLng(dLat, dLng);
 
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+
                             markerOptions.position(newLocation);
                             markerOptions.title(displayName);
                             markerOptions.snippet(available);
                             Marker mMarker = mMap.addMarker(markerOptions);
                             markers.put(dataSnapshot.getKey(), mMarker);
-                        }
+                        }else if(markers.containsValue(dataSnapshot.getKey())){
+                            Marker marker = markers.get(dataSnapshot.getKey());
+                            marker.remove();
+                        }//added to remove marker if unavailable
                     }
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        if(markers.containsValue(dataSnapshot.getKey())){
+                            Marker marker = markers.get(dataSnapshot.getKey());
+                            marker.remove();
+                        }//removes previous marker
                         String available = dataSnapshot.child("avail").getValue(String.class);
                         MarkerOptions markerOptions = new MarkerOptions();
                         if (markers.containsKey(dataSnapshot.getKey())) {
@@ -656,13 +699,18 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
 
                             LatLng newLocation = new LatLng(dLat, dLng);
 
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+
                             markerOptions.position(newLocation);
                             markerOptions.title(displayName);
                             markerOptions.snippet(available);
 
                             Marker mMarker = mMap.addMarker(markerOptions);
                             markers.put(dataSnapshot.getKey(), mMarker);
-                        }
+                        }else if(markers.containsValue(dataSnapshot.getKey())){
+                            Marker marker = markers.get(dataSnapshot.getKey());
+                            marker.remove();
+                        }//added to remove marker if unavailable
                     }
 
                     @Override

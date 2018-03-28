@@ -60,7 +60,7 @@ public class Register extends AppCompatActivity {
              * Adding persistence for data stored in firebase.
              * also gets unique id for current user
              * */
-            //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             myDatabaseReference=FirebaseDatabase.getInstance().getReference("User");
             userDatRef = FirebaseDatabase.getInstance().getReference("UserData");
         } catch (Exception e) {
@@ -161,7 +161,7 @@ public class Register extends AppCompatActivity {
                         return;
                     }
 
-                    progressBar.setVisibility(View.VISIBLE);
+                    //progressBar.setVisibility(View.VISIBLE);
 
                     /*
                     * create user and store data in authorization database
@@ -171,7 +171,7 @@ public class Register extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     Toast.makeText(Register.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
-                                    progressBar.setVisibility(View.GONE);
+                                    //progressBar.setVisibility(View.GONE);
 
                                     // If sign in fails, display a message to the user. If sign in succeeds
                                     // the auth state listener will be notified and logic to handle the
@@ -181,6 +181,7 @@ public class Register extends AppCompatActivity {
                                                 Toast.LENGTH_SHORT).show();
                                     } else {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
+                                        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         String uid = user.getUid();
                                         addUser(uid,((EditText)findViewById(R.id.fullname)).getText().toString(),
@@ -188,12 +189,12 @@ public class Register extends AppCompatActivity {
                                                 ((EditText)findViewById(R.id.email_id)).getText().toString(),
                                                 ((EditText)findViewById(R.id.dateOfBirth)).getText().toString(),
                                                 Integer.parseInt(((EditText)findViewById(R.id.userPhone)).getText().toString()));
-                                        finish();
+                                        //finish();
                                     }
                                 }
                             });
 
-                    finish();
+                    //finish();
                 }
 
             });
