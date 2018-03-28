@@ -1,4 +1,8 @@
 package com.rendevu.main;
+/**
+*
+* Class for handling exceptions for the Logout method
+* */
 
 public class ExceptionClass extends Exception {
 
