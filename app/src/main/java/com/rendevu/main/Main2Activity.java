@@ -83,10 +83,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.lang.NullPointerException;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
@@ -95,6 +97,11 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 
 public class Main2Activity extends AppCompatActivity implements MyDialogFragment.UserNameListener, ActivityCompat.OnRequestPermissionsResultCallback {
     private static final int PERMISSION_REQUEST_LOCATION = 34;
+
+
+    String s = "Null pointer exception for user.getUid()";
+
+
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -249,36 +256,77 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         }
     }
 
+
+
     /**
      * Josh
+     *****************
+     * LOGOUT METHOD *
+     *****************
+     * (uses ExceptionClass)
      *
      * When logout button is pressed,
      * user is signed out of app, and sent back to the home screen.
+     *
+     * ExceptionClass with try/catch
+     * handle exceptions thrown from trying to determine
+     * if a valid user exists to log out of the app.
      * */
-    public void onLogoutClick(View vu) {
+    public void onLogoutClick(View vu) throws ExceptionClass{
         try {
-            FirebaseAuth.getInstance().signOut();
-            //auth.signOut();
+            isUserLoggedIn(); //first check if this user is actually signed in.
+
+            FirebaseAuth.getInstance().signOut();  //also removes Firebase persistence until next login.
+
+
+            //Toast.makeText(getApplicationContext(), "You Are Now Logged Out......Goodbye", Toast.LENGTH_SHORT).show();
+        } catch (ExceptionClass e) {
+            processError(e);
+            //e.printStackTrace();
+            //Toast.makeText(getApplicationContext(), "Logout error", Toast.LENGTH_SHORT).show();
+        }finally{
+            //executes whether a current user exists or not.
             Intent intent = new Intent(Main2Activity.this, MainActivity.class);
             startActivity(intent);
-            finish();  //closes current activity before moving to the next.
-
-
-            Toast.makeText(getApplicationContext(), "You Are Now Logged Out......Goodbye", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Logout error", Toast.LENGTH_SHORT).show();
+            finish();  //disables back button from navigating back into the app.
         }
     }
 
-    /*private void signOut() {
-        mAuth.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // ...
-                    }
-                });
-    }*/
+    private void isUserLoggedIn() throws ExceptionClass{
+        try{
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                Toast.makeText(getApplicationContext(), "Logging out...", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "No Users to Logout!", Toast.LENGTH_SHORT).show();
+            }
+        }catch(IllegalStateException e){
+
+            throw new ExceptionClass(e.getMessage(),"ILLEGAL_STATE_EXCEPTION");
+        }catch(NullPointerException e){
+
+            throw new ExceptionClass(e.getMessage(),"NULL_POINTER_EXCEPTION");
+        }
+    }
+
+    private static void processError(ExceptionClass e) throws ExceptionClass {
+
+        switch(e.getErrorCode()){
+            case "ILLEGAL_STATE_EXCEPTION":
+                System.out.println("State of current user cannot be determined.");
+                throw e;
+            case "NULL_POINTER_EXCEPTION":
+                System.out.println("No users are currently logged in.");
+                break;
+            default:
+                System.out.println("Unknown exception occurred, writing to log."+e.getMessage());
+                e.printStackTrace();
+        }
+    }
+    /********************
+     *END LOGOUT METHOD**
+     ********************/
+
 
 
     /*
@@ -289,11 +337,14 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
     public void onBackPressed() {
         // Add the Back key handler here.
         this.moveTaskToBack(true);
-        /*FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(Main2Activity.this, MainActivity.class);
-        startActivity(intent);
-        finish();*/
     }
+
+
+
+
+
+
+
 
     /**
      * Josh
@@ -429,8 +480,9 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
         public MainScreenTabFragment() {
         }
 
+
         @Override
-        public void onCreate(Bundle savedInstanceState) {
+        public void onCreate(Bundle savedInstanceState) throws NullPointerException {
             try {
 
                 mFusedLocationClient = LocationServices.getFusedLocationProviderClient(super.getActivity());
@@ -447,7 +499,8 @@ public class Main2Activity extends AppCompatActivity implements MyDialogFragment
                 }else{
                     getLastLocation();
                 }
-            } catch (Exception e) {
+            } catch (NullPointerException e) {
+                System.out.print("method: getUid is trying to reference a null pointer.");
                 e.printStackTrace();
             }
         }
