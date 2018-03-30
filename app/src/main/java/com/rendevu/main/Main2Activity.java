@@ -4,7 +4,7 @@ package com.rendevu.main;
  *  This class holds the configurations for the tab view.
  *  This implements each of the three fragment.
  */
-
+//i put some stuff for testing
 import android.*;
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -343,13 +343,6 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
     }
 
 
-
-
-
-
-
-
-                              
     /**
      * Josh
      * Controls for the pop-up dialog fragment,
