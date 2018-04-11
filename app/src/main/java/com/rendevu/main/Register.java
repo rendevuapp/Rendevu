@@ -7,7 +7,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
@@ -33,12 +32,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 
 
-public class Register extends AppCompatActivity {
-    private static final String TAG = "Register";
+public class Register extends UncaughtExceptionActivity {
+    //private static final String TAG = "Register";
+
 
     private DatabaseReference myDatabaseReference, userDatRef;
 
-    private FirebaseDatabase mFirebaseInstance;
+    //private FirebaseDatabase mFirebaseInstance;
 
     private String userId;
 
@@ -73,10 +73,10 @@ public class Register extends AppCompatActivity {
              * Adding persistence for data stored in firebase.
              * also gets unique id for current user
              * */
-            //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-            mFirebaseInstance = FirebaseDatabase.getInstance();
-            //mFirebaseInstance.setPersistenceEnabled(true);
+            /*mFirebaseInstance = FirebaseDatabase.getInstance();
+            mFirebaseInstance.setPersistenceEnabled(true);*/
 
             myDatabaseReference=FirebaseDatabase.getInstance().getReference("User");
             userDatRef = FirebaseDatabase.getInstance().getReference("UserData");
@@ -173,12 +173,6 @@ public class Register extends AppCompatActivity {
                         return;
                     }
 
-                    /*if (password.length() < 6) {
-                        Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }*/
-                    //progressBar.setVisibility(View.VISIBLE);
-
                     /*
                     * create user and store data in authorization database
                     * */
@@ -187,7 +181,6 @@ public class Register extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     Toast.makeText(Register.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
-                                    //progressBar.setVisibility(View.GONE);
 
                                     // If registration fails, display exception handler message to the user. If registration succeeds
                                     // the auth state listener will be notified and logic to handle the
@@ -223,7 +216,7 @@ public class Register extends AppCompatActivity {
                                     } else {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
                                         //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-                                        mFirebaseInstance.setPersistenceEnabled(true);
+                                        //mFirebaseInstance.setPersistenceEnabled(true);
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         String uid = user.getUid();
                                         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -274,11 +267,12 @@ public class Register extends AppCompatActivity {
     * */
     @Override
     public void onBackPressed() {
+        throw new RuntimeException("this will cause a crash");
         // Add the Back key handler here.
-        FirebaseAuth.getInstance().signOut();
+        /*FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(Register.this, MainActivity.class);
         startActivity(intent);
-        finish();
+        finish();*/
     }
 
     @Override
