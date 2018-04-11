@@ -5,30 +5,22 @@ package com.rendevu.main;
  *  This implements each of the three fragment.
  */
 
-import android.*;
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Looper;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,45 +31,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-//import com.google.android.gms.awareness.snapshot.LocationResult;
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
-
-import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -88,16 +60,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Queue;
-import java.lang.NullPointerException;
 
-import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+//import com.google.android.gms.awareness.snapshot.LocationResult;
 
 //import javax.xml.crypto.Data;
 
@@ -106,9 +73,18 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
     private static final int PERMISSION_REQUEST_LOCATION = 34;
 
 
-    String s = "Null pointer exception for user.getUid()";
+    Button invite;
+    /**
+     * Trying to separate some of the onClick handlers
+     * */
+    /*private class inner extends InnerMainActivity_onClickHandlers{
+        public inner(Main2Activity mainActivity)
+        {
+            super(mainActivity);
+        }
+    };*/
 
-
+    private InvitationClass sendInvite;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -122,12 +98,12 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
      *referencing firebase for data storage
      *
      */
-    private FirebaseDatabase mFireBaseDatabase;
+    //private FirebaseDatabase mFireBaseDatabase;
     public static final String TAG = Main2Activity.class.getSimpleName();
-    private static final int REQUEST_INVITE = 0;  //used for sending invites
+    //private static final int REQUEST_INVITE = 0;  //used for sending invites
     private static GoogleApiClient mGoogleApiClient;
 
-    private FirebaseAuth auth;
+    //private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,8 +115,8 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
             // primary sections of the activity.
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
             setSupportActionBar(toolbar);
+
             mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
             // Set up the ViewPager with the sections adapter.
@@ -156,6 +132,28 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
                     .addOnConnectionFailedListener((GoogleApiClient.OnConnectionFailedListener) this)
                     .addApi(LocationServices.API)
                     .build();
+
+
+
+            /**
+            *
+            * Listener and Handler for send invite button
+            * */
+            invite = findViewById(R.id.sendInvites);
+
+            invite.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    InvitationClass Inv = new InvitationClass();
+                    try {
+                        Inv.onInviteClicked(v);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -163,7 +161,6 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
     @Override
     protected void onStart() {
         super.onStart();
-
     }
     @Override
     protected void onStop() {
@@ -215,7 +212,9 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
      * button is clicked.
      *
      * */
-    public void onInviteClicked(View v) {
+
+
+    /*public void onInviteClicked(View v) {
         try {
             Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
                     .setMessage(getString(R.string.invitation_message))
@@ -227,8 +226,8 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    @Override
+    }*/
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             super.onActivityResult(requestCode, resultCode, data);
@@ -252,7 +251,7 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
             
        
 
@@ -273,7 +272,10 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
      * handle exceptions thrown from trying to determine
      * if a valid user exists to log out of the app.
      * */
-    public void onLogoutClick(View vu) throws ExceptionClass{
+    /*public FirebaseAuthException(String errorCode, String message){
+
+    }*/
+    public void onLogoutClick(View vu) throws ExceptionClass, FirebaseAuthClass{
         try {
             isUserLoggedIn(); //first check if this user is actually signed in.
 
@@ -292,10 +294,8 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
             finish();  //disables back button from navigating back into the app.
         }
     }
-            
-       
 
-    private void isUserLoggedIn() throws ExceptionClass{
+    private void isUserLoggedIn() throws ExceptionClass, FirebaseAuthClass{
         try{
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
@@ -303,7 +303,10 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
             } else {
                 Toast.makeText(getApplicationContext(), "No Users to Logout!", Toast.LENGTH_SHORT).show();
             }
-        }catch(IllegalStateException e){
+        }/*catch (FirebaseAuthInvalidUserException e) {
+
+            throw new FirebaseAuthClass(e.getMessage(), "ERROR_USER_TOKEN_EXPIRED");
+        }*/catch (IllegalStateException e){
 
             throw new ExceptionClass(e.getMessage(),"ILLEGAL_STATE_EXCEPTION");
         }catch(NullPointerException e){
@@ -312,14 +315,17 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
         }
     }
 
-    private static void processError(ExceptionClass e) throws ExceptionClass {
+    private static void processError(ExceptionClass e) throws ExceptionClass, FirebaseAuthClass {
 
         switch(e.getErrorCode()){
+            case "NOT_SIGNED_IN_EXCEPTION":
+                System.out.println("The user is not currently signed in.");
+                throw e;
             case "ILLEGAL_STATE_EXCEPTION":
                 System.out.println("State of current user cannot be determined.");
                 throw e;
             case "NULL_POINTER_EXCEPTION":
-                System.out.println("No users are currently logged in.");
+                System.out.println("No value to be referenced.");
                 break;
             default:
                 System.out.println("Unknown exception occurred, writing to log."+e.getMessage());
