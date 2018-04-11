@@ -25,17 +25,15 @@
         android:layout_height="wrap_content"
         android:fontFamily="monospace"
         android:onClick="onClick"
-        android:text="Add Circle Codes"
+        android:text="@string/add_contact"
         android:textSize="18sp" />
 
     <Button
         android:id="@+id/sendInvites"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="monospace"
-        android:onClick="onClick"
-        android:text="SEND APP INVITE"
-        android:textSize="18sp" />
+        android:onClick="onInviteClicked"
+        android:textSize="16sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

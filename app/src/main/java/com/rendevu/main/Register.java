@@ -2,8 +2,8 @@ package com.rendevu.main;
 /*
     Josh Davenport
  */
-
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,15 +17,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -34,12 +30,8 @@ import java.util.Calendar;
 
 
 public class Register extends AppCompatActivity {
-    private static final String TAG = "Register";
 
     private DatabaseReference myDatabaseReference, userDatRef;
-
-    private FirebaseDatabase mFirebaseInstance;
-
     private String userId;
 
     private EditText fullName, inputEmail, phoneNum,
@@ -49,11 +41,6 @@ public class Register extends AppCompatActivity {
     private ProgressBar progressBar;
     private DatePickerDialog datePickerDialog;
     boolean flag=false;
-
-    /**
-     * The ViewSwitcher to switch between the login buttons and the progress indicator
-     */
-    private ViewSwitcher mSwitcher;
 
     /*
     * User is authenticated through Firebase
@@ -73,11 +60,7 @@ public class Register extends AppCompatActivity {
              * Adding persistence for data stored in firebase.
              * also gets unique id for current user
              * */
-            //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-            mFirebaseInstance = FirebaseDatabase.getInstance();
-            //mFirebaseInstance.setPersistenceEnabled(true);
-
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             myDatabaseReference=FirebaseDatabase.getInstance().getReference("User");
             userDatRef = FirebaseDatabase.getInstance().getReference("UserData");
         } catch (Exception e) {
@@ -160,23 +143,24 @@ public class Register extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    final String email = inputEmail.getText().toString().trim();
-                    final String password = loginPass.getText().toString().trim();
+                    String email = inputEmail.getText().toString().trim();
+                    String password = loginPass.getText().toString().trim();
 
                     if (TextUtils.isEmpty(email)) {
-                        Toast.makeText(getApplicationContext(), "Enter your email address!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     if (TextUtils.isEmpty(password)) {
-                        Toast.makeText(getApplicationContext(), "Enter a password!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    /*if (password.length() < 6) {
+                    if (password.length() < 6) {
                         Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
                         return;
-                    }*/
+                    }
+
                     //progressBar.setVisibility(View.VISIBLE);
 
                     /*
@@ -189,41 +173,15 @@ public class Register extends AppCompatActivity {
                                     Toast.makeText(Register.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
                                     //progressBar.setVisibility(View.GONE);
 
-                                    // If registration fails, display exception handler message to the user. If registration succeeds
+                                    // If sign in fails, display a message to the user. If sign in succeeds
                                     // the auth state listener will be notified and logic to handle the
-                                    // registered user can be handled in the listener.
+                                    // signed in user can be handled in the listener.
                                     if (!task.isSuccessful()) {
-
-                                        //clear the invalid input
-                                        loginPass.setText(null);
-                                        inputEmail.setText(null);
-
-                                        try {
-                                            final Exception exception = task.getException();
-                                            if(exception == null) {
-                                                //exception for no error code found
-                                                throw new NullPointerException("exception is null");
-                                            }
-                                            throw exception;
-                                        } catch(FirebaseAuthWeakPasswordException e) {
-                                            //for a password less than 6 characters
-                                            loginPass.setError(getString(R.string.error_weak_password));
-                                            loginPass.requestFocus();
-                                        } catch(FirebaseAuthInvalidCredentialsException e) {
-                                            inputEmail.setError(getString(R.string.error_invalid_email));
-                                            inputEmail.requestFocus();
-                                        } catch(FirebaseAuthUserCollisionException e) {
-                                            inputEmail.setError(getString(R.string.error_user_exists));
-                                            inputEmail.requestFocus();
-                                        } catch(Exception e) {
-                                            //default message also displayed on bottom of screen
-                                            Toast.makeText(Register.this, "Registration failed." + task.getException(),
-                                                    Toast.LENGTH_SHORT).show();
-                                        }
+                                        Toast.makeText(Register.this, "Authentication failed." + task.getException(),
+                                                Toast.LENGTH_SHORT).show();
                                     } else {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
                                         //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-                                        mFirebaseInstance.setPersistenceEnabled(true);
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         String uid = user.getUid();
                                         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -233,13 +191,17 @@ public class Register extends AppCompatActivity {
                                                 ((EditText)findViewById(R.id.email_id)).getText().toString(),
                                                 ((EditText)findViewById(R.id.dateOfBirth)).getText().toString(),
                                                 Integer.parseInt(((EditText)findViewById(R.id.userPhone)).getText().toString()));
+                                        //finish();
                                     }
                                 }
                             });
+
+                    //finish();
                 }
+
             });
+
         } catch (Exception e) {
-            //catches any residual errors
             Toast.makeText(getApplicationContext(), "Registration failure", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
