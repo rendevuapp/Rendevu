@@ -28,8 +28,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
-
-public class Register extends AppCompatActivity {
+public class Register extends UncaughtExceptionActivity {
+    //private static final String TAG = "Register";
+    private FirebaseDatabase mFirebaseInstance;
 
     private DatabaseReference myDatabaseReference, userDatRef;
     private String userId;
@@ -60,7 +61,11 @@ public class Register extends AppCompatActivity {
              * Adding persistence for data stored in firebase.
              * also gets unique id for current user
              * */
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+            mFirebaseInstance = FirebaseDatabase.getInstance();
+            mFirebaseInstance.setPersistenceEnabled(true);
+
             myDatabaseReference=FirebaseDatabase.getInstance().getReference("User");
             userDatRef = FirebaseDatabase.getInstance().getReference("UserData");
         } catch (Exception e) {
@@ -181,7 +186,9 @@ public class Register extends AppCompatActivity {
                                                 Toast.LENGTH_SHORT).show();
                                     } else {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
-                                        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                                                                                                     
+                                        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                                        mFirebaseInstance.setPersistenceEnabled(true);
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         String uid = user.getUid();
                                         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -236,11 +243,12 @@ public class Register extends AppCompatActivity {
     * */
     @Override
     public void onBackPressed() {
+        throw new RuntimeException("this will cause a crash");
         // Add the Back key handler here.
-        FirebaseAuth.getInstance().signOut();
+        /*FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(Register.this, MainActivity.class);
         startActivity(intent);
-        finish();
+        finish();*/
     }
 
     @Override

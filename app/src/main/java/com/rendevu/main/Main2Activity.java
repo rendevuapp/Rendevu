@@ -102,12 +102,13 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 //import javax.xml.crypto.Data;
 
 
-public class Main2Activity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class Main2Activity extends UncaughtExceptionActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final int PERMISSION_REQUEST_LOCATION = 34;
 
 
     String s = "Null pointer exception for user.getUid()";
 
+    Button invite;
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -273,7 +274,7 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
      * handle exceptions thrown from trying to determine
      * if a valid user exists to log out of the app.
      * */
-    public void onLogoutClick(View vu) throws ExceptionClass{
+    public void onLogoutClick(View vu) throws ExceptionClass, FirebaseAuthClass{
         try {
             isUserLoggedIn(); //first check if this user is actually signed in.
 
