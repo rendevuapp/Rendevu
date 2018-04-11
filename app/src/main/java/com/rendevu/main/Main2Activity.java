@@ -21,7 +21,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -64,27 +63,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//import com.google.android.gms.awareness.snapshot.LocationResult;
 
-//import javax.xml.crypto.Data;
-
-
-public class Main2Activity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class Main2Activity extends UncaughtExceptionActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final int PERMISSION_REQUEST_LOCATION = 34;
 
 
-    Button invite;
-    /**
-     * Trying to separate some of the onClick handlers
-     * */
-    /*private class inner extends InnerMainActivity_onClickHandlers{
-        public inner(Main2Activity mainActivity)
-        {
-            super(mainActivity);
-        }
-    };*/
+    //Button invite;
 
-    private InvitationClass sendInvite;
+    //private InvitationClass sendInvite;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -98,12 +84,8 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
      *referencing firebase for data storage
      *
      */
-    //private FirebaseDatabase mFireBaseDatabase;
     public static final String TAG = Main2Activity.class.getSimpleName();
-    //private static final int REQUEST_INVITE = 0;  //used for sending invites
     private static GoogleApiClient mGoogleApiClient;
-
-    //private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +121,7 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
             *
             * Listener and Handler for send invite button
             * */
-            invite = findViewById(R.id.sendInvites);
+            /*invite = findViewById(R.id.sendInvites);
 
             invite.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -151,7 +133,7 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
                         e.printStackTrace();
                     }
                 }
-            });
+            });*/
 
 
         } catch (Exception e) {
@@ -281,7 +263,6 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
 
             FirebaseAuth.getInstance().signOut();  //also removes Firebase persistence until next login.
 
-
             //Toast.makeText(getApplicationContext(), "You Are Now Logged Out......Goodbye", Toast.LENGTH_SHORT).show();
         } catch (ExceptionClass e) {
             processError(e);
@@ -303,10 +284,7 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
             } else {
                 Toast.makeText(getApplicationContext(), "No Users to Logout!", Toast.LENGTH_SHORT).show();
             }
-        }/*catch (FirebaseAuthInvalidUserException e) {
-
-            throw new FirebaseAuthClass(e.getMessage(), "ERROR_USER_TOKEN_EXPIRED");
-        }*/catch (IllegalStateException e){
+        }catch (IllegalStateException e){
 
             throw new ExceptionClass(e.getMessage(),"ILLEGAL_STATE_EXCEPTION");
         }catch(NullPointerException e){
