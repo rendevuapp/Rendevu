@@ -6,27 +6,20 @@ package com.rendevu.main;
  */
 //i put some stuff for testing
 import android.*;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -40,28 +33,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 //import com.google.android.gms.awareness.snapshot.LocationResult;
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -71,13 +53,10 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -88,13 +67,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Queue;
 import java.lang.NullPointerException;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
@@ -360,15 +335,21 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
             }
             switch (view.getId()) {
                 case R.id.addContactActivityButton:
-                    MyDialogFragment editNameDialog = new MyDialogFragment();
-                    editNameDialog.show(manager, "fragment_edit_name");
+                    AddUserToCircleDialog addUserToCircleDialog = new AddUserToCircleDialog();
+                    addUserToCircleDialog.show(manager, "Add_Contact");
                     break;
 
                 //generic alert fragment
                 case R.id.showAlertDialogFragment:
-                    MyAlertDialogFragment alertDialogFragment = new MyAlertDialogFragment();
-                    alertDialogFragment.show(manager, "fragment_edit_name");
+                    MyAlertDialogFragment myAlertDialogFragment = new MyAlertDialogFragment();
+                    myAlertDialogFragment.show(manager, "Logout");
                     break;
+                    //
+                case R.id.sendCodeButton:
+                    SendUserCircleCode sendUserCircleCode = new SendUserCircleCode();
+                    sendUserCircleCode.show(manager, "Send_Circle_Code");
+                    break;
+
             }
         } catch (Exception e) {
             e.printStackTrace();

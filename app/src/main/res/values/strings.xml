@@ -99,6 +99,10 @@
     <string name="title_activity_maps">Map</string>
     <string name="google_maps_key">AIzaSyC6-uj8kUd-pEKg4XEUByuEauIHgUYKXQQ</string>
     <string name="add_contact">Add Contact</string>
+    <string name="logout">Logout</string>
+    <string name="send_invite">App Invite</string>
+    <string name="send_code">Send Code</string>
     <string name="innerCircle">Add to Inner Circle</string>
     <string name="outerCircle">Add to Outer Circle</string>
+
 </resources>
