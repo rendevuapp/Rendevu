@@ -981,46 +981,46 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+//  public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
+//      public SectionsPagerAdapter(FragmentManager fm) {
+//          super(fm);
+//      }
 
-        @Override
-        public Fragment getItem(int position) {
-            try {
-                switch (position) {
-                    case 0:
-                        return new ContactTabFragment();
-                    case 1:
-                        return new MainScreenTabFragment();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
+//      @Override
+//      public Fragment getItem(int position) {
+//          try {
+//              switch (position) {
+//                  case 0:
+//                      return new contactActivity();
+//                  case 1:
+//                      return new mapActivity();
+//              }
+//          } catch (Exception e) {
+//              e.printStackTrace();
+//          }
+//          return null;
+//      }
 
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 2;
-        }
+//      @Override
+//      public int getCount() {
+//          // Show 3 total pages.
+//          return 2;
+//      }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            try {
-                switch (position) {
-                    case 0:
-                        return "Contacts";
-                    case 1:
-                        return "Main";
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
+//      @Override
+//      public CharSequence getPageTitle(int position) {
+//          try {
+//              switch (position) {
+//                  case 0:
+//                      return "Contacts";
+//                  case 1:
+//                      return "Main";
+//              }
+//          } catch (Exception e) {
+//              e.printStackTrace();
+//          }
+//          return null;
+//      }
+//  }
 }
