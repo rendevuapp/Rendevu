@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -71,28 +72,21 @@ import java.lang.NullPointerException;
      */
     public  class mapActivity extends Fragment implements OnMapReadyCallback {
 
-        private static final int PERMISSION_REQUEST_LOCATION = 34;
-        private FirebaseDatabase mFireBaseDatabase;
-        public static final String TAG = Main2Activity.class.getSimpleName();
-        private static final int REQUEST_INVITE = 0;  //used for sending invites
-        private static GoogleApiClient mGoogleApiClient;
-
-        private FirebaseAuth auth;
         FirebaseDatabase database;
         Marker marker;
         MapView mapView;
         private List<Tracking> list;
         ToggleButton saveLocButton;
         Button refreshButton;
-
+        public static final String TAG = Main2Activity.class.getSimpleName();
         private FusedLocationProviderClient mFusedLocationClient;
         final double defaultLatitude = 29.424503;
         final double defaultLongtitude = -98.491500;
-
+        private static final int PERMISSION_REQUEST_LOCATION = 34;
         private static Double latitude, longtitude;
         protected Location mLastLocation;
         //LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-
+        private static GoogleApiClient mGoogleApiClient;
         private DatabaseReference mDatabase, rDatabase;
 
         @SuppressLint("ValidFragment")
@@ -448,35 +442,7 @@ import java.lang.NullPointerException;
                 e.printStackTrace();
             }
         }
-   
-        private void requestLocationPermission() {
-               // Permission has not been granted and must be requested.
-               if (ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
-                       Manifest.permission.ACCESS_FINE_LOCATION)) {
-                   // Provide an additional rationale to the user if the permission was not granted
-                   // and the user would benefit from additional context for the use of the permission.
-                   // Display a SnackBar with a button to request the missing permission.
-                   Snackbar.make(super.getView(), "Location Access is required to display markers  ",
-                           Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
-                       @Override
-                       public void onClick(View view) {
-                           // Request the permission
-                           mapActivity.super.getActivity().requestPermissions(
-                                   new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                   PERMISSION_REQUEST_LOCATION);
-                       }
-                   }).show();
 
-               } else {
-
-                   Snackbar.make(super.getView(),
-                           "Permission is not available. Requesting Location permission.",
-                           Snackbar.LENGTH_SHORT).show();
-                   // Request the permission. The result will be received in onRequestPermissionResult().
-                   super.getActivity().requestPermissions( new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                           PERMISSION_REQUEST_LOCATION);
-               }
-        }
 
         @Override
         public void onResume() {
