@@ -7,49 +7,21 @@ package com.rendevu.main;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
 
-public class InvitationClass extends UncaughtExceptionActivity{
-
-    Button invite;
+public class InvitationClass extends AppCompatActivity{
 
     private static final int REQUEST_INVITE = 0;  //used for sending invites
 
     private static String good = "Preparing to send Invitation!";
 
-    private InvitationClass(){  }
+    public  InvitationClass(){  }
 
-    //private InvitationClass sendInvite;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-        /**
-         *
-         * Listener and Handler for send invite button
-         * */
-        invite = findViewById(R.id.sendInvites);
-
-        invite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InvitationClass Inv = new InvitationClass();
-                try {
-                    Inv.onInviteClicked(v);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
     public void onInviteClicked(View v) {
         try {
             Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
@@ -61,12 +33,11 @@ public class InvitationClass extends UncaughtExceptionActivity{
             startActivityForResult(intent, REQUEST_INVITE);
         } /*catch (InvalidClassException e) {
             e.printStackTrace();
-            throw new InvalidClassException(e.getMessage(), "Invalid Object in InvitationClass");
-        } */catch (Exception e) {
-            e.printStackTrace();
-        }/*finally{
+            //throw new InvalidClassException(e.getMessage(), "Invalid Object in InvitationClass");
+        } */catch (RuntimeException x){
+        }finally{
 
-        }*/
+        }
     }
 
     @Override

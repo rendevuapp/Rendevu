@@ -2,9 +2,10 @@ package com.rendevu.main;
 /*
     Josh Davenport
  */
+import android.app.Activity;
 import android.os.Bundle;
 
-public class Welcome extends UncaughtExceptionActivity{
+public class Welcome extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

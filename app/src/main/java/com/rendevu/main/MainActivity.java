@@ -2,18 +2,21 @@ package com.rendevu.main;
 /*
     Josh Davenport
  */
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.app.Activity;
+import android.content.Intent;
 import android.widget.Toast;
 
+import android.os.Handler;
+
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.NoSuchElementException;
 
-public class MainActivity extends UncaughtExceptionActivity {
+public class MainActivity extends Activity {
     FirebaseAuth auth;
     Intent i=null;
 
