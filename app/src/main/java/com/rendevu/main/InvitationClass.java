@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
 
-public class InvitationClass extends AppCompatActivity{
+public class InvitationClass extends UncaughtExceptionActivity{
 
     private static final int REQUEST_INVITE = 0;  //used for sending invites
 

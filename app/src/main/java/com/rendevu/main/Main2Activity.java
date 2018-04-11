@@ -69,20 +69,11 @@ import java.util.Map;
 //import javax.xml.crypto.Data;
 
 
-public class Main2Activity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class Main2Activity extends UncaughtExceptionActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final int PERMISSION_REQUEST_LOCATION = 34;
 
 
     Button invite;
-    /**
-     * Trying to separate some of the onClick handlers
-     * */
-    /*private class inner extends InnerMainActivity_onClickHandlers{
-        public inner(Main2Activity mainActivity)
-        {
-            super(mainActivity);
-        }
-    };*/
 
     private InvitationClass sendInvite;
 
@@ -272,9 +263,6 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
      * handle exceptions thrown from trying to determine
      * if a valid user exists to log out of the app.
      * */
-    /*public FirebaseAuthException(String errorCode, String message){
-
-    }*/
     public void onLogoutClick(View vu) throws ExceptionClass, FirebaseAuthClass{
         try {
             isUserLoggedIn(); //first check if this user is actually signed in.

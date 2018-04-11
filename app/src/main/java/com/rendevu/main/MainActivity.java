@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.NoSuchElementException;
 
-public class MainActivity extends Activity {
+public class MainActivity extends UncaughtExceptionActivity {
     FirebaseAuth auth;
     Intent i=null;
 

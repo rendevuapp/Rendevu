@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.NoSuchElementException;
 
-public class Login extends AppCompatActivity {
+public class Login extends UncaughtExceptionActivity {
 
     private EditText loginEmail, loginPass;
     private FirebaseAuth auth;
