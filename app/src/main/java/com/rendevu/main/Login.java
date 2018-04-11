@@ -7,6 +7,7 @@ package com.rendevu.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,7 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.NoSuchElementException;
 
-public class Login extends UncaughtExceptionActivity {
+public class Login extends AppCompatActivity {
 
     private EditText loginEmail, loginPass;
     private FirebaseAuth auth;
