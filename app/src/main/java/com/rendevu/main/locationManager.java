@@ -70,23 +70,29 @@ public class locationManager extends AppCompatActivity{
     ToggleButton saveLocButton;
     Button refreshButton;
     
-    private FusedLocationProviderClient mFusedLocationClient;
+    private static FusedLocationProviderClient mFusedLocationClient;
     final double defaultLatitude = 29.424503;
-    final double defaultLongtitude = 98.491500;
-    private boolean permissions = false;
+    final double defaultLongtitude = 91.491500;
+    private static boolean permissions = false;
     private static Double latitude, longtitude;
     private static Context context;
-    protected Location mLastLocation;
+    protected static Location mLastLocation;
     //LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
 
     private DatabaseReference mDatabase, rDatabase;
 
     public locationManager(Context context, Activity act){
+        mFusedLocationClient  = LocationServices.getFusedLocationProviderClient(act);
 //        this.act = sActivity;
         this.context= context;
         this.act = act;
+        if(!checkPermission()){
+            requestPermissions();
 
+        }else{
+            getLastLocation();
+        }
     }
 
     public String getLatString(){
@@ -120,6 +126,7 @@ public class locationManager extends AppCompatActivity{
 
         @SuppressWarnings("MissingPermission")
         public void getLastLocation() {
+
             mFusedLocationClient.getLastLocation()
                     .addOnCompleteListener(act, new OnCompleteListener<Location>() {
                         @Override
@@ -130,6 +137,7 @@ public class locationManager extends AppCompatActivity{
                                 latitude= mLastLocation.getLatitude();
                                 longtitude= mLastLocation.getLongitude();
 
+
                                 Toast.makeText(act, "we got here"+latitude+" "+longtitude, Toast.LENGTH_SHORT).show();
                             } else {
                                 Log.w(TAG, "getLastLocation:exception", task.getException());
@@ -137,6 +145,7 @@ public class locationManager extends AppCompatActivity{
                             }
                         }
                     });
+
         }
 
 
@@ -179,6 +188,7 @@ public class locationManager extends AppCompatActivity{
          * Return the current state of the permissions needed.
          */
         public boolean checkPermission() {
+
             int permissionState = ActivityCompat.checkSelfPermission(act,
                     Manifest.permission.ACCESS_FINE_LOCATION);
             return permissionState == PackageManager.PERMISSION_GRANTED;
