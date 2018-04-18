@@ -4,6 +4,7 @@ package com.rendevu.main;
  */
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -53,7 +54,7 @@ public class Register extends UncaughtExceptionActivity {
     /**
      * The ViewSwitcher to switch between the login buttons and the progress indicator
      */
-    private ViewSwitcher mSwitcher;
+    //private ViewSwitcher mSwitcher;
 
     /*
     * User is authenticated through Firebase
@@ -218,11 +219,14 @@ public class Register extends UncaughtExceptionActivity {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
                                         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
                                         mFirebaseInstance.setPersistenceEnabled(true);
+
+                                        //  Rick Cantu
+                                        //  This section of the code gets the current user's UID and calls
+                                        //  the method "addUser" which build the user's tree structure on the
+                                        //  database.
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         String uid = user.getUid();
-                                        FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                        String CircleCode = database.getReference().push().getKey();
-                                        addUser(uid, CircleCode, ((EditText)findViewById(R.id.fullname)).getText().toString(),
+                                        addUser(uid, ((EditText)findViewById(R.id.fullname)).getText().toString(),
                                                 ((EditText)findViewById(R.id.username)).getText().toString(),
                                                 ((EditText)findViewById(R.id.email_id)).getText().toString(),
                                                 ((EditText)findViewById(R.id.dateOfBirth)).getText().toString(),
@@ -240,17 +244,19 @@ public class Register extends UncaughtExceptionActivity {
     }
 
 
-    private void addUser(String uid, String CircleCode, String fullname, String username,
+    private void addUser(String uid, String fullname, String username,
                             String email, String dob, int phoneNumber){
+        //  This method takes the inputs from the register screen and assigns them to
+        //  variables that are then pushed to the database to specific children on the
+        //  database.  This builds the user's tree structure on the database.
         String userId = uid;
-        String code = CircleCode;
         User user = new User(fullname, username, email, dob, phoneNumber);
         myDatabaseReference.child(userId).setValue(user);
         userDatRef.child(userId).child("fullname").setValue(fullname);
         userDatRef.child(userId).child("avail").setValue("false");
         userDatRef.child(userId).child("lat").setValue("0");
         userDatRef.child(userId).child("lng").setValue("0");
-        userDatRef.child(userId).child("CircleCode").setValue(code);
+        userDatRef.child(userId).child("CircleCodes");
     }
 
     @Override

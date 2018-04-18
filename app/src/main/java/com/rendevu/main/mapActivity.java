@@ -1,9 +1,4 @@
 package com.rendevu.main;
-/**
- *   Ricardo Cantu
- *  This class holds the configurations for the tab view.
- *  This implements each of the three fragment.
- */
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,33 +6,22 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -49,7 +33,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,430 +42,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.lang.NullPointerException;
-
-import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
-
-//import javax.xml.crypto.Data;
-
-
-public class Main2Activity extends UncaughtExceptionActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
-    private static final int PERMISSION_REQUEST_LOCATION = 34;
-
-
-    Button invite;
-
-    private InvitationClass sendInvite;
-
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
-
-    /**
-     *
-     *referencing firebase for data storage
-     *
-     */
-    //private FirebaseDatabase mFireBaseDatabase;
-    public static final String TAG = Main2Activity.class.getSimpleName();
-    private static final int REQUEST_INVITE = 0;  //used for sending invites
-    private static GoogleApiClient mGoogleApiClient;
-
-    //private FirebaseAuth auth;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        try {
-
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main2);
-            // Create the adapter that will return a fragment for each of the three
-            // primary sections of the activity.
-
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-
-            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-            // Set up the ViewPager with the sections adapter.
-            mViewPager = (ViewPager) findViewById(R.id.container);
-            mViewPager.setAdapter(mSectionsPagerAdapter);
-
-            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-            tabLayout.setupWithViewPager(mViewPager);
-
-
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks((GoogleApiClient.ConnectionCallbacks) this)
-                    .addOnConnectionFailedListener((GoogleApiClient.OnConnectionFailedListener) this)
-                    .addApi(LocationServices.API)
-                    .build();
-
-
-
-            /**
-            *
-            * Listener and Handler for send invite button
-            * */
-            invite = findViewById(R.id.sendInvites);
-
-            invite.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    InvitationClass Inv = new InvitationClass();
-                    try {
-                        Inv.onInviteClicked(v);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-/**
- *  @Override
- *  public void onFinishUserDialog(String addedName) {
- *
- *      //Contact name and Phone number added in dialog are passed here
- *      //to be inserted into firebase.
- *
- *      try {
- *          Toast.makeText(this, "ADDED: " + addedName, Toast.LENGTH_SHORT).show();
- *      } catch (Exception e) {
- *          e.printStackTrace();
- *      }
- *  }
- */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        try {
-            getMenuInflater().inflate(R.menu.menu_main2, menu);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        try {
-            int id = item.getItemId();
-            //noinspection SimplifiableIfStatement
-            if (id == R.id.action_settings) {
-                return true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    /**
-     * Josh
-     * Handler for sending invitation when send invite
-     * button is clicked.
-     *
-     * */
-    public void onInviteClicked(View v) {
-        try {
-            Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
-                    .setMessage(getString(R.string.invitation_message))
-                    .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
-                    .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
-                    .setCallToActionText(getString(R.string.invitation_cta))
-                    .build();
-            startActivityForResult(intent, REQUEST_INVITE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        try {
-            super.onActivityResult(requestCode, resultCode, data);
-            String TAG = "";
-            Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
-
-            if (requestCode == REQUEST_INVITE) {
-                if (resultCode == RESULT_OK) {
-                    // Get the invitation IDs of all sent messages
-                    String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-                    for (String id : ids) {
-                        Log.d(TAG, "onActivityResult: sent invitation " + id);
-                    }
-                } else {
-                    // Sending failed or it was canceled, show failure message to the user
-                    // ...
-                    Toast.makeText(getApplicationContext(), "Failed Invite!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-            
-       
-
-
-
-                              
-    /**
-     * Josh
-     *****************
-     * LOGOUT METHOD *
-     *****************
-     * (uses ExceptionClass)
-     *
-     * When logout button is pressed,
-     * user is signed out of app, and sent back to the home screen.
-     *
-     * ExceptionClass with try/catch
-     * handle exceptions thrown from trying to determine
-     * if a valid user exists to log out of the app.
-     * */
-    public void onLogoutClick(View vu) throws ExceptionClass, FirebaseAuthClass{
-        try {
-            isUserLoggedIn(); //first check if this user is actually signed in.
-
-            FirebaseAuth.getInstance().signOut();  //also removes Firebase persistence until next login.
-
-
-            //Toast.makeText(getApplicationContext(), "You Are Now Logged Out......Goodbye", Toast.LENGTH_SHORT).show();
-        } catch (ExceptionClass e) {
-            processError(e);
-            //e.printStackTrace();
-            //Toast.makeText(getApplicationContext(), "Logout error", Toast.LENGTH_SHORT).show();
-        }finally{
-            //executes whether a current user exists or not.
-            Intent intent = new Intent(Main2Activity.this, MainActivity.class);
-            startActivity(intent);
-            finish();  //disables back button from navigating back into the app.
-        }
-    }
-
-    private void isUserLoggedIn() throws ExceptionClass, FirebaseAuthClass{
-        try{
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if (user != null) {
-                Toast.makeText(getApplicationContext(), "Logging out...", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getApplicationContext(), "No Users to Logout!", Toast.LENGTH_SHORT).show();
-            }
-        }/*catch (FirebaseAuthInvalidUserException e) {
-
-            throw new FirebaseAuthClass(e.getMessage(), "ERROR_USER_TOKEN_EXPIRED");
-        }*/catch (IllegalStateException e){
-
-            throw new ExceptionClass(e.getMessage(),"ILLEGAL_STATE_EXCEPTION");
-        }catch(NullPointerException e){
-
-            throw new ExceptionClass(e.getMessage(),"NULL_POINTER_EXCEPTION");
-        }
-    }
-
-    private static void processError(ExceptionClass e) throws ExceptionClass {
-
-        switch(e.getErrorCode()){
-            case "ILLEGAL_STATE_EXCEPTION":
-                System.out.println("State of current user cannot be determined.");
-                throw e;
-            case "NULL_POINTER_EXCEPTION":
-                System.out.println("No value to be referenced.");
-                break;
-            default:
-                System.out.println("Unknown exception occurred, writing to log."+e.getMessage());
-                e.printStackTrace();
-        }
-    }
-    /********************
-     *END LOGOUT METHOD**
-     ********************/
-
-
-
-    /*
-    * Josh
-    *   Back button when already logged in will minimize the app.
-    * */
-    @Override
-    public void onBackPressed() {
-        // Add the Back key handler here.
-        this.moveTaskToBack(true);
-    }
-
-
-
-
-
-
-
-
-                              
-    /**
-     * Josh
-     * Controls for the pop-up dialog fragment,
-     * could probably be useful for something else
-     *
-     * */
-    public void onClick(View view) {
-        // close existing dialog fragments
-        try {
-            android.app.FragmentManager manager = getFragmentManager();
-            android.app.Fragment frag = manager.findFragmentByTag("fragment_edit_name");
-            if (frag != null) {
-                manager.beginTransaction().remove(frag).commit();
-            }
-            switch (view.getId()) {
-                case R.id.addContactActivityButton:
-                    AddUserToCircleDialog addUserToCircleDialog = new AddUserToCircleDialog();
-                    addUserToCircleDialog.show(manager, "Add_Contact");
-                    break;
-
-                //generic alert fragment
-                case R.id.showAlertDialogFragment:
-                    MyAlertDialogFragment myAlertDialogFragment = new MyAlertDialogFragment();
-                    myAlertDialogFragment.show(manager, "Logout");
-                    break;
-                    //
-                case R.id.sendCodeButton:
-                    SendUserCircleCode sendUserCircleCode = new SendUserCircleCode();
-                    sendUserCircleCode.show(manager, "Send_Circle_Code");
-                    break;
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    /**
-     *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE CONTACT TAB.
-     *  Ricardo Cantu
-     */
-    public static class ContactTabFragment extends Fragment {
-        FirebaseDatabase database;
-        DatabaseReference databaseReference;
-
-        RecyclerView recyclerView;
-        FirebaseRecyclerAdapter<User, UserHolder> adapter;
-
-        private List<User> list;
-
-        public ContactTabFragment() {
-        }
-
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            //innDatabaseQuarryRef.orderByChild("InnerCircleMembers").
-            //contRef = database.getReference("User");
-            //contRef.addValueEventListener(new ValueEventListener() {
-            //    @Override
-            //    public void onDataChange(DataSnapshot dataSnapshot) {
-            //        list = new ArrayList<>();
-            //        for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-            //            User value = dataSnapshot1.getValue(User.class);
-            //            User fire = new User();
-            //            String fullname = value.getFullName();
-            //            String dob = value.getDOB();
-            //            fire.setFullName(fullname);
-            //            fire.setDOB(dob);
-            //            list.add(fire);
-            //        }
-            //    }
-            //    @Override
-            //    public void onCancelled(DatabaseError databaseError) {
-            //        Log.w("Error", "Failed to read Value.", databaseError.toException());
-            //    }
-            //});
-        }
-
-        @Override
-        public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-            final View rootView = inflater.inflate(R.layout.contact_tab, container, false);
-
-
-            database = FirebaseDatabase.getInstance();
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            String uid = user.getUid();
-            databaseReference = database.getReference().child("UserData").child(uid).child("CircleMembers");
-            Query query = databaseReference.orderByKey();
-
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(linearLayoutManager);
-
-            FirebaseRecyclerOptions recyclerOptions = new FirebaseRecyclerOptions.Builder<User>().setQuery(query, User.class).build();
-
-            adapter = new FirebaseRecyclerAdapter<User, UserHolder>(recyclerOptions){
-
-                @Override
-                protected void onBindViewHolder(@NonNull UserHolder holder, int position, @NonNull User model) {
-                    holder.setName(model.getFullName());
-                    holder.setDOB(model.getDOB());
-                    holder.setAvail(model.getAvail());
-
-                    String avail = holder.setAvail(model.getAvail());
-
-                    if(avail.equals("true")){
-                      holder.setAvail("Available");
-                    }
-                    else if(avail.equals("false")) {
-                        holder.setAvail("Not Available");
-                    }
-                }
-
-                @Override
-                public UserHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item,parent, false);
-                    return new UserHolder(view);
-                }
-            };
-            recyclerView.setAdapter(adapter);
-            return rootView;
-        }
-        @Override
-        public void onStart() {
-            super.onStart();
-            adapter.startListening();
-        }
-
-        @Override
-        public void onStop() {
-            super.onStop();
-            adapter.stopListening();
-        }
-    }
-
-
-
-
-
     /*
     *
     * Notes for Map:
@@ -502,9 +67,17 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
     /**
      *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE MAIN SCREEN TAB.
      *  Tamim Alekozai
+     *
      */
-    public static class MainScreenTabFragment extends Fragment implements OnMapReadyCallback {
+    public  class mapActivity extends Fragment implements OnMapReadyCallback {
 
+        private static final int PERMISSION_REQUEST_LOCATION = 34;
+        private FirebaseDatabase mFireBaseDatabase;
+        public static final String TAG = Main2Activity.class.getSimpleName();
+        private static final int REQUEST_INVITE = 0;  //used for sending invites
+        private static GoogleApiClient mGoogleApiClient;
+
+        private FirebaseAuth auth;
         FirebaseDatabase database;
         Marker marker;
         MapView mapView;
@@ -523,7 +96,7 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
         private DatabaseReference mDatabase, rDatabase;
 
         @SuppressLint("ValidFragment")
-        public MainScreenTabFragment() {
+        public mapActivity() {
         }
 
 
@@ -749,6 +322,7 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
                 rDatabase.addChildEventListener(new ChildEventListener() {
+
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     String uid = user.getUid();
                     int isInCircle = 0;
@@ -758,7 +332,7 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
                         String available = dataSnapshot.child("avail").getValue(String.class);
                         MarkerOptions markerOptions = new MarkerOptions();
 
-                        final String key = dataSnapshot.getKey();
+                        String key = dataSnapshot.getKey();
 
                         rDatabase.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
                             @Override
@@ -887,7 +461,7 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
                        @Override
                        public void onClick(View view) {
                            // Request the permission
-                           MainScreenTabFragment.super.getActivity().requestPermissions(
+                           mapActivity.super.getActivity().requestPermissions(
                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                    PERMISSION_REQUEST_LOCATION);
                        }
@@ -959,51 +533,3 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
             }
         }
     }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-//  public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-//      public SectionsPagerAdapter(FragmentManager fm) {
-//          super(fm);
-//      }
-
-//      @Override
-//      public Fragment getItem(int position) {
-//          try {
-//              switch (position) {
-//                  case 0:
-//                      return new contactActivity();
-//                  case 1:
-//                      return new mapActivity();
-//              }
-//          } catch (Exception e) {
-//              e.printStackTrace();
-//          }
-//          return null;
-//      }
-
-//      @Override
-//      public int getCount() {
-//          // Show 3 total pages.
-//          return 2;
-//      }
-
-//      @Override
-//      public CharSequence getPageTitle(int position) {
-//          try {
-//              switch (position) {
-//                  case 0:
-//                      return "Contacts";
-//                  case 1:
-//                      return "Main";
-//              }
-//          } catch (Exception e) {
-//              e.printStackTrace();
-//          }
-//          return null;
-//      }
-//  }
-}
