@@ -83,7 +83,7 @@ public class Register extends UncaughtExceptionActivity {
             userDatRef = FirebaseDatabase.getInstance().getReference("UserData");
         } catch (Exception e) {
 
-            Toast.makeText(getApplicationContext(), "Firebase error", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Firebase error", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         hidePass = findViewById(R.id.show_hide);

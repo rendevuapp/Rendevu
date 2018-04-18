@@ -133,7 +133,7 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
             *
             * Listener and Handler for send invite button
             * */
-            invite = findViewById(R.id.sendInvites);
+            /*invite = findViewById(R.id.sendInvites);
 
             invite.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -145,7 +145,7 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
                         e.printStackTrace();
                     }
                 }
-            });
+            });*/
 
 
         } catch (Exception e) {
@@ -161,7 +161,6 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
         super.onStop();
     }
 /**
- *  @Override
  *  public void onFinishUserDialog(String addedName) {
  *
  *      //Contact name and Phone number added in dialog are passed here

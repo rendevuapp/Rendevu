@@ -3,7 +3,7 @@ package com.rendevu.main;
  *   Ricardo Cantu
  *  This class holds the configurations for the tab view.
  *  This implements each of the three fragment.
- */
+ **/
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -80,7 +80,7 @@ public  class contactActivity extends Fragment {
         databaseReference = database.getReference().child("UserData").child(uid).child("CircleMembers");
         Query query = databaseReference.orderByKey();
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView = rootView.findViewById(R.id.recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
