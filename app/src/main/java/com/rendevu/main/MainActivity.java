@@ -2,6 +2,8 @@ package com.rendevu.main;
 /*
     Josh Davenport
  */
+import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -120,4 +122,5 @@ public class MainActivity extends UncaughtExceptionActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
+
 }

@@ -37,7 +37,6 @@ import java.lang.NullPointerException;
 public class Main2Activity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final int PERMISSION_REQUEST_LOCATION = 34;
 
-
     String s = "Null pointer exception for user.getUid()";
 
 
@@ -64,7 +63,6 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
-
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main2);
             // Create the adapter that will return a fragment for each of the three
@@ -305,5 +303,9 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
             e.printStackTrace();
         }
     }
+
+
+
+
 
 }

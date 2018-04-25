@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -45,10 +47,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.lang.NullPointerException;
+
+
     /*
     *
     * Notes for Map:
@@ -70,7 +76,7 @@ import java.lang.NullPointerException;
      *  Tamim Alekozai
      *
      */
-    public  class mapActivity extends Fragment implements OnMapReadyCallback {
+    public  class mapFragment extends Fragment implements OnMapReadyCallback {
 
         FirebaseDatabase database;
         Marker marker;
@@ -79,7 +85,7 @@ import java.lang.NullPointerException;
         ToggleButton saveLocButton;
         Button refreshButton;
         public static final String TAG = Main2Activity.class.getSimpleName();
-        //private FusedLocationProviderClient mFusedLocationClient;
+        private FusedLocationProviderClient mFusedLocationClient;
         final double defaultLatitude = 29.424503;
         final double defaultLongtitude = -98.491500;
         private static final int PERMISSION_REQUEST_LOCATION = 34;
@@ -88,31 +94,27 @@ import java.lang.NullPointerException;
         //LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         private static GoogleApiClient mGoogleApiClient;
         private DatabaseReference mDatabase, rDatabase;
-        private locationManager loc;
 
         @SuppressLint("ValidFragment")
-        public mapActivity() {
+        public mapFragment() {
         }
 
 
         @Override
         public void onCreate(Bundle savedInstanceState) throws NullPointerException {
             try {
+
+                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(super.getActivity());
                 super.onCreate(savedInstanceState);
-                loc = new locationManager(super.getContext(),super.getActivity());
-                //mFusedLocationClient = LocationServices.getFusedLocationProviderClient(super.getActivity());
+               checkPermissions();
                 database = FirebaseDatabase.getInstance();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = user.getUid();
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("UserData").child(uid);
                 rDatabase = FirebaseDatabase.getInstance().getReference().child("UserData");
 
-                if(!loc.checkPermission()){
-                    loc.requestPermissions();
+                    getLastLocation();
 
-                }else{
-                    loc.getLastLocation();
-                }
             } catch (NullPointerException e) {
                 System.out.print("method: getUid is trying to reference a null pointer.");
                 e.printStackTrace();
@@ -127,15 +129,20 @@ import java.lang.NullPointerException;
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
                 saveLocButton = (ToggleButton) rootView.findViewById(R.id.toggleButton2);
-                loc.getLastLocation();
+
                 saveLocButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                         String sLat, sLng;
                         if(isChecked){
-                                sLat = Double.toString(loc.getLat());
-                                sLng = Double.toString(loc.getLongt());
-
+                            if(latitude != null && longtitude != null){
+                                sLat = Double.toString(latitude);
+                                sLng = Double.toString(longtitude);
+                                }
+                            else{
+                                sLat = Double.toString(defaultLatitude);
+                                sLng = Double.toString(defaultLongtitude);
+                            }
                             DatabaseReference newPush = mDatabase;
                             newPush.child("avail").setValue("true");
                             newPush.child("lat").setValue(sLat);
@@ -157,6 +164,110 @@ import java.lang.NullPointerException;
             return rootView;
         }
 
+
+        @SuppressWarnings("MissingPermission")
+        private void getLastLocation() {
+            mFusedLocationClient.getLastLocation()
+                    .addOnCompleteListener(super.getActivity(), new OnCompleteListener<Location>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Location> task) {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                mLastLocation = task.getResult();
+
+                                latitude= mLastLocation.getLatitude();
+                                longtitude= mLastLocation.getLongitude();
+                            } else {
+                                Log.w(TAG, "getLastLocation:exception", task.getException());
+                                showSnackbar(getString(R.string.no_location_detected));
+                            }
+                        }
+                    });
+        }
+
+        /**
+         * Shows a {@link Snackbar} using {@code text}.
+         *
+         * @param text The Snackbar text.
+         */
+        private void showSnackbar(final String text) {
+            View container = super.getView().findViewById(R.id.appbar);
+            if (container != null) {
+                Snackbar.make(container, text, Snackbar.LENGTH_LONG).show();
+            }
+        }
+
+        /**
+         * Shows a {@link Snackbar}.
+         *
+         * @param mainTextStringId The id for the string resource for the Snackbar text.
+         * @param actionStringId   The text of the action item.
+         * @param listener         The listener associated with the Snackbar action.
+         */
+        private void showSnackbar(final int mainTextStringId, final int actionStringId,
+                                  View.OnClickListener listener) {
+            Snackbar.make(super.getView().findViewById(android.R.id.content),
+                    getString(mainTextStringId),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(getString(actionStringId), listener).show();
+        }
+
+        /**
+         * permissions request code
+         */
+        private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
+
+        /**
+         * Permissions that need to be explicitly requested from end user.
+         */
+        private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
+                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE };
+
+
+        /**
+         * Checks the dynamically-controlled permissions and requests missing permissions from end user.
+         */
+        protected void checkPermissions() {
+            final List<String> missingPermissions = new ArrayList<String>();
+            // check all required dynamic permissions
+            for (final String permission : REQUIRED_SDK_PERMISSIONS) {
+                final int result = ContextCompat.checkSelfPermission(super.getContext(), permission);
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    missingPermissions.add(permission);
+                }
+            }
+            if (!missingPermissions.isEmpty()) {
+                // request all missing permissions
+                final String[] permissions = missingPermissions
+                        .toArray(new String[missingPermissions.size()]);
+                ActivityCompat.requestPermissions(super.getActivity(), permissions, REQUEST_CODE_ASK_PERMISSIONS);
+            } else {
+                final int[] grantResults = new int[REQUIRED_SDK_PERMISSIONS.length];
+                Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
+                onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS,
+                        grantResults);
+            }
+        }
+
+        @Override
+        public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                               @NonNull int[] grantResults) {
+            switch (requestCode) {
+                case REQUEST_CODE_ASK_PERMISSIONS:
+                    for (int index = permissions.length - 1; index >= 0; --index) {
+                        if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+                            // exit the app if one permission is not granted
+
+                            Toast.makeText(super.getContext(), "Required permission '" + permissions[index]
+                                    + "' not granted, exiting", Toast.LENGTH_LONG).show();
+
+                            return;
+                        }
+                    }
+                    // all permissions were granted
+                    ;
+                    break;
+            }
+        }
 
         @SuppressLint("MissingPermission")
         @Override

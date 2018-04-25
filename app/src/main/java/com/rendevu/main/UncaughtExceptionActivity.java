@@ -8,10 +8,13 @@ package com.rendevu.main;
  is then handled.
  */
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 public class UncaughtExceptionActivity extends AppCompatActivity {
+    private Context context  = UncaughtExceptionActivity.this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
