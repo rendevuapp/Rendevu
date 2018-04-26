@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!---
+    Rick Cantu
+
+    This array populates the spinner for selecting the circle that a user is placed in
+    in the MyAlertDialogFragment.
+
+    -->
+    <string-array name="circle_name_array">
+        <item>InnerCircle</item>
+        <item>OuterCircle</item>
+    </string-array>
+</resources>

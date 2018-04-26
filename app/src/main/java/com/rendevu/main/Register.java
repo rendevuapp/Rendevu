@@ -2,6 +2,7 @@ package com.rendevu.main;
 /*
     Josh Davenport
  */
+
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,11 +18,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -29,9 +34,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 
 
-public class Register extends AppCompatActivity {
+public class Register extends UncaughtExceptionActivity {
+    //private static final String TAG = "Register";
 
     private DatabaseReference myDatabaseReference, userDatRef;
+
+    private FirebaseDatabase mFirebaseInstance;
+
     private String userId;
 
     private EditText fullName, inputEmail, phoneNum,
@@ -41,6 +50,11 @@ public class Register extends AppCompatActivity {
     private ProgressBar progressBar;
     private DatePickerDialog datePickerDialog;
     boolean flag=false;
+
+    /**
+     * The ViewSwitcher to switch between the login buttons and the progress indicator
+     */
+    //private ViewSwitcher mSwitcher;
 
     /*
     * User is authenticated through Firebase
@@ -60,12 +74,16 @@ public class Register extends AppCompatActivity {
              * Adding persistence for data stored in firebase.
              * also gets unique id for current user
              * */
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+            mFirebaseInstance = FirebaseDatabase.getInstance();
+            mFirebaseInstance.setPersistenceEnabled(true);
+
             myDatabaseReference=FirebaseDatabase.getInstance().getReference("User");
             userDatRef = FirebaseDatabase.getInstance().getReference("UserData");
         } catch (Exception e) {
 
-            Toast.makeText(getApplicationContext(), "Firebase error", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Firebase error", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         hidePass = findViewById(R.id.show_hide);
@@ -143,25 +161,18 @@ public class Register extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    String email = inputEmail.getText().toString().trim();
-                    String password = loginPass.getText().toString().trim();
+                    final String email = inputEmail.getText().toString().trim();
+                    final String password = loginPass.getText().toString().trim();
 
                     if (TextUtils.isEmpty(email)) {
-                        Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Enter your email address!", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     if (TextUtils.isEmpty(password)) {
-                        Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Enter a password!", Toast.LENGTH_SHORT).show();
                         return;
                     }
-
-                    if (password.length() < 6) {
-                        Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    //progressBar.setVisibility(View.VISIBLE);
 
                     /*
                     * create user and store data in authorization database
@@ -173,52 +184,79 @@ public class Register extends AppCompatActivity {
                                     Toast.makeText(Register.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
                                     //progressBar.setVisibility(View.GONE);
 
-                                    // If sign in fails, display a message to the user. If sign in succeeds
+                                    // If registration fails, display exception handler message to the user. If registration succeeds
                                     // the auth state listener will be notified and logic to handle the
-                                    // signed in user can be handled in the listener.
+                                    // registered user can be handled in the listener.
                                     if (!task.isSuccessful()) {
-                                        Toast.makeText(Register.this, "Authentication failed." + task.getException(),
-                                                Toast.LENGTH_SHORT).show();
+
+                                        //clear the invalid input
+                                        loginPass.setText(null);
+                                        inputEmail.setText(null);
+
+                                        try {
+                                            final Exception exception = task.getException();
+                                            if(exception == null) {
+                                                //exception for no error code found
+                                                throw new NullPointerException("exception is null");
+                                            }
+                                            throw exception;
+                                        } catch(FirebaseAuthWeakPasswordException e) {
+                                            //for a password less than 6 characters
+                                            loginPass.setError(getString(R.string.error_weak_password));
+                                            loginPass.requestFocus();
+                                        } catch(FirebaseAuthInvalidCredentialsException e) {
+                                            inputEmail.setError(getString(R.string.error_invalid_email));
+                                            inputEmail.requestFocus();
+                                        } catch(FirebaseAuthUserCollisionException e) {
+                                            inputEmail.setError(getString(R.string.error_user_exists));
+                                            inputEmail.requestFocus();
+                                        } catch(Exception e) {
+                                            //default message also displayed on bottom of screen
+                                            Toast.makeText(Register.this, "Registration failed." + task.getException(),
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
                                     } else {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
-                                        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                                        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                                        mFirebaseInstance.setPersistenceEnabled(true);
+
+                                        //  Rick Cantu
+                                        //  This section of the code gets the current user's UID and calls
+                                        //  the method "addUser" which build the user's tree structure on the
+                                        //  database.
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         String uid = user.getUid();
-                                        FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                        String CircleCode = database.getReference().push().getKey();
-                                        addUser(uid, CircleCode, ((EditText)findViewById(R.id.fullname)).getText().toString(),
+                                        addUser(uid, ((EditText)findViewById(R.id.fullname)).getText().toString(),
                                                 ((EditText)findViewById(R.id.username)).getText().toString(),
                                                 ((EditText)findViewById(R.id.email_id)).getText().toString(),
                                                 ((EditText)findViewById(R.id.dateOfBirth)).getText().toString(),
                                                 Integer.parseInt(((EditText)findViewById(R.id.userPhone)).getText().toString()));
-                                        //finish();
                                     }
                                 }
                             });
-
-                    //finish();
                 }
-
             });
-
         } catch (Exception e) {
+            //catches any residual errors
             Toast.makeText(getApplicationContext(), "Registration failure", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
 
 
-    private void addUser(String uid, String CircleCode, String fullname, String username,
+    private void addUser(String uid, String fullname, String username,
                             String email, String dob, int phoneNumber){
+        //  This method takes the inputs from the register screen and assigns them to
+        //  variables that are then pushed to the database to specific children on the
+        //  database.  This builds the user's tree structure on the database.
         String userId = uid;
-        String code = CircleCode;
         User user = new User(fullname, username, email, dob, phoneNumber);
         myDatabaseReference.child(userId).setValue(user);
         userDatRef.child(userId).child("fullname").setValue(fullname);
         userDatRef.child(userId).child("avail").setValue("false");
         userDatRef.child(userId).child("lat").setValue("0");
         userDatRef.child(userId).child("lng").setValue("0");
-        userDatRef.child(userId).child("CircleCode").setValue(code);
+        userDatRef.child(userId).child("CircleCodes");
     }
 
     @Override
@@ -236,11 +274,12 @@ public class Register extends AppCompatActivity {
     * */
     @Override
     public void onBackPressed() {
+        throw new RuntimeException("this will cause a crash");
         // Add the Back key handler here.
-        FirebaseAuth.getInstance().signOut();
+        /*FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(Register.this, MainActivity.class);
         startActivity(intent);
-        finish();
+        finish();*/
     }
 
     @Override

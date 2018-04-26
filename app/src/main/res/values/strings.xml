@@ -11,6 +11,9 @@
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="btn_reset_password">Reset Password</string>
     <string name="hint_email">Email</string>
+    <string name="error_weak_password">Password is too weak, must be at least 6 characters.</string>
+    <string name="error_invalid_email">Email is invalid, please enter a valid email address.</string>
+    <string name="error_user_exists">An account with this email address already exists!</string>
     <!--<string name="btn_back"><![CDATA[<< Back]]></string>-->
     <!-- Strings related to Settings -->
 
@@ -99,6 +102,9 @@
     <string name="title_activity_maps">Map</string>
     <string name="google_maps_key">AIzaSyC6-uj8kUd-pEKg4XEUByuEauIHgUYKXQQ</string>
     <string name="add_contact">Add Contact</string>
+    <string name="logout">Logout</string>
+    <string name="send_invite">App Invite</string>
+    <string name="send_code">Send Code</string>
     <string name="innerCircle">Add to Inner Circle</string>
     <string name="outerCircle">Add to Outer Circle</string>
 </resources>

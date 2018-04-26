@@ -11,7 +11,7 @@ Josh
     android:layout_gravity="center"
     android:alpha="20"
     android:background="?attr/colorBackgroundFloating"
-    tools:layout_editor_absoluteY="164dp">
+    tools:layout_editor_absoluteY="249dp">
 
     <TextView
         android:id="@+id/lblAddContact"
@@ -23,6 +23,7 @@ Josh
         android:text="Enter New Contact Code"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:fontFamily="monospace"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,6 +39,7 @@ Josh
         android:layout_marginTop="8dp"
         android:cursorVisible="true"
         android:hint="Circle Code"
+        android:fontFamily="monospace"
         android:imeOptions="actionDone"
         android:inputType="textPersonName"
         android:singleLine="true"
@@ -46,58 +48,43 @@ Josh
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblAddContact" />
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="368dp"
-        android:layout_height="70dp"
+    <Spinner
+        android:id="@+id/circle_spinner"
+        android:layout_width="347dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addCode">
-
-        <RadioButton
-            android:id="@+id/radioButton_innerCircle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/innerCircle" />
-
-        <RadioButton
-            android:id="@+id/radioButton_outerCircle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="true"
-            android:text="@string/outerCircle" />
-
-    </RadioGroup>
+        app:layout_constraintTop_toBottomOf="@+id/addCode" />
 
     <Button
         android:id="@+id/cancelButton"
-        android:layout_width="123dp"
-        android:layout_height="51dp"
+        android:layout_width="126dp"
+        android:layout_height="53dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:text="CANCEL"
+        android:fontFamily="monospace"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/circle_spinner" />
 
     <Button
         android:id="@+id/addContactButton"
         android:layout_width="126dp"
-        android:layout_height="52dp"
+        android:layout_height="53dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="ADD CONTACT"
+        android:fontFamily="monospace"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/circle_spinner" />
 
 </android.support.constraint.ConstraintLayout>
 
