@@ -28,9 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
-public class Register extends UncaughtExceptionActivity {
-    //private static final String TAG = "Register";
-    private FirebaseDatabase mFirebaseInstance;
+
+public class Register extends AppCompatActivity {
 
     private DatabaseReference myDatabaseReference, userDatRef;
     private String userId;
@@ -61,11 +60,7 @@ public class Register extends UncaughtExceptionActivity {
              * Adding persistence for data stored in firebase.
              * also gets unique id for current user
              * */
-            //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-            mFirebaseInstance = FirebaseDatabase.getInstance();
-            mFirebaseInstance.setPersistenceEnabled(true);
-
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             myDatabaseReference=FirebaseDatabase.getInstance().getReference("User");
             userDatRef = FirebaseDatabase.getInstance().getReference("UserData");
         } catch (Exception e) {
@@ -186,17 +181,12 @@ public class Register extends UncaughtExceptionActivity {
                                                 Toast.LENGTH_SHORT).show();
                                     } else {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
-                                                                                                     
-                                        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-                                        mFirebaseInstance.setPersistenceEnabled(true);
-
-                                        //  Rick Cantu
-                                        //  This section of the code gets the current user's UID and calls
-                                        //  the method "addUser" which build the user's tree structure on the
-                                        //  database.
+                                        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         String uid = user.getUid();
-                                        addUser(uid, ((EditText)findViewById(R.id.fullname)).getText().toString(),
+                                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                        String CircleCode = database.getReference().push().getKey();
+                                        addUser(uid, CircleCode, ((EditText)findViewById(R.id.fullname)).getText().toString(),
                                                 ((EditText)findViewById(R.id.username)).getText().toString(),
                                                 ((EditText)findViewById(R.id.email_id)).getText().toString(),
                                                 ((EditText)findViewById(R.id.dateOfBirth)).getText().toString(),
@@ -218,19 +208,17 @@ public class Register extends UncaughtExceptionActivity {
     }
 
 
-    private void addUser(String uid, String fullname, String username,
+    private void addUser(String uid, String CircleCode, String fullname, String username,
                             String email, String dob, int phoneNumber){
-        //  This method takes the inputs from the register screen and assigns them to
-        //  variables that are then pushed to the database to specific children on the
-        //  database.  This builds the user's tree structure on the database.
         String userId = uid;
+        String code = CircleCode;
         User user = new User(fullname, username, email, dob, phoneNumber);
         myDatabaseReference.child(userId).setValue(user);
         userDatRef.child(userId).child("fullname").setValue(fullname);
         userDatRef.child(userId).child("avail").setValue("false");
         userDatRef.child(userId).child("lat").setValue("0");
         userDatRef.child(userId).child("lng").setValue("0");
-        userDatRef.child(userId).child("CircleCodes");
+        userDatRef.child(userId).child("CircleCode").setValue(code);
     }
 
     @Override
@@ -248,12 +236,11 @@ public class Register extends UncaughtExceptionActivity {
     * */
     @Override
     public void onBackPressed() {
-        throw new RuntimeException("this will cause a crash");
         // Add the Back key handler here.
-        /*FirebaseAuth.getInstance().signOut();
+        FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(Register.this, MainActivity.class);
         startActivity(intent);
-        finish();*/
+        finish();
     }
 
     @Override

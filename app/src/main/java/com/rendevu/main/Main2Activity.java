@@ -7,19 +7,28 @@ package com.rendevu.main;
 //i put some stuff for testing
 import android.*;
 
+import android.*;
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,17 +42,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 //import com.google.android.gms.awareness.snapshot.LocationResult;
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -53,10 +73,13 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -67,9 +90,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Queue;
 import java.lang.NullPointerException;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
@@ -103,7 +130,7 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
     private static final int REQUEST_INVITE = 0;  //used for sending invites
     private static GoogleApiClient mGoogleApiClient;
 
-    private FirebaseAuth auth;
+    private FirebaseAuth mauth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +159,28 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
                     .addOnConnectionFailedListener((GoogleApiClient.OnConnectionFailedListener) this)
                     .addApi(LocationServices.API)
                     .build();
+
+
+
+            /**
+            *
+            * Listener and Handler for send invite button
+            * */
+            /*invite = findViewById(R.id.sendInvites);
+
+            invite.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    InvitationClass Inv = new InvitationClass();
+                    try {
+                        Inv.onInviteClicked(v);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });*/
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -146,7 +195,6 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
         super.onStop();
     }
 /**
- *  @Override
  *  public void onFinishUserDialog(String addedName) {
  *
  *      //Contact name and Phone number added in dialog are passed here
@@ -737,24 +785,11 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
 
                         final String key = dataSnapshot.getKey();
 
-                        //not needed, what was causing the crash has been removed.
-                        //if(dataSnapshot.hasChild("Circle"))
                         rDatabase.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+                                circle = dataSnapshot.child("Circle").getValue(String.class);
                                 isInCircle = 1;
-                                final DatabaseReference cirRef = rDatabase.child(uid);
-                                cirRef.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        circle = dataSnapshot.child("Circle").getValue(String.class);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
                             }
 
                             @Override
@@ -767,7 +802,7 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
                             String lat = dataSnapshot.child("lat").getValue(String.class);
                             String lng = dataSnapshot.child("lng").getValue(String.class);
                             String displayName = dataSnapshot.child("fullname").getValue(String.class);
-                            String circle = dataSnapshot.child("Circle").getValue(String.class);
+                            String circle = dataSnapshot.child("Circle").getValue().toString();
                             Double dLat = Double.parseDouble(lat);
                             Double dLng = Double.parseDouble(lng);
 
@@ -791,34 +826,25 @@ public class Main2Activity extends UncaughtExceptionActivity implements Activity
             
 
 
-      //  will test this area 
-                        if(markers.containsValue(dataSnapshot.getKey())){
-                            Marker marker = markers.get(dataSnapshot.getKey());
-                            marker.remove();
-                        }//removes previous marker
+      //will test this area 
+//                      if(markers.containsValue(dataSnapshot.getKey())){
+//                          Marker marker = markers.get(dataSnapshot.getKey());
+//                          marker.remove();
+//                      }//removes previous marker
                               
                         String available = dataSnapshot.child("avail").getValue(String.class);
                         MarkerOptions markerOptions = new MarkerOptions();
 
-                        final String key = dataSnapshot.getKey();
-                        //not needed, what was causing the crash has been removed.
-                        //if(dataSnapshot.hasChild("Circle"))
+                        String key = dataSnapshot.getKey();
+                        rDatabase = database.getReference().child("UserData").child(uid);
+
+                        if(dataSnapshot.hasChild("Circle"))
                         rDatabase.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange (DataSnapshot dataSnapshot){
+
+                                @Override
+                                public void onDataChange (DataSnapshot dataSnapshot){
+                                circle = dataSnapshot.child("Circle").getValue().toString();
                                 isInCircle = 1;
-                                final DatabaseReference cirRef = rDatabase.child(uid);
-                                cirRef.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        circle = dataSnapshot.child("Circle").getValue(String.class);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
                             }
 
                             @Override
