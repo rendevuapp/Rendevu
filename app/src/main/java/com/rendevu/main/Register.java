@@ -4,6 +4,7 @@ package com.rendevu.main;
  */
 
 import android.app.DatePickerDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -156,6 +157,7 @@ public class Register extends UncaughtExceptionActivity {
             e.printStackTrace();
         }
 
+
         try {
             btnSignUp.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -174,6 +176,7 @@ public class Register extends UncaughtExceptionActivity {
                         return;
                     }
 
+
                     /*
                     * create user and store data in authorization database
                     * */
@@ -181,19 +184,15 @@ public class Register extends UncaughtExceptionActivity {
                             .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    Toast.makeText(Register.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                                    /*Toast.makeText(Register.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();*/
                                     //progressBar.setVisibility(View.GONE);
 
                                     // If registration fails, display exception handler message to the user. If registration succeeds
                                     // the auth state listener will be notified and logic to handle the
                                     // registered user can be handled in the listener.
                                     if (!task.isSuccessful()) {
-
-                                        //clear the invalid input
-                                        loginPass.setText(null);
-                                        inputEmail.setText(null);
-
                                         try {
+
                                             final Exception exception = task.getException();
                                             if(exception == null) {
                                                 //exception for no error code found
@@ -201,19 +200,27 @@ public class Register extends UncaughtExceptionActivity {
                                             }
                                             throw exception;
                                         } catch(FirebaseAuthWeakPasswordException e) {
+                                            ExceptionHandler.makeExceptionAlert(Register.this, e);
                                             //for a password less than 6 characters
+                                            //clear the invalid input
+                                            loginPass.setText(null);
                                             loginPass.setError(getString(R.string.error_weak_password));
                                             loginPass.requestFocus();
                                         } catch(FirebaseAuthInvalidCredentialsException e) {
+                                            ExceptionHandler.makeExceptionAlert(Register.this, e);
+                                            inputEmail.setText(null);
                                             inputEmail.setError(getString(R.string.error_invalid_email));
                                             inputEmail.requestFocus();
                                         } catch(FirebaseAuthUserCollisionException e) {
+                                            ExceptionHandler.makeExceptionAlert(Register.this, e);
+                                            inputEmail.setText(null);
                                             inputEmail.setError(getString(R.string.error_user_exists));
                                             inputEmail.requestFocus();
                                         } catch(Exception e) {
+                                            ExceptionHandler.makeExceptionAlert(Register.this, e);//added this
                                             //default message also displayed on bottom of screen
-                                            Toast.makeText(Register.this, "Registration failed." + task.getException(),
-                                                    Toast.LENGTH_SHORT).show();
+                                            /*Toast.makeText(Register.this, "Registration failed." + task.getException(),
+                                                    Toast.LENGTH_SHORT).show();*/
                                         }
                                     } else {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
@@ -274,12 +281,18 @@ public class Register extends UncaughtExceptionActivity {
     * */
     @Override
     public void onBackPressed() {
-        throw new RuntimeException("this will cause a crash");
-        // Add the Back key handler here.
-        /*FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(Register.this, MainActivity.class);
-        startActivity(intent);
-        finish();*/
+
+        try {
+            // Add the Back key handler here.
+            /*FirebaseAuth.getInstance().signOut();*/
+            startActivity(intent);
+            /*ExceptionHandler.exceptionThrower(new ActivityNotFoundException());*/
+            finish();
+            //throw new RuntimeException("this will cause a crash");//for testing purposes
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
