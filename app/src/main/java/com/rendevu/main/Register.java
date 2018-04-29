@@ -50,11 +50,6 @@ public class Register extends UncaughtExceptionActivity {
     private DatePickerDialog datePickerDialog;
     private boolean flag=false;
 
-    /**
-     * The ViewSwitcher to switch between the login buttons and the progress indicator
-     */
-    //private ViewSwitcher mSwitcher;
-
     /*
     * User is authenticated through Firebase
     * */
@@ -164,7 +159,7 @@ public class Register extends UncaughtExceptionActivity {
                     final String password = loginPass.getText().toString().trim();
 
                     if (TextUtils.isEmpty(email)) {
-                        Toast.makeText(getApplicationContext(), "Enter your email address!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
                         return;
                     }
 

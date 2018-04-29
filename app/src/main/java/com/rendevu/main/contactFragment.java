@@ -30,7 +30,7 @@ import java.util.List;
  *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE CONTACT TAB.
  *  Ricardo Cantu
  */
-public  class contactActivity extends Fragment {
+public  class contactFragment extends Fragment {
     FirebaseDatabase database;
     DatabaseReference databaseReference;
 
@@ -39,7 +39,7 @@ public  class contactActivity extends Fragment {
 
     private List<User> list;
 
-    public contactActivity() {
+    public contactFragment() {
     }
 
     @Override

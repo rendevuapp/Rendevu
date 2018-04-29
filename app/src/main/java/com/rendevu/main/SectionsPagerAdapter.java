@@ -21,9 +21,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         try {
             switch (position) {
                 case 0:
-                    return new contactActivity();
+                    return new contactFragment();
                 case 1:
-                    return new mapActivity();
+                    return new mapFragment();
             }
         } catch (Exception e) {
             e.printStackTrace();
