@@ -20,8 +20,8 @@ Rick
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Circle Code"
         android:fontFamily="monospace"
+        android:text="Circle Code"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textSize="24sp"
@@ -30,22 +30,24 @@ Rick
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/GeneratedCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="monospace"
+        android:longClickable="true"
         android:text="Code"
         android:textAlignment="center"
+        android:textIsSelectable="true"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SendCircleCodeTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/codeMessage" />
 
     <Button
-        android:id="@+id/share_button"
+        android:id="@+id/close_shareCode_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -53,11 +55,23 @@ Rick
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="monospace"
-        android:text="Share"
+        android:text="DISMISS"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/GeneratedCode"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/codeMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You can copy this code and share it with a friend!"
+        app:layout_constraintBottom_toTopOf="@+id/GeneratedCode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SendCircleCodeTitle" />
 
 </android.support.constraint.ConstraintLayout>
