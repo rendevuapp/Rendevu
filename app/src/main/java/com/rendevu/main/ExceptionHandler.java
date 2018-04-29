@@ -1,6 +1,5 @@
 package com.rendevu.main;
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -19,8 +18,8 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 public class ExceptionHandler {
 
     public static void makeExceptionAlert(Context context, Exception ex) {
-        String headerText = "";
-        String messageText = "";
+        String headerText;
+        String messageText;
 
         if (ex instanceof ArrayIndexOutOfBoundsException) {
             headerText = context.getText(R.string.error).toString();
@@ -40,10 +39,7 @@ public class ExceptionHandler {
         } else if (ex instanceof RuntimeException) {
             headerText = context.getText(R.string.error).toString();
             messageText = context.getText(R.string.RuntimeException).toString();
-        } /*else if (ex instanceof ActivityNotFoundException) {
-            headerText = context.getText(R.string.error).toString();
-            messageText = context.getText(R.string.ActivityNotFoundException).toString();
-        } */else if (ex instanceof FirebaseAuthWeakPasswordException) {
+        } else if (ex instanceof FirebaseAuthWeakPasswordException) {
             headerText = context.getText(R.string.error).toString();
             messageText = context.getText(R.string.FirebaseAuthWeakPasswordException).toString();
         } else if (ex instanceof FirebaseAuthInvalidCredentialsException) {
@@ -90,9 +86,7 @@ public class ExceptionHandler {
                 throw ex;
             } else if (ex instanceof RuntimeException) {
                 throw ex;
-            } /*else if (ex instanceof ActivityNotFoundException) {
-                throw (ActivityNotFoundException) ex;
-            } */else if (ex instanceof FirebaseAuthWeakPasswordException) {
+            } else if (ex instanceof FirebaseAuthWeakPasswordException) {
                 throw ex;
             } else if (ex instanceof FirebaseAuthInvalidCredentialsException) {
                 throw ex;

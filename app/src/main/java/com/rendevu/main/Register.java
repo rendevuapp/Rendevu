@@ -3,13 +3,11 @@ package com.rendevu.main;
     Josh Davenport
  */
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,22 +32,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 
 
+@SuppressWarnings({"FieldCanBeLocal", "SpellCheckingInspection"})
 public class Register extends UncaughtExceptionActivity {
     //private static final String TAG = "Register";
 
     private DatabaseReference myDatabaseReference, userDatRef;
 
-    private FirebaseDatabase mFirebaseInstance;
+    //private static FirebaseDatabase mFirebaseInstance;
+    static {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    }
 
+    private EditText inputEmail, loginPass, dateofBirth;
     private String userId;
-
-    private EditText fullName, inputEmail, phoneNum,
-            loginPass, dateofBirth, userName;
     private ImageView hidePass=null;
-    private Button btnSignUp;
     private ProgressBar progressBar;
     private DatePickerDialog datePickerDialog;
-    boolean flag=false;
+    private boolean flag=false;
 
     /**
      * The ViewSwitcher to switch between the login buttons and the progress indicator
@@ -70,15 +68,15 @@ public class Register extends UncaughtExceptionActivity {
             //Get Firebase auth instance
             auth = FirebaseAuth.getInstance();
 
-            /**
+            /*
              * Josh
              * Adding persistence for data stored in firebase.
              * also gets unique id for current user
              * */
             //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-            mFirebaseInstance = FirebaseDatabase.getInstance();
-            mFirebaseInstance.setPersistenceEnabled(true);
+            //mFirebaseInstance = FirebaseDatabase.getInstance();
+            //mFirebaseInstance.setPersistenceEnabled(true);
 
             myDatabaseReference=FirebaseDatabase.getInstance().getReference("User");
             userDatRef = FirebaseDatabase.getInstance().getReference("UserData");
@@ -88,14 +86,11 @@ public class Register extends UncaughtExceptionActivity {
             e.printStackTrace();
         }
         hidePass = findViewById(R.id.show_hide);
-        fullName = findViewById(R.id.fullname);
         inputEmail = findViewById(R.id.email_id);
-        phoneNum = findViewById(R.id.userPhone);
         loginPass = findViewById(R.id.password);
         dateofBirth = findViewById(R.id.dateOfBirth);
-        userName = findViewById(R.id.username);
-        btnSignUp = findViewById(R.id.register);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        progressBar = findViewById(R.id.progressBar);
 
         try {
             dateofBirth.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +106,7 @@ public class Register extends UncaughtExceptionActivity {
                     datePickerDialog = new DatePickerDialog(Register.this, android.R.style.Theme_Holo_Dialog,
                             new DatePickerDialog.OnDateSetListener() {
 
+                                @SuppressLint("SetTextI18n")
                                 @Override
                                 public void onDateSet(DatePicker view, int year,
                                                       int monthOfYear, int dayOfMonth) {
@@ -137,7 +133,7 @@ public class Register extends UncaughtExceptionActivity {
                 @Override
                 public void onClick(View arg0) {
 
-                    if(flag==false)
+                    if(!flag)
                     {
                         hidePass.setImageResource(R.drawable.hide);
                         loginPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -159,6 +155,7 @@ public class Register extends UncaughtExceptionActivity {
 
 
         try {
+            Button btnSignUp = findViewById(R.id.register);
             btnSignUp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -224,15 +221,25 @@ public class Register extends UncaughtExceptionActivity {
                                         }
                                     } else {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
-                                        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-                                        mFirebaseInstance.setPersistenceEnabled(true);
+                                        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                                        //mFirebaseInstance.setPersistenceEnabled(true);
 
                                         //  Rick Cantu
                                         //  This section of the code gets the current user's UID and calls
                                         //  the method "addUser" which build the user's tree structure on the
                                         //  database.
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                        String uid = user.getUid();
+                                        String uid = null;
+                                        try {
+                                            if (user != null) {
+                                                uid = user.getUid();
+                                            } else {
+                                                ExceptionHandler.exceptionThrower(new NullPointerException());
+                                            }
+                                        } catch (Exception e) {
+                                            ExceptionHandler.makeExceptionAlert(Register.this, e);
+                                            e.printStackTrace();
+                                        }
                                         addUser(uid, ((EditText)findViewById(R.id.fullname)).getText().toString(),
                                                 ((EditText)findViewById(R.id.username)).getText().toString(),
                                                 ((EditText)findViewById(R.id.email_id)).getText().toString(),
@@ -256,7 +263,7 @@ public class Register extends UncaughtExceptionActivity {
         //  This method takes the inputs from the register screen and assigns them to
         //  variables that are then pushed to the database to specific children on the
         //  database.  This builds the user's tree structure on the database.
-        String userId = uid;
+        userId = uid;
         User user = new User(fullname, username, email, dob, phoneNumber);
         myDatabaseReference.child(userId).setValue(user);
         userDatRef.child(userId).child("fullname").setValue(fullname);
@@ -285,12 +292,12 @@ public class Register extends UncaughtExceptionActivity {
 
         try {
             // Add the Back key handler here.
-            /*FirebaseAuth.getInstance().signOut();*/
+            FirebaseAuth.getInstance().signOut();
             startActivity(intent);
-            /*ExceptionHandler.exceptionThrower(new ActivityNotFoundException());*/
             finish();
             //throw new RuntimeException("this will cause a crash");//for testing purposes
         } catch (Exception e) {
+            ExceptionHandler.makeExceptionAlert(Register.this, e);
             e.printStackTrace();
         }
     }

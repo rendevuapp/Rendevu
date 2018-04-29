@@ -120,4 +120,5 @@
     <string name="FirebaseAuthInvalidCredentialsException">The email you have entered is invalid!</string>
     <string name="FirebaseAuthUserCollisionException">A user with this email address already exists!</string>
     <string name="ActivityNotFoundException">Requested activity does not exist!</string>
+    <string name="error_user_logged_in">A user with this email is already logged in!</string>
 </resources>

@@ -7,8 +7,6 @@ package com.rendevu.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,6 +19,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 import java.util.NoSuchElementException;
 
@@ -28,10 +28,8 @@ public class Login extends UncaughtExceptionActivity {
 
     private EditText loginEmail, loginPass;
     private FirebaseAuth auth;
-    //private ProgressBar progressBar;
-    private Button btnSignup, start, btnReset;
     private ImageView hidePass=null;
-    boolean flag=false;
+    private boolean flag=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +47,11 @@ public class Login extends UncaughtExceptionActivity {
         setSupportActionBar(toolbar);*/
 
         hidePass = findViewById(R.id.show_hide2);
-        loginEmail = (EditText) findViewById(R.id.email_id2);
-        loginPass = (EditText) findViewById(R.id.password2);
-        //progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        btnSignup = (Button) findViewById(R.id.backRegister);
-        start = (Button) findViewById(R.id.btnLogin);
-        btnReset = (Button) findViewById(R.id.forgotPass);
+        loginEmail = findViewById(R.id.email_id2);
+        loginPass = findViewById(R.id.password2);
+        Button btnSignup = findViewById(R.id.backRegister);
+        Button start = findViewById(R.id.btnLogin);
+        Button btnReset = findViewById(R.id.forgotPass);
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
@@ -79,7 +76,7 @@ public class Login extends UncaughtExceptionActivity {
             startActivity(new Intent(Login.this, MainActivity.class));
             finish(); //closes current activity before moving to the next.
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "General Exception", Toast.LENGTH_SHORT).show();
+            ExceptionHandler.makeExceptionAlert(Login.this, e);
             e.printStackTrace();
         }
 
@@ -92,7 +89,7 @@ public class Login extends UncaughtExceptionActivity {
                 }
             });
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Error switching pages", Toast.LENGTH_SHORT).show();
+            ExceptionHandler.makeExceptionAlert(Login.this, e);
             e.printStackTrace();
         }
 
@@ -102,7 +99,7 @@ public class Login extends UncaughtExceptionActivity {
                 @Override
                 public void onClick(View arg0) {
 
-                    if(flag==false)
+                    if(!flag)
                     {
                         hidePass.setImageResource(R.drawable.hide);
                         loginPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -151,12 +148,40 @@ public class Login extends UncaughtExceptionActivity {
                                     // signed in user can be handled in the listener.
                                     //progressBar.setVisibility(View.GONE);
                                     if (!task.isSuccessful()) {
-                                        // there was an error
-                                        if (password.length() < 6) {
-                                            loginPass.setError("Invalid Password!");
-                                        } else {
-                                            Toast.makeText(Login.this, "Authentication failed, check your email or password...", Toast.LENGTH_LONG).show();
+                                        try {
+
+                                            if (password.length() < 6) {
+                                                loginPass.setError("Invalid Password!");
+                                                loginPass.setText(null);
+                                                loginPass.requestFocus();
+                                            }
+                                            final Exception exception = task.getException();
+                                            if(exception == null) {
+                                                //exception for no error code found
+                                                throw new NullPointerException("exception is null");
+                                            }
+                                            throw exception;
+                                        } catch(FirebaseAuthInvalidCredentialsException e) {
+                                            ExceptionHandler.makeExceptionAlert(Login.this, e);
+                                            loginPass.setText(null);
+                                            loginEmail.setText(null);
+                                            loginEmail.setError(getString(R.string.error_invalid_email));
+                                            loginEmail.requestFocus();
+                                        } catch(FirebaseAuthUserCollisionException e) {
+                                            ExceptionHandler.makeExceptionAlert(Login.this, e);
+                                            loginPass.setText(null);
+                                            loginEmail.setText(null);
+                                            loginEmail.setError(getString(R.string.error_user_logged_in));
+                                            loginEmail.requestFocus();
+                                        } catch(Exception e) {
+                                            ExceptionHandler.makeExceptionAlert(Login.this, e);//added this
+                                            //default message also displayed on bottom of screen
+                                            /*Toast.makeText(Register.this, "Registration failed." + task.getException(),
+                                                    Toast.LENGTH_SHORT).show();*/
                                         }
+                                         /*else {
+                                            Toast.makeText(Login.this, "Authentication failed, check your email or password...", Toast.LENGTH_LONG).show();
+                                        }*/
                                     } else {
                                         Intent intent = new Intent(Login.this, Main2Activity.class);
                                         startActivity(intent);
@@ -167,7 +192,8 @@ public class Login extends UncaughtExceptionActivity {
                 }
             });
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Authentication process failed, cannot login", Toast.LENGTH_SHORT).show();
+            ExceptionHandler.makeExceptionAlert(Login.this, e);
+            /*Toast.makeText(getApplicationContext(), "Authentication process failed, cannot login", Toast.LENGTH_SHORT).show();*/
             e.printStackTrace();
         }
     }

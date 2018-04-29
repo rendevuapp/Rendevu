@@ -5,31 +5,28 @@ package com.rendevu.main;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
 
 import android.os.Handler;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.NoSuchElementException;
 
+@SuppressWarnings("ConstantConditions")
 public class MainActivity extends UncaughtExceptionActivity {
-    FirebaseAuth auth;
-    Intent i=null;
 
-    final String TAG = this.getClass().getName();
+    private final String TAG = this.getClass().getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        auth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         if (auth.getCurrentUser() != null) {
-            Toast.makeText(this, "Welcome Back  "+auth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Welcome Back  "+ auth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, Main2Activity.class));
             finish();
         }
@@ -43,7 +40,7 @@ public class MainActivity extends UncaughtExceptionActivity {
             {
                 case R.id.log_in:
                     try {
-                        i = new Intent(this, Login.class);
+                        Intent i = new Intent(this, Login.class);
                         startActivityForResult(i, 500);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         finish();
@@ -57,9 +54,9 @@ public class MainActivity extends UncaughtExceptionActivity {
                     }
                 case R.id.register:
                     try {
-                    i=new Intent(this,Register.class);
+                    Intent i =new Intent(this,Register.class);
                     startActivityForResult(i, 500);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
                     break;
                     }catch (NoSuchElementException e) {
@@ -84,7 +81,7 @@ public class MainActivity extends UncaughtExceptionActivity {
     * User asked to press back button twice
     * to completely shutdown app
     * */
-    boolean twice;
+    private boolean twice;
     @Override
     public void onBackPressed() {
         // Add the Back key handler here.
