@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -32,6 +34,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -78,21 +81,28 @@ import java.lang.NullPointerException;
      */
     public  class mapFragment extends Fragment implements OnMapReadyCallback {
 
+        private static final int PERMISSION_REQUEST_LOCATION = 34;
+        private FirebaseDatabase mFireBaseDatabase;
+        public static final String TAG = Main2Activity.class.getSimpleName();
+        private static final int REQUEST_INVITE = 0;  //used for sending invites
+        private static GoogleApiClient mGoogleApiClient;
+
+        private FirebaseAuth auth;
         FirebaseDatabase database;
         Marker marker;
         MapView mapView;
         private List<Tracking> list;
         ToggleButton saveLocButton;
         Button refreshButton;
-        public static final String TAG = Main2Activity.class.getSimpleName();
+
         private FusedLocationProviderClient mFusedLocationClient;
         final double defaultLatitude = 29.424503;
         final double defaultLongtitude = -98.491500;
-        private static final int PERMISSION_REQUEST_LOCATION = 34;
+
         private static Double latitude, longtitude;
         protected Location mLastLocation;
         //LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        private static GoogleApiClient mGoogleApiClient;
+
         private DatabaseReference mDatabase, rDatabase;
 
         @SuppressLint("ValidFragment")
@@ -106,15 +116,18 @@ import java.lang.NullPointerException;
 
                 mFusedLocationClient = LocationServices.getFusedLocationProviderClient(super.getActivity());
                 super.onCreate(savedInstanceState);
-               checkPermissions();
                 database = FirebaseDatabase.getInstance();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = user.getUid();
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("UserData").child(uid);
                 rDatabase = FirebaseDatabase.getInstance().getReference().child("UserData");
 
-                    getLastLocation();
+                if(!checkPermission()){
+                    requestPermissions();
 
+                }else{
+                    getLastLocation();
+                }
             } catch (NullPointerException e) {
                 System.out.print("method: getUid is trying to reference a null pointer.");
                 e.printStackTrace();
@@ -134,6 +147,12 @@ import java.lang.NullPointerException;
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                         String sLat, sLng;
+                        if(!checkPermission()){
+                            requestPermissions();
+
+                        }else{
+                            getLastLocation();
+                        }
                         if(isChecked){
                             if(latitude != null && longtitude != null){
                                 sLat = Double.toString(latitude);
@@ -163,7 +182,6 @@ import java.lang.NullPointerException;
             }
             return rootView;
         }
-
 
         @SuppressWarnings("MissingPermission")
         private void getLastLocation() {
@@ -212,60 +230,91 @@ import java.lang.NullPointerException;
         }
 
         /**
-         * permissions request code
+         * Return the current state of the permissions needed.
          */
-        private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
+        private boolean checkPermission() {
+            int permissionState = ActivityCompat.checkSelfPermission(super.getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION);
+            return permissionState == PackageManager.PERMISSION_GRANTED;
+        }
 
-        /**
-         * Permissions that need to be explicitly requested from end user.
-         */
-        private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
-                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        private void startLocationPermissionRequest() {
+            ActivityCompat.requestPermissions(super.getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_REQUEST_LOCATION);
+        }
 
+        private void requestPermissions() {
+            boolean shouldProvideRationale =
+                    ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
+                            Manifest.permission.ACCESS_FINE_LOCATION);
 
-        /**
-         * Checks the dynamically-controlled permissions and requests missing permissions from end user.
-         */
-        protected void checkPermissions() {
-            final List<String> missingPermissions = new ArrayList<String>();
-            // check all required dynamic permissions
-            for (final String permission : REQUIRED_SDK_PERMISSIONS) {
-                final int result = ContextCompat.checkSelfPermission(super.getContext(), permission);
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    missingPermissions.add(permission);
-                }
-            }
-            if (!missingPermissions.isEmpty()) {
-                // request all missing permissions
-                final String[] permissions = missingPermissions
-                        .toArray(new String[missingPermissions.size()]);
-                ActivityCompat.requestPermissions(super.getActivity(), permissions, REQUEST_CODE_ASK_PERMISSIONS);
+            // Provide an additional rationale to the user. This would happen if the user denied the
+            // request previously, but didn't check the "Don't ask again" checkbox.
+            if (shouldProvideRationale) {
+                Log.i(TAG, "Displaying permission rationale to provide additional context.");
+
+                showSnackbar(R.string.permission_rationale, android.R.string.ok,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // Request permission
+                                startLocationPermissionRequest();
+                            }
+                        });
+
             } else {
-                final int[] grantResults = new int[REQUIRED_SDK_PERMISSIONS.length];
-                Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
-                onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS,
-                        grantResults);
+                Log.i(TAG, "Requesting permission");
+                // Request permission. It's possible this can be auto answered if device policy
+                // sets the permission in a given state or the user denied the permission
+                // previously and checked "Never ask again".
+                startLocationPermissionRequest();
             }
         }
 
+        /**
+         * Callback received when a permissions request has been completed.
+         */
         @Override
-        public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                                @NonNull int[] grantResults) {
-            switch (requestCode) {
-                case REQUEST_CODE_ASK_PERMISSIONS:
-                    for (int index = permissions.length - 1; index >= 0; --index) {
-                        if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
-                            // exit the app if one permission is not granted
+            Log.i(TAG, "onRequestPermissionResult");
+            if (requestCode == PERMISSION_REQUEST_LOCATION) {
+                if (grantResults.length <= 0) {
+                    // If user interaction was interrupted, the permission request is cancelled and you
+                    // receive empty arrays.
+                    Log.i(TAG, "User interaction was cancelled.");
+                } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission granted.
+                    getLastLocation();
+                } else {
+                    // Permission denied.
 
-                            Toast.makeText(super.getContext(), "Required permission '" + permissions[index]
-                                    + "' not granted, exiting", Toast.LENGTH_LONG).show();
+                    // Notify the user via a SnackBar that they have rejected a core permission for the
+                    // app, which makes the Activity useless. In a real app, core permissions would
+                    // typically be best requested during a welcome-screen flow.
 
-                            return;
-                        }
-                    }
-                    // all permissions were granted
-                    ;
-                    break;
+                    // Additionally, it is important to remember that a permission might have been
+                    // rejected without asking the user for permission (device policy or "Never ask
+                    // again" prompts). Therefore, a user interface affordance is typically implemented
+                    // when permissions are denied. Otherwise, your app could appear unresponsive to
+                    // touches or interactions which have required permissions.
+                    showSnackbar(R.string.permission_denied_explanation, R.string.settings,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // Build intent that displays the App settings screen.
+                                    Intent intent = new Intent();
+                                    intent.setAction(
+                                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package",
+                                            BuildConfig.APPLICATION_ID, null);
+                                    intent.setData(uri);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                }
+                            });
+                }
             }
         }
 
@@ -282,6 +331,29 @@ import java.lang.NullPointerException;
                 mMap.getUiSettings().setZoomControlsEnabled(true);
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
+                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter(){
+                    @Override
+                    public View getInfoWindow(Marker marker) {
+                        return null;
+                    }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+                        LinearLayout info = new LinearLayout(getContext());
+                        info.setOrientation(LinearLayout.VERTICAL);
+
+                        TextView title = new TextView(getContext());
+                        title.setText(marker.getTitle());
+
+                        TextView snippet = new TextView(getContext());
+                        snippet.setText(marker.getSnippet());
+
+                        info.addView(title);
+                        info.addView(snippet);
+                        return info;
+                    }
+                });
+
                 rDatabase.addChildEventListener(new ChildEventListener() {
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -291,7 +363,7 @@ import java.lang.NullPointerException;
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         String available = dataSnapshot.child("avail").getValue(String.class);
-                        MarkerOptions markerOptions = new MarkerOptions();
+                        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_green_scaled));
 
                         String key = dataSnapshot.getKey();
 
@@ -333,17 +405,17 @@ import java.lang.NullPointerException;
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            
 
 
-      //will test this area 
+
+      //will test this area
 //                      if(markers.containsValue(dataSnapshot.getKey())){
 //                          Marker marker = markers.get(dataSnapshot.getKey());
 //                          marker.remove();
 //                      }//removes previous marker
-                              
+
                         String available = dataSnapshot.child("avail").getValue(String.class);
-                        MarkerOptions markerOptions = new MarkerOptions();
+                        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_green_scaled));
 
                         String key = dataSnapshot.getKey();
                         rDatabase = database.getReference().child("UserData").child(uid);
@@ -409,7 +481,35 @@ import java.lang.NullPointerException;
                 e.printStackTrace();
             }
         }
+   
+        private void requestLocationPermission() {
+               // Permission has not been granted and must be requested.
+               if (ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
+                       Manifest.permission.ACCESS_FINE_LOCATION)) {
+                   // Provide an additional rationale to the user if the permission was not granted
+                   // and the user would benefit from additional context for the use of the permission.
+                   // Display a SnackBar with a button to request the missing permission.
+                   Snackbar.make(super.getView(), "Location Access is required to display markers  ",
+                           Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                       @Override
+                       public void onClick(View view) {
+                           // Request the permission
+                           mapFragment.super.getActivity().requestPermissions(
+                                   new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                   PERMISSION_REQUEST_LOCATION);
+                       }
+                   }).show();
 
+               } else {
+
+                   Snackbar.make(super.getView(),
+                           "Permission is not available. Requesting Location permission.",
+                           Snackbar.LENGTH_SHORT).show();
+                   // Request the permission. The result will be received in onRequestPermissionResult().
+                   super.getActivity().requestPermissions( new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                           PERMISSION_REQUEST_LOCATION);
+               }
+        }
 
         @Override
         public void onResume() {

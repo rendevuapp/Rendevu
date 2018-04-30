@@ -149,22 +149,39 @@ public class AddUserToCircleDialog extends DialogFragment {
                     addContactButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            final String circleCode = codeEditText.getText().toString();
-                            quarryDatabaseReference.orderByChild("CircleCodes").equalTo(circleCode).addValueEventListener(new ValueEventListener() {
+
+                            //current user's uid
+                            final String uid = user.getUid();
+
+                            //db reference to UserCodes
+                            final DatabaseReference queryDB = FirebaseDatabase.getInstance().getReference("UserCodes");
+
+                            final String circleCode = codeEditText.getText().toString().trim();
+
+                            //the query to find the code in the UserCodes table
+                            queryDB.orderByChild("code").equalTo(circleCode).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                                        String key = dataSnapshot1.getKey();
-                                        userDatabaseReference.child("CircleMembers").child(key).child("Circle").setValue(circle);
-                                        quarryDatabaseReference.child("CircleCodes").child(circleCode).removeValue();
-                                        getDialog().dismiss();
+                                        String key = dataSnapshot1.child("uid").getValue().toString();//getKey();
+
+                                        //when found, the value stored in 'uid' in the entry is written to the circle table of the current user
+                                        DatabaseReference db = FirebaseDatabase.getInstance().getReference("UserData");
+                                        db.child(uid).child("CircleMembers").child(key).child("Circle").setValue(circle);
+
+                                        /*userDatabaseReference.child("CircleMembers").child(key).child("Circle").setValue(circle);
+                                        quarryDatabaseReference.child("CircleCodes").child(circleCode).removeValue();*/
                                     }
+                                    getDialog().dismiss();
                                 }
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-                                    getDialog().dismiss();
+                                    //getDialog().dismiss();
                                 }
                             });
+
+                            //once the query is complete, the share code is deleted so that it cannot be used by a second party
+                            queryDB.child(circleCode).removeValue();
                         }
                     });
                     cancelButton.setOnClickListener(new View.OnClickListener() {
