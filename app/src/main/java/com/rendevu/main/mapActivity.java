@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -29,6 +31,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -321,6 +324,29 @@ import java.lang.NullPointerException;
                 mMap.getUiSettings().setZoomControlsEnabled(true);
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
+                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter(){
+                    @Override
+                    public View getInfoWindow(Marker marker) {
+                        return null;
+                    }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+                        LinearLayout info = new LinearLayout(getContext());
+                        info.setOrientation(LinearLayout.VERTICAL);
+
+                        TextView title = new TextView(getContext());
+                        title.setText(marker.getTitle());
+
+                        TextView snippet = new TextView(getContext());
+                        snippet.setText(marker.getSnippet());
+
+                        info.addView(title);
+                        info.addView(snippet);
+                        return info;
+                    }
+                });
+
                 rDatabase.addChildEventListener(new ChildEventListener() {
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -330,7 +356,7 @@ import java.lang.NullPointerException;
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         String available = dataSnapshot.child("avail").getValue(String.class);
-                        MarkerOptions markerOptions = new MarkerOptions();
+                        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_green_scaled));
 
                         String key = dataSnapshot.getKey();
 
@@ -372,17 +398,17 @@ import java.lang.NullPointerException;
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            
 
 
-      //will test this area 
+
+      //will test this area
 //                      if(markers.containsValue(dataSnapshot.getKey())){
 //                          Marker marker = markers.get(dataSnapshot.getKey());
 //                          marker.remove();
 //                      }//removes previous marker
-                              
+
                         String available = dataSnapshot.child("avail").getValue(String.class);
-                        MarkerOptions markerOptions = new MarkerOptions();
+                        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_green_scaled));
 
                         String key = dataSnapshot.getKey();
                         rDatabase = database.getReference().child("UserData").child(uid);
