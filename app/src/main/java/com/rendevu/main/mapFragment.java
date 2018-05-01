@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -13,14 +12,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -30,6 +29,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -46,9 +46,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.lang.NullPointerException;
+
+
     /*
     *
     * Notes for Map:
@@ -70,27 +71,34 @@ import java.lang.NullPointerException;
      *  Tamim Alekozai
      *
      */
-    public  class mapActivity extends Fragment implements OnMapReadyCallback {
+    @SuppressWarnings({"unchecked", "BooleanMethodIsAlwaysInverted", "ConstantConditions", "SuspiciousMethodCalls", "unused"})
+    public  class mapFragment extends Fragment implements OnMapReadyCallback {
 
-        FirebaseDatabase database;
-        Marker marker;
-        MapView mapView;
-        private List<Tracking> list;
-        ToggleButton saveLocButton;
-        Button refreshButton;
-        public static final String TAG = Main2Activity.class.getSimpleName();
-        private FusedLocationProviderClient mFusedLocationClient;
-        final double defaultLatitude = 29.424503;
-        final double defaultLongtitude = -98.491500;
         private static final int PERMISSION_REQUEST_LOCATION = 34;
-        private static Double latitude, longtitude;
-        protected Location mLastLocation;
-        //LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        // --Commented out by Inspection (4/29/2018 9:08 PM):private FirebaseDatabase mFireBaseDatabase;
+        private static final String TAG = Main2Activity.class.getSimpleName();
+        // --Commented out by Inspection (4/29/2018 9:08 PM):private static final int REQUEST_INVITE = 0;  //used for sending invites
         private static GoogleApiClient mGoogleApiClient;
+
+        // --Commented out by Inspection (4/29/2018 9:08 PM):private FirebaseAuth auth;
+        private FirebaseDatabase database;
+        // --Commented out by Inspection (4/29/2018 9:08 PM):Marker marker;
+        private MapView mapView;
+        // --Commented out by Inspection (4/29/2018 9:08 PM):private List<Tracking> list;
+        // --Commented out by Inspection (4/29/2018 9:08 PM):Button refreshButton;
+
+        private FusedLocationProviderClient mFusedLocationClient;
+        private final double defaultLatitude = 29.424503;
+        private final double defaultLongtitude = -98.491500;
+
+        private static Double latitude, longtitude;
+        private Location mLastLocation;
+        //LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+
         private DatabaseReference mDatabase, rDatabase;
 
         @SuppressLint("ValidFragment")
-        public mapActivity() {
+        public mapFragment() {
         }
 
 
@@ -102,7 +110,12 @@ import java.lang.NullPointerException;
                 super.onCreate(savedInstanceState);
                 database = FirebaseDatabase.getInstance();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                String uid = user.getUid();
+                String uid = null;
+                try {
+                    uid = user.getUid();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("UserData").child(uid);
                 rDatabase = FirebaseDatabase.getInstance().getReference().child("UserData");
 
@@ -119,13 +132,13 @@ import java.lang.NullPointerException;
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = null;
             try {
                 rootView = inflater.inflate(R.layout.mainscreen_tab, container, false);
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+                //LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
-                saveLocButton = (ToggleButton) rootView.findViewById(R.id.toggleButton2);
+                ToggleButton saveLocButton = rootView.findViewById(R.id.toggleButton2);
 
                 saveLocButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -150,6 +163,8 @@ import java.lang.NullPointerException;
                             newPush.child("avail").setValue("true");
                             newPush.child("lat").setValue(sLat);
                             newPush.child("lng").setValue(sLng);
+
+
                         }
                         else{
                             DatabaseReference newPush = mDatabase;
@@ -158,7 +173,7 @@ import java.lang.NullPointerException;
                     }
                 });
 
-                mapView = (MapView) rootView.findViewById(R.id.map);
+                mapView = rootView.findViewById(R.id.map);
                 mapView.onCreate(savedInstanceState);
                 mapView.getMapAsync(this);
             } catch (Exception e) {
@@ -169,21 +184,25 @@ import java.lang.NullPointerException;
 
         @SuppressWarnings("MissingPermission")
         private void getLastLocation() {
-            mFusedLocationClient.getLastLocation()
-                    .addOnCompleteListener(super.getActivity(), new OnCompleteListener<Location>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Location> task) {
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                mLastLocation = task.getResult();
+            try {
+                mFusedLocationClient.getLastLocation()
+                        .addOnCompleteListener(super.getActivity(), new OnCompleteListener<Location>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Location> task) {
+                                if (task.isSuccessful() && task.getResult() != null) {
+                                    mLastLocation = task.getResult();
 
-                                latitude= mLastLocation.getLatitude();
-                                longtitude= mLastLocation.getLongitude();
-                            } else {
-                                Log.w(TAG, "getLastLocation:exception", task.getException());
-                                showSnackbar(getString(R.string.no_location_detected));
+                                    latitude= mLastLocation.getLatitude();
+                                    longtitude= mLastLocation.getLongitude();
+                                } else {
+                                    Log.w(TAG, "getLastLocation:exception", task.getException());
+                                    showSnackbar(getString(R.string.no_location_detected));
+                                }
                             }
-                        }
-                    });
+                        });
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
 
         /**
@@ -192,7 +211,12 @@ import java.lang.NullPointerException;
          * @param text The Snackbar text.
          */
         private void showSnackbar(final String text) {
-            View container = super.getView().findViewById(R.id.appbar);
+            View container = null;
+            try {
+                container = super.getView().findViewById(R.id.appbar);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
             if (container != null) {
                 Snackbar.make(container, text, Snackbar.LENGTH_LONG).show();
             }
@@ -207,31 +231,49 @@ import java.lang.NullPointerException;
          */
         private void showSnackbar(final int mainTextStringId, final int actionStringId,
                                   View.OnClickListener listener) {
-            Snackbar.make(super.getView().findViewById(android.R.id.content),
-                    getString(mainTextStringId),
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(getString(actionStringId), listener).show();
+            try {
+                Snackbar.make(super.getView().findViewById(android.R.id.content),
+                        getString(mainTextStringId),
+                        Snackbar.LENGTH_INDEFINITE)
+                        .setAction(getString(actionStringId), listener).show();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
 
         /**
          * Return the current state of the permissions needed.
          */
         private boolean checkPermission() {
-            int permissionState = ActivityCompat.checkSelfPermission(super.getActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION);
+            int permissionState = 0;
+            try {
+                permissionState = ActivityCompat.checkSelfPermission(super.getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
             return permissionState == PackageManager.PERMISSION_GRANTED;
         }
 
         private void startLocationPermissionRequest() {
-            ActivityCompat.requestPermissions(super.getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSION_REQUEST_LOCATION);
+            try {
+                ActivityCompat.requestPermissions(super.getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        PERMISSION_REQUEST_LOCATION);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
 
         private void requestPermissions() {
             boolean shouldProvideRationale =
-                    ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
-                            Manifest.permission.ACCESS_FINE_LOCATION);
+                    false;
+            try {
+                shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
 
             // Provide an additional rationale to the user. This would happen if the user denied the
             // request previously, but didn't check the "Don't ask again" checkbox.
@@ -315,16 +357,39 @@ import java.lang.NullPointerException;
                 mMap.getUiSettings().setZoomControlsEnabled(true);
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
+                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter(){
+                    @Override
+                    public View getInfoWindow(Marker marker) {
+                        return null;
+                    }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+                        LinearLayout info = new LinearLayout(getContext());
+                        info.setOrientation(LinearLayout.VERTICAL);
+
+                        TextView title = new TextView(getContext());
+                        title.setText(marker.getTitle());
+
+                        TextView snippet = new TextView(getContext());
+                        snippet.setText(marker.getSnippet());
+
+                        info.addView(title);
+                        info.addView(snippet);
+                        return info;
+                    }
+                });
+
                 rDatabase.addChildEventListener(new ChildEventListener() {
 
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    String uid = user.getUid();
+                    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    final String uid = user.getUid();
                     int isInCircle = 0;
                     String circle;
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         String available = dataSnapshot.child("avail").getValue(String.class);
-                        MarkerOptions markerOptions = new MarkerOptions();
+                        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_green_scaled));
 
                         String key = dataSnapshot.getKey();
 
@@ -341,42 +406,46 @@ import java.lang.NullPointerException;
                             }
                         });
 
-                        if(available.equals("true") && isInCircle == 1 ) {
-                            String lat = dataSnapshot.child("lat").getValue(String.class);
-                            String lng = dataSnapshot.child("lng").getValue(String.class);
-                            String displayName = dataSnapshot.child("fullname").getValue(String.class);
-                            String circle = dataSnapshot.child("Circle").getValue().toString();
-                            Double dLat = Double.parseDouble(lat);
-                            Double dLng = Double.parseDouble(lng);
+                        try {
+                            if(available.equals("true") && isInCircle == 1 ) {
+                                String lat = dataSnapshot.child("lat").getValue(String.class);
+                                String lng = dataSnapshot.child("lng").getValue(String.class);
+                                String displayName = dataSnapshot.child("fullname").getValue(String.class);
+                                String circle = dataSnapshot.child("Circle").getValue().toString();
+                                Double dLat = Double.parseDouble(lat);
+                                Double dLng = Double.parseDouble(lng);
 
-                            LatLng newLocation = new LatLng(dLat, dLng);
+                                LatLng newLocation = new LatLng(dLat, dLng);
 
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
 
-                            markerOptions.position(newLocation);
-                            markerOptions.title(displayName);
-                            markerOptions.snippet(circle);
-                            Marker mMarker = mMap.addMarker(markerOptions);
-                            markers.put(dataSnapshot.getKey(), mMarker);
-                        }else if(markers.containsValue(dataSnapshot.getKey())){
-                            Marker marker = markers.get(dataSnapshot.getKey());
-                            marker.remove();
-                        }//added to remove marker if unavailable
+                                markerOptions.position(newLocation);
+                                markerOptions.title(displayName);
+                                markerOptions.snippet(circle);
+                                Marker mMarker = mMap.addMarker(markerOptions);
+                                markers.put(dataSnapshot.getKey(), mMarker);
+                            }else if(markers.containsValue(dataSnapshot.getKey())){
+                                Marker marker = markers.get(dataSnapshot.getKey());
+                                marker.remove();
+                            }//added to remove marker if unavailable
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            
 
 
-      //will test this area 
+
+      //will test this area
 //                      if(markers.containsValue(dataSnapshot.getKey())){
 //                          Marker marker = markers.get(dataSnapshot.getKey());
 //                          marker.remove();
 //                      }//removes previous marker
-                              
+
                         String available = dataSnapshot.child("avail").getValue(String.class);
-                        MarkerOptions markerOptions = new MarkerOptions();
+                        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_green_scaled));
 
                         String key = dataSnapshot.getKey();
                         rDatabase = database.getReference().child("UserData").child(uid);
@@ -386,8 +455,12 @@ import java.lang.NullPointerException;
 
                                 @Override
                                 public void onDataChange (DataSnapshot dataSnapshot){
-                                circle = dataSnapshot.child("Circle").getValue().toString();
-                                isInCircle = 1;
+                                    try {
+                                        circle = dataSnapshot.child("Circle").getValue().toString();
+                                    } catch (NullPointerException e) {
+                                        e.printStackTrace();
+                                    }
+                                    isInCircle = 1;
                             }
 
                             @Override
@@ -398,26 +471,30 @@ import java.lang.NullPointerException;
                         if (markers.containsKey(dataSnapshot.getKey())) {
                             markers.get(dataSnapshot.getKey()).remove();
                         }
-                        if (available.equals("true") && isInCircle == 1) {
-                            String lat = dataSnapshot.child("lat").getValue(String.class);
-                            String lng = dataSnapshot.child("lng").getValue(String.class);
-                            String displayName = dataSnapshot.child("fullname").getValue(String.class);
-                            Double dLat = Double.parseDouble(lat);
-                            Double dLng = Double.parseDouble(lng);
+                        try {
+                            if (available.equals("true") && isInCircle == 1) {
+                                String lat = dataSnapshot.child("lat").getValue(String.class);
+                                String lng = dataSnapshot.child("lng").getValue(String.class);
+                                String displayName = dataSnapshot.child("fullname").getValue(String.class);
+                                Double dLat = Double.parseDouble(lat);
+                                Double dLng = Double.parseDouble(lng);
 
-                            LatLng newLocation = new LatLng(dLat, dLng);
+                                LatLng newLocation = new LatLng(dLat, dLng);
 
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
 
-                            markerOptions.position(newLocation);
-                            markerOptions.title(displayName);
-                            markerOptions.snippet(circle);
-                            Marker mMarker = mMap.addMarker(markerOptions);
-                            markers.put(dataSnapshot.getKey(), mMarker);
-                        }else if(markers.containsValue(dataSnapshot.getKey())){
-                            Marker marker = markers.get(dataSnapshot.getKey());
-                            marker.remove();
-                        }//added to remove marker if unavailable
+                                markerOptions.position(newLocation);
+                                markerOptions.title(displayName);
+                                markerOptions.snippet(circle);
+                                Marker mMarker = mMap.addMarker(markerOptions);
+                                markers.put(dataSnapshot.getKey(), mMarker);
+                            }else if(markers.containsValue(dataSnapshot.getKey())){
+                                Marker marker = markers.get(dataSnapshot.getKey());
+                                marker.remove();
+                            }//added to remove marker if unavailable
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -442,7 +519,41 @@ import java.lang.NullPointerException;
                 e.printStackTrace();
             }
         }
-
+   
+// --Commented out by Inspection START (4/29/2018 9:08 PM):
+//        private void requestLocationPermission() {
+//               // Permission has not been granted and must be requested.
+//            try {
+//                if (ActivityCompat.shouldShowRequestPermissionRationale(super.getActivity(),
+//                        Manifest.permission.ACCESS_FINE_LOCATION)) {
+//                    // Provide an additional rationale to the user if the permission was not granted
+//                    // and the user would benefit from additional context for the use of the permission.
+//                    // Display a SnackBar with a button to request the missing permission.
+//                    Snackbar.make(super.getView(), "Location Access is required to display markers  ",
+//                            Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            // Request the permission
+//                            mapFragment.super.getActivity().requestPermissions(
+//                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                                    PERMISSION_REQUEST_LOCATION);
+//                        }
+//                    }).show();
+//
+//                } else {
+//
+//                    Snackbar.make(super.getView(),
+//                            "Permission is not available. Requesting Location permission.",
+//                            Snackbar.LENGTH_SHORT).show();
+//                    // Request the permission. The result will be received in onRequestPermissionResult().
+//                    super.getActivity().requestPermissions( new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                            PERMISSION_REQUEST_LOCATION);
+//                }
+//            } catch (NullPointerException e) {
+//                e.printStackTrace();
+//            }
+//        }
+// --Commented out by Inspection STOP (4/29/2018 9:08 PM)
 
         @Override
         public void onResume() {
@@ -474,13 +585,18 @@ import java.lang.NullPointerException;
             try {
                 super.onDestroy();
                 mapView.onDestroy();
+                // set avail to false when user logs out
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                    DatabaseReference newPush = mDatabase;
+                    newPush.child("avail").setValue("false");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         @Override
-        public void onSaveInstanceState(Bundle outState) {
+        public void onSaveInstanceState(@NonNull Bundle outState) {
             try {
                 super.onSaveInstanceState(outState);
                 mapView.onSaveInstanceState(outState);

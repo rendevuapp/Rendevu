@@ -11,6 +11,9 @@
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="btn_reset_password">Reset Password</string>
     <string name="hint_email">Email</string>
+    <string name="error_weak_password">Password is too weak, must be at least 6 characters.</string>
+    <string name="error_invalid_email">Please enter a valid email address.</string>
+    <string name="error_user_exists">Please enter a valid email address.</string>
     <!--<string name="btn_back"><![CDATA[<< Back]]></string>-->
     <!-- Strings related to Settings -->
 
@@ -104,5 +107,18 @@
     <string name="send_code">Send Code</string>
     <string name="innerCircle">Add to Inner Circle</string>
     <string name="outerCircle">Add to Outer Circle</string>
-
+    <string name="error">Exception:</string>
+    <string name="ArrayIndexOutOfBoundsException">Array Index Out of Bounds!</string>
+    <string name="ClassNotFoundException">Class Not Found!</string>
+    <string name="IndexOutOfBoundsException">Index Out of Bounds</string>
+    <string name="NullPointerException">Null Pointer to Object!</string>
+    <string name="NumberFormatException">Invalid Number Format!</string>
+    <string name="RuntimeException">Runtime Error!</string>
+    <string name="Exception">General Exception</string>
+    <string name="error_close">Close</string>
+    <string name="FirebaseAuthWeakPasswordException">Password must be longer than 6 characters!</string>
+    <string name="FirebaseAuthInvalidCredentialsException">The email you have entered is invalid!</string>
+    <string name="FirebaseAuthUserCollisionException">A user with this email address already exists!</string>
+    <string name="ActivityNotFoundException">Requested activity does not exist!</string>
+    <string name="error_user_logged_in">A user with this email is already logged in!</string>
 </resources>

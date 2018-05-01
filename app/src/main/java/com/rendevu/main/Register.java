@@ -2,12 +2,12 @@ package com.rendevu.main;
 /*
     Josh Davenport
  */
+
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,26 +22,33 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
+
+@SuppressWarnings({"FieldCanBeLocal", "SpellCheckingInspection"})
 public class Register extends UncaughtExceptionActivity {
     //private static final String TAG = "Register";
-    private FirebaseDatabase mFirebaseInstance;
 
     private DatabaseReference myDatabaseReference, userDatRef;
-    private String userId;
 
-    private EditText fullName, inputEmail, phoneNum,
-            loginPass, dateofBirth, userName;
+    //private static FirebaseDatabase mFirebaseInstance;
+    static {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    }
+
+    private EditText inputEmail, loginPass, dateofBirth;
+    private String userId;
     private ImageView hidePass=null;
-    private Button btnSignUp;
     private ProgressBar progressBar;
     private DatePickerDialog datePickerDialog;
-    boolean flag=false;
+    private boolean flag=false;
 
     /*
     * User is authenticated through Firebase
@@ -56,32 +63,29 @@ public class Register extends UncaughtExceptionActivity {
             //Get Firebase auth instance
             auth = FirebaseAuth.getInstance();
 
-            /**
+            /*
              * Josh
              * Adding persistence for data stored in firebase.
              * also gets unique id for current user
              * */
             //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-            mFirebaseInstance = FirebaseDatabase.getInstance();
-            mFirebaseInstance.setPersistenceEnabled(true);
+            //mFirebaseInstance = FirebaseDatabase.getInstance();
+            //mFirebaseInstance.setPersistenceEnabled(true);
 
             myDatabaseReference=FirebaseDatabase.getInstance().getReference("User");
             userDatRef = FirebaseDatabase.getInstance().getReference("UserData");
         } catch (Exception e) {
 
-            Toast.makeText(getApplicationContext(), "Firebase error", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Firebase error", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         hidePass = findViewById(R.id.show_hide);
-        fullName = findViewById(R.id.fullname);
         inputEmail = findViewById(R.id.email_id);
-        phoneNum = findViewById(R.id.userPhone);
         loginPass = findViewById(R.id.password);
         dateofBirth = findViewById(R.id.dateOfBirth);
-        userName = findViewById(R.id.username);
-        btnSignUp = findViewById(R.id.register);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        progressBar = findViewById(R.id.progressBar);
 
         try {
             dateofBirth.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +101,7 @@ public class Register extends UncaughtExceptionActivity {
                     datePickerDialog = new DatePickerDialog(Register.this, android.R.style.Theme_Holo_Dialog,
                             new DatePickerDialog.OnDateSetListener() {
 
+                                @SuppressLint("SetTextI18n")
                                 @Override
                                 public void onDateSet(DatePicker view, int year,
                                                       int monthOfYear, int dayOfMonth) {
@@ -123,7 +128,7 @@ public class Register extends UncaughtExceptionActivity {
                 @Override
                 public void onClick(View arg0) {
 
-                    if(flag==false)
+                    if(!flag)
                     {
                         hidePass.setImageResource(R.drawable.hide);
                         loginPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -143,13 +148,15 @@ public class Register extends UncaughtExceptionActivity {
             e.printStackTrace();
         }
 
+
         try {
+            Button btnSignUp = findViewById(R.id.register);
             btnSignUp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    String email = inputEmail.getText().toString().trim();
-                    String password = loginPass.getText().toString().trim();
+                    final String email = inputEmail.getText().toString().trim();
+                    final String password = loginPass.getText().toString().trim();
 
                     if (TextUtils.isEmpty(email)) {
                         Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
@@ -157,16 +164,10 @@ public class Register extends UncaughtExceptionActivity {
                     }
 
                     if (TextUtils.isEmpty(password)) {
-                        Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Enter a password!", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    if (password.length() < 6) {
-                        Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    //progressBar.setVisibility(View.VISIBLE);
 
                     /*
                     * create user and store data in authorization database
@@ -175,43 +176,77 @@ public class Register extends UncaughtExceptionActivity {
                             .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    Toast.makeText(Register.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                                    /*Toast.makeText(Register.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();*/
                                     //progressBar.setVisibility(View.GONE);
 
-                                    // If sign in fails, display a message to the user. If sign in succeeds
+                                    // If registration fails, display exception handler message to the user. If registration succeeds
                                     // the auth state listener will be notified and logic to handle the
-                                    // signed in user can be handled in the listener.
+                                    // registered user can be handled in the listener.
                                     if (!task.isSuccessful()) {
-                                        Toast.makeText(Register.this, "Authentication failed." + task.getException(),
-                                                Toast.LENGTH_SHORT).show();
+                                        try {
+
+                                            final Exception exception = task.getException();
+                                            if(exception == null) {
+                                                //exception for no error code found
+                                                throw new NullPointerException("exception is null");
+                                            }
+                                            throw exception;
+                                        } catch(FirebaseAuthWeakPasswordException e) {
+                                            ExceptionHandler.makeExceptionAlert(Register.this, e);
+                                            //for a password less than 6 characters
+                                            //clear the invalid input
+                                            loginPass.setText(null);
+                                            loginPass.setError(getString(R.string.error_weak_password));
+                                            loginPass.requestFocus();
+                                        } catch(FirebaseAuthInvalidCredentialsException e) {
+                                            ExceptionHandler.makeExceptionAlert(Register.this, e);
+                                            inputEmail.setText(null);
+                                            inputEmail.setError(getString(R.string.error_invalid_email));
+                                            inputEmail.requestFocus();
+                                        } catch(FirebaseAuthUserCollisionException e) {
+                                            ExceptionHandler.makeExceptionAlert(Register.this, e);
+                                            inputEmail.setText(null);
+                                            inputEmail.setError(getString(R.string.error_user_exists));
+                                            inputEmail.requestFocus();
+                                        } catch(Exception e) {
+                                            ExceptionHandler.makeExceptionAlert(Register.this, e);//added this
+                                            //default message also displayed on bottom of screen
+                                            /*Toast.makeText(Register.this, "Registration failed." + task.getException(),
+                                                    Toast.LENGTH_SHORT).show();*/
+                                        }
                                     } else {
                                         startActivity(new Intent(Register.this, Main2Activity.class));
-                                                                                                     
-                                        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-                                        mFirebaseInstance.setPersistenceEnabled(true);
+                                        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                                        //mFirebaseInstance.setPersistenceEnabled(true);
 
                                         //  Rick Cantu
                                         //  This section of the code gets the current user's UID and calls
                                         //  the method "addUser" which build the user's tree structure on the
                                         //  database.
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                        String uid = user.getUid();
+                                        String uid = null;
+                                        try {
+                                            if (user != null) {
+                                                uid = user.getUid();
+                                            } else {
+                                                ExceptionHandler.exceptionThrower(new NullPointerException());
+                                            }
+                                        } catch (Exception e) {
+                                            ExceptionHandler.makeExceptionAlert(Register.this, e);
+                                            e.printStackTrace();
+                                        }
                                         addUser(uid, ((EditText)findViewById(R.id.fullname)).getText().toString(),
                                                 ((EditText)findViewById(R.id.username)).getText().toString(),
                                                 ((EditText)findViewById(R.id.email_id)).getText().toString(),
                                                 ((EditText)findViewById(R.id.dateOfBirth)).getText().toString(),
                                                 Integer.parseInt(((EditText)findViewById(R.id.userPhone)).getText().toString()));
-                                        //finish();
                                     }
                                 }
                             });
-
-                    //finish();
                 }
-
             });
-
         } catch (Exception e) {
+            //catches any residual errors
             Toast.makeText(getApplicationContext(), "Registration failure", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
@@ -223,7 +258,7 @@ public class Register extends UncaughtExceptionActivity {
         //  This method takes the inputs from the register screen and assigns them to
         //  variables that are then pushed to the database to specific children on the
         //  database.  This builds the user's tree structure on the database.
-        String userId = uid;
+        userId = uid;
         User user = new User(fullname, username, email, dob, phoneNumber);
         myDatabaseReference.child(userId).setValue(user);
         userDatRef.child(userId).child("fullname").setValue(fullname);
@@ -248,12 +283,18 @@ public class Register extends UncaughtExceptionActivity {
     * */
     @Override
     public void onBackPressed() {
-        throw new RuntimeException("this will cause a crash");
-        // Add the Back key handler here.
-        /*FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(Register.this, MainActivity.class);
-        startActivity(intent);
-        finish();*/
+
+        try {
+            // Add the Back key handler here.
+            FirebaseAuth.getInstance().signOut();
+            startActivity(intent);
+            finish();
+            //throw new RuntimeException("this will cause a crash");//for testing purposes
+        } catch (Exception e) {
+            ExceptionHandler.makeExceptionAlert(Register.this, e);
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.rendevu.main;
  *   Ricardo Cantu
  *  This class holds the configurations for the tab view.
  *  This implements each of the three fragment.
- */
+ **/
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -30,7 +30,7 @@ import java.util.List;
  *  THIS IS THE FRAGMENT THAT CONTAINS THE VIEW FOR THE CONTACT TAB.
  *  Ricardo Cantu
  */
-public  class contactActivity extends Fragment {
+public  class contactFragment extends Fragment {
     FirebaseDatabase database;
     DatabaseReference databaseReference;
 
@@ -39,7 +39,7 @@ public  class contactActivity extends Fragment {
 
     private List<User> list;
 
-    public contactActivity() {
+    public contactFragment() {
     }
 
     @Override
@@ -80,7 +80,7 @@ public  class contactActivity extends Fragment {
         databaseReference = database.getReference().child("UserData").child(uid).child("CircleMembers");
         Query query = databaseReference.orderByKey();
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView = rootView.findViewById(R.id.recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
