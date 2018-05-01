@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/construct" >
+    android:background="#ffffff">
 
     <RelativeLayout
         android:id="@+id/rl"
@@ -34,11 +35,11 @@
         android:layout_above="@+id/rl"
         android:layout_centerHorizontal="true"
         android:ems="10"
-        android:fontFamily="monospace"
+        android:fontFamily="@font/noto_sans"
         android:hint="Email"
         android:inputType="textPersonName"
         android:maxLength="25"
-        android:textColor="?attr/colorAccent"
+        android:textColor="#2bbd7e"
         android:textColorHint="?attr/colorAccent"
         android:textSize="19sp">
 
@@ -48,31 +49,34 @@
     <Button
         android:id="@+id/signin2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="101dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="53dp"
-        android:background="#0700"
-        android:text="Enter login info"
-        android:textColor="#DAA520"
+        android:layout_marginTop="0dp"
+        android:background="#2bbd7e"
+        android:fontFamily="@font/roboto"
+        android:text="Welcome to Rendevu"
+        android:textColor="#9fffe0"
         android:textSize="25sp" />
 
     <Button
         android:id="@+id/btnLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/rl"
-        android:layout_alignStart="@+id/password2"
-        android:layout_below="@+id/password2"
-        android:layout_marginTop="24dp"
-        android:background="@color/cardview_shadow_start_color"
+        style="@android:style/Widget.Material.Light.Button"
+        android:layout_width="125dp"
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="143dp"
+        android:background="#4fb3bf"
+        android:fontFamily="@font/noto_sans"
         android:onClick="action"
-        android:text="LOGIN"
-        android:textColor="@android:color/holo_blue_bright"
-        android:textSize="20sp" />
+        android:text="Sign In"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        tools:text="Sign In" />
 
     <EditText
         android:id="@+id/password2"
@@ -84,37 +88,39 @@
         android:ems="10"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:fontFamily="@font/noto_sans"
         android:hint="Password"
         android:inputType="textPassword"
         android:maxLength="40"
         android:maxLines="1"
         android:singleLine="true"
-        android:textColor="?attr/colorAccent"
+        android:textColor="#2bbd7e"
         android:textColorHint="?attr/colorAccent" />
 
     <Button
         android:id="@+id/forgotPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/btnLogin"
-        android:layout_alignStart="@+id/btnLogin"
-        android:layout_below="@+id/btnLogin"
-        android:layout_marginTop="31dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="75dp"
         android:background="@android:color/transparent"
+        android:fontFamily="@font/noto_sans"
         android:text="Forgot Password?"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textColor="#7aff73"
-        android:textSize="12sp" />
+        android:textColor="#ff8a65"
+        android:textSize="10sp" />
 
     <Button
         android:id="@+id/backRegister"
-        android:layout_width="wrap_content"
+        android:layout_width="182dp"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/forgotPass"
         android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/forgotPass"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
         android:background="@android:color/transparent"
-        android:text="Need an account? Sign up here!"
+        android:fontFamily="@font/noto_sans"
+        android:text="Create New Account"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="@android:color/holo_blue_bright" />
 
