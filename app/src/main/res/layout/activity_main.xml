@@ -6,7 +6,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/construct" >
+    android:background="@drawable/background_home" >
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="1"
+        android:contentDescription="smoke"
+        app:srcCompat="@drawable/cast_expanded_controller_actionbar_bg_gradient_light" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -18,9 +26,11 @@
             android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:layout_weight="0.90"
-            android:background="@android:color/darker_gray"
+            android:background="#1b1e1e"
+            android:fontFamily="@font/fjord_one"
             android:onClick="login_register"
             android:text="Register"
+            android:textColor="@android:color/holo_blue_bright"
             android:textSize="20sp" />
 
         <Button
@@ -28,40 +38,39 @@
             android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:layout_weight="1.00"
-            android:background="@android:color/darker_gray"
+            android:background="#1b1e1e"
+            android:fontFamily="@font/fjord_one"
             android:onClick="login_register"
             android:text="Log In"
+            android:textColor="@android:color/holo_blue_bright"
             android:textSize="20sp" />
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0700"
-        android:text=" [Under Construction] "
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#DAA520"
-        android:textSize="30sp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="83dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentTop="true"
+        android:background="#0700"
+        android:fontFamily="@font/fjord_one"
+        android:gravity="center"
+        android:text="WELCOME!"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textSize="36sp" />
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/text"
         android:adjustViewBounds="true"
-        android:alpha="0.4"
+        android:alpha="0.6"
         android:scaleType="fitXY"
-        android:visibility="visible"
-        android:src="@drawable/logo_main" />
+        android:src="@drawable/logo_noback"
+        android:visibility="visible" />
 
 </RelativeLayout>
