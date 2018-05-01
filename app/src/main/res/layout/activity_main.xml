@@ -21,12 +21,12 @@
             android:layout_width="101dp"
             android:layout_height="38dp"
             android:layout_weight="0.90"
-            android:background="#00838f"
-            android:backgroundTint="#4fb3bf"
+            android:background="#4fb3bf"
             android:elevation="@dimen/cast_expanded_controller_ad_background_layout_height"
             android:fontFamily="@font/noto_sans"
             android:onClick="login_register"
             android:text="Register"
+            android:textAllCaps="false"
             android:textSize="20sp"
             android:visibility="visible" />
 
@@ -35,11 +35,11 @@
             android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:layout_weight="1.00"
-            android:background="#00838f"
-            android:backgroundTint="#4fb3bf"
+            android:background="#4fb3bf"
             android:fontFamily="@font/noto_sans"
             android:onClick="login_register"
             android:text="Log In"
+            android:textAllCaps="false"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -47,7 +47,7 @@
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="100dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
