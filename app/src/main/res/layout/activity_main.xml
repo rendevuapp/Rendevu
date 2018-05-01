@@ -30,7 +30,7 @@
             android:fontFamily="@font/fjord_one"
             android:onClick="login_register"
             android:text="Register"
-            android:textColor="@android:color/holo_blue_bright"
+            android:textColor="@android:color/holo_blue_dark"
             android:textSize="20sp" />
 
         <Button
@@ -42,7 +42,7 @@
             android:fontFamily="@font/fjord_one"
             android:onClick="login_register"
             android:text="Log In"
-            android:textColor="@android:color/holo_blue_bright"
+            android:textColor="@android:color/holo_blue_dark"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -54,12 +54,12 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="#0700"
-        android:fontFamily="@font/fjord_one"
+        android:fontFamily="cursive"
         android:gravity="center"
-        android:text="WELCOME!"
+        android:text="Welcome to,"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/holo_blue_bright"
-        android:textSize="36sp" />
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="@dimen/cast_intro_overlay_button_margin_bottom" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -68,7 +68,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/text"
         android:adjustViewBounds="true"
-        android:alpha="0.6"
+        android:alpha="0.5"
         android:scaleType="fitXY"
         android:src="@drawable/logo_noback"
         android:visibility="visible" />
