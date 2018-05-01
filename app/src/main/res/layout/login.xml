@@ -77,7 +77,7 @@
         android:fontFamily="@font/fjord_one"
         android:onClick="action"
         android:text="LOGIN"
-        android:textColor="@android:color/holo_blue_bright"
+        android:textColor="@android:color/background_light"
         android:textSize="20sp" />
 
     <EditText

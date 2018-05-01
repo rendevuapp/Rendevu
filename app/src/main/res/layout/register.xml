@@ -155,7 +155,7 @@
         android:fontFamily="@font/fjord_one"
         android:onClick="onClickAction"
         android:text="Continue"
-        android:textColor="@android:color/holo_blue_bright"
+        android:textColor="@android:color/background_light"
         android:textSize="20sp" />
 
     <EditText
