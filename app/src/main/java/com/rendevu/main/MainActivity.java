@@ -2,9 +2,13 @@ package com.rendevu.main;
 /*
     Josh Davenport
  */
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.content.Intent;
@@ -20,7 +24,7 @@ import java.util.NoSuchElementException;
 public class MainActivity extends UncaughtExceptionActivity {
 
     private final String TAG = this.getClass().getName();
-
+    private static final int PERMISSION_REQUEST_LOCATION = 34;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -32,6 +36,7 @@ public class MainActivity extends UncaughtExceptionActivity {
             startActivity(new Intent(this, Main2Activity.class));
             finish();
         }
+        requestPermissions();
 
     }
 
@@ -120,4 +125,58 @@ public class MainActivity extends UncaughtExceptionActivity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
+    private void requestPermissions() {
+        boolean shouldProvideRationale =
+                false;
+        try {
+            shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        // Provide an additional rationale to the user. This would happen if the user denied the
+        // request previously, but didn't check the "Don't ask again" checkbox.
+        if (shouldProvideRationale) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+
+            showSnackbar(R.string.permission_rationale, android.R.string.ok,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // Request permission
+                            startLocationPermissionRequest();
+                        }
+                    });
+
+        } else {
+            Log.i(TAG, "Requesting permission");
+            // Request permission. It's possible this can be auto answered if device policy
+            // sets the permission in a given state or the user denied the permission
+            // previously and checked "Never ask again".
+            startLocationPermissionRequest();
+        }
+    }
+
+    private void startLocationPermissionRequest() {
+        try {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_REQUEST_LOCATION);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showSnackbar(final int mainTextStringId, final int actionStringId,
+                              View.OnClickListener listener) {
+        try {
+            Snackbar.make(this.getCurrentFocus().findViewById(android.R.id.content),
+                    getString(mainTextStringId),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(getString(actionStringId), listener).show();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
 }
