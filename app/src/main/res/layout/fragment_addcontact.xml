@@ -10,7 +10,7 @@ Josh
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:alpha="20"
-    android:background="colorBackgroundFloating"
+    android:background="?attr/colorBackgroundFloating"
     tools:layout_editor_absoluteY="249dp">
 
     <TextView
@@ -68,7 +68,7 @@ Josh
         android:layout_width="126dp"
         android:layout_height="53dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="76dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:background="#f1f8e9"
@@ -85,7 +85,7 @@ Josh
         android:layout_width="126dp"
         android:layout_height="53dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="88dp"
+        android:layout_marginEnd="48dp"
         android:layout_marginTop="8dp"
         android:background="#f1f8e9"
         android:elevation="8dp"
