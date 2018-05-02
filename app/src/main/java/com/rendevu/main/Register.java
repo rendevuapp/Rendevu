@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 
 @SuppressWarnings({"FieldCanBeLocal", "SpellCheckingInspection"})
@@ -258,6 +259,8 @@ public class Register extends UncaughtExceptionActivity {
         //  This method takes the inputs from the register screen and assigns them to
         //  variables that are then pushed to the database to specific children on the
         //  database.  This builds the user's tree structure on the database.
+        HashMap<String,Object> map = new HashMap<>();
+
         userId = uid;
         User user = new User(fullname, username, email, dob, phoneNumber);
         myDatabaseReference.child(userId).setValue(user);
@@ -265,7 +268,10 @@ public class Register extends UncaughtExceptionActivity {
         userDatRef.child(userId).child("avail").setValue("false");
         userDatRef.child(userId).child("lat").setValue("0");
         userDatRef.child(userId).child("lng").setValue("0");
-        userDatRef.child(userId).child("CircleCodes");
+//        userDatRef.child(userId).child("CircleCodes");
+        map.put("InnerCircle")
+        userDatRef.child(userId).child("CircleMembers").child("Inner")
+
     }
 
     @Override
