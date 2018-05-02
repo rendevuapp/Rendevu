@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!---
     Ricardo Cantu
+
+
+    UI Alexander Mann
 -->
 
 
@@ -29,6 +32,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!--  app:layout_constraintEnd_toStartOf="@+id/addContactActivityButton" -->
+
+
+            <!--    <Button
+            android:id="@+id/addContactActivityButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:onClick="onClick"
+            android:text="@string/add_contact"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sendCodeButton"
+            app:layout_constraintTop_toTopOf="parent" />
+            -->
+
             <Button
                 android:id="@+id/showAlertDialogFragment"
                 android:layout_width="0dp"
@@ -52,24 +74,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-            <!--  app:layout_constraintEnd_toStartOf="@+id/addContactActivityButton" -->
-
-
-            <!--    <Button
-            android:id="@+id/addContactActivityButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="monospace"
-            android:onClick="onClick"
-            android:text="@string/add_contact"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/sendCodeButton"
-            app:layout_constraintTop_toTopOf="parent" />
-            -->
 
             <Button
                 android:id="@+id/sendCodeButton"
@@ -119,7 +123,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/linearlayout"
-            android:layout_width="wrap_content"
+            android:layout_width="425dp"
             android:layout_height="match_parent">
 
             <!--   <Space
@@ -129,18 +133,17 @@
             tools:layout_editor_absoluteY="0dp" />
             -->
 
+
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/addContactActivityButton"
-                android:layout_width="86dp"
-                android:layout_height="85dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginStart="263dp"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
                 android:fontFamily="@font/roboto_slab_bold"
-
-
                 android:onClick="onClick"
                 android:text="@string/add_contact"
                 android:textColor="#ffffff"
