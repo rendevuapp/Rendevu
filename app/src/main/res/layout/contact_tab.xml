@@ -2,13 +2,13 @@
 <!---
     Ricardo Cantu
 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/cast_expanded_controller_actionbar_bg_gradient_light"
+    android:orientation="vertical">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/linearLayout"
@@ -17,17 +17,20 @@
 
         <Button
             android:id="@+id/showAlertDialogFragment"
-            android:layout_width="0dp"
+            style="@android:style/Widget.Holo.Button"
+            android:layout_width="74dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:clickable="true"
-            android:fontFamily="monospace"
+            android:elevation="0dp"
+            android:fontFamily="@font/fjord_one"
             android:onClick="onLogoutClick"
             android:text="@string/logout"
-            android:textSize="10sp"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="12sp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/addContactActivityButton"
@@ -36,45 +39,51 @@
 
         <Button
             android:id="@+id/addContactActivityButton"
-            android:layout_width="0dp"
+            style="@android:style/Widget.Holo.Button"
+            android:layout_width="89dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="monospace"
+            android:fontFamily="@font/fjord_one"
             android:onClick="onClick"
             android:text="@string/add_contact"
-            android:textSize="10sp"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sendCodeButton"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/sendCodeButton"
-            android:layout_width="0dp"
+            style="@android:style/Widget.Holo.Button"
+            android:layout_width="83dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="monospace"
+            android:fontFamily="@font/fjord_one"
             android:onClick="onClick"
             android:text="@string/send_code"
-            android:textSize="10sp"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sendInvitesButton"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/sendInvitesButton"
-            android:layout_width="0dp"
+            style="@android:style/Widget.Holo.Button"
+            android:layout_width="76dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="monospace"
+            android:fontFamily="@font/fjord_one"
             android:onClick="onInviteClicked"
             android:text="@string/send_invite"
-            android:textSize="10sp"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
