@@ -67,7 +67,9 @@ public class Login extends UncaughtExceptionActivity {
             btnSignup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(Login.this, Register.class));
+                    //startActivity(new Intent(Login.this, Register.class));
+                    startActivityForResult(new Intent(Login.this, Register.class), 500);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish(); //closes current activity before moving to the next.
                 }
             });
@@ -85,11 +87,11 @@ public class Login extends UncaughtExceptionActivity {
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(Login.this, ResetPassword.class));
-                    finish(); //closes current activity before moving to the next.
+                    //finish(); //closes current activity before moving to the next.
                 }
             });
         } catch (Exception e) {
-            ExceptionHandler.makeExceptionAlert(Login.this, e);
+            //ExceptionHandler.makeExceptionAlert(Login.this, e);
             e.printStackTrace();
         }
 

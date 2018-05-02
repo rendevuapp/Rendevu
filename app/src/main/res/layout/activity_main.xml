@@ -112,7 +112,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
-        android:alpha="0.5"
+        android:alpha="0.9"
         android:scaleType="fitXY"
         android:src="@drawable/logo_noback"
         android:visibility="visible"

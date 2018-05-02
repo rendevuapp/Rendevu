@@ -11,6 +11,7 @@ Josh
     android:layout_gravity="center"
     android:alpha="20"
     android:background="?attr/colorBackgroundFloating"
+    android:theme="@style/Base.Theme.AppCompat.Dialog"
     tools:layout_editor_absoluteY="249dp">
 
     <TextView
@@ -20,10 +21,10 @@ Josh
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/fjord_one"
         android:text="Enter New Contact Code"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:fontFamily="monospace"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,8 +39,8 @@ Josh
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:cursorVisible="true"
+        android:fontFamily="@font/fjord_one"
         android:hint="Circle Code"
-        android:fontFamily="monospace"
         android:imeOptions="actionDone"
         android:inputType="textPersonName"
         android:singleLine="true"
@@ -50,11 +51,12 @@ Josh
 
     <Spinner
         android:id="@+id/circle_spinner"
-        android:layout_width="347dp"
+        android:layout_width="286dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:theme="@style/Base.Widget.AppCompat.ListPopupWindow"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addCode" />
@@ -67,8 +69,8 @@ Josh
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_weight="1"
+        android:fontFamily="@font/fjord_one"
         android:text="CANCEL"
-        android:fontFamily="monospace"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/circle_spinner" />
@@ -80,8 +82,8 @@ Josh
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/fjord_one"
         android:text="ADD CONTACT"
-        android:fontFamily="monospace"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/circle_spinner" />

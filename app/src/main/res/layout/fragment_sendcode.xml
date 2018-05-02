@@ -11,6 +11,7 @@ Rick
     android:layout_gravity="center"
     android:alpha="20"
     android:background="?attr/colorBackgroundFloating"
+    android:theme="@style/Base.Theme.AppCompat.Dialog"
     tools:layout_editor_absoluteY="249dp">
 
     <TextView
@@ -20,7 +21,7 @@ Rick
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:fontFamily="monospace"
+        android:fontFamily="@font/fjord_one"
         android:text="Circle Code"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -36,7 +37,7 @@ Rick
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:fontFamily="monospace"
+        android:fontFamily="@font/fjord_one"
         android:longClickable="true"
         android:text="Code"
         android:textAlignment="center"
@@ -48,13 +49,14 @@ Rick
 
     <Button
         android:id="@+id/close_shareCode_button"
+        style="@android:style/Widget.Holo.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:fontFamily="monospace"
+        android:fontFamily="@font/fjord_one"
         android:text="DISMISS"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -67,6 +69,7 @@ Rick
         android:id="@+id/codeMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/fjord_one"
         android:text="You can copy this code and share it with a friend!"
         app:layout_constraintBottom_toTopOf="@+id/GeneratedCode"
         app:layout_constraintEnd_toEndOf="parent"
