@@ -30,7 +30,9 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#f1f8e9"
+            >
 
             <!--  app:layout_constraintEnd_toStartOf="@+id/addContactActivityButton" -->
 
@@ -61,7 +63,7 @@
                 android:background="#4fb3bf"
                 android:backgroundTint="#4fb3bf"
                 android:clickable="true"
-                android:elevation="12dp"
+                android:elevation="6dp"
                 android:fontFamily="@font/noto_sans"
                 android:onClick="onLogoutClick"
                 android:text="@string/logout"
@@ -102,7 +104,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
                 android:background="#4fb3bf"
-                android:elevation="12dp"
+                android:elevation="6dp"
                 android:fontFamily="@font/noto_sans"
                 android:onClick="onInviteClicked"
                 android:text="@string/send_invite"
