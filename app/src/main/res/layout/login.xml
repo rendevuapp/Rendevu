@@ -46,7 +46,7 @@ Alexander Mann
         android:inputType="textPersonName"
         android:maxLength="25"
         android:textColor="#2bbd7e"
-        android:textColorHint="?attr/colorAccent"
+        android:textColorHint="#00838f"
         android:textSize="19sp">
 
         <requestFocus />
@@ -64,7 +64,8 @@ Alexander Mann
         android:layout_marginTop="0dp"
         android:background="#2bbd7e"
         android:fontFamily="@font/roboto"
-        android:text="Sign In to Rendevu"
+        android:text=">>Sign In to Rendevu"
+        android:textAllCaps="false"
         android:textColor="#9fffe0"
         android:textSize="25sp" />
 
@@ -79,14 +80,15 @@ Alexander Mann
         android:background="#4fb3bf"
         android:fontFamily="@font/noto_sans"
         android:onClick="action"
-        android:text="Sign In"
+        android:text=">>Sign In"
+        android:textAllCaps="false"
         android:textColor="#ffffff"
         android:textSize="18sp"
         tools:text="Sign In" />
 
     <EditText
         android:id="@+id/password2"
-        android:layout_width="wrap_content"
+        android:layout_width="221dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/rl"
         android:layout_below="@+id/email_id2"
@@ -101,7 +103,7 @@ Alexander Mann
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="#2bbd7e"
-        android:textColorHint="?attr/colorAccent" />
+        android:textColorHint="#00838f" />
 
     <Button
         android:id="@+id/forgotPass"

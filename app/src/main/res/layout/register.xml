@@ -44,6 +44,7 @@
         android:inputType="textEmailAddress"
         android:maxLength="40"
         android:textColor="#69f0ae"
+
         android:textColorHint="#00838f">
 
     </EditText>
@@ -95,7 +96,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="50dp"
-            android:background="@drawable/show" />
+            android:background="@drawable/show" />  <!-- This is an image that is clickable -->
 
         <EditText
             android:id="@+id/password"
@@ -112,7 +113,9 @@
             android:inputType="textPassword"
             android:maxLength="40"
             android:maxLines="1"
+            android:selectAllOnFocus="false"
             android:singleLine="true"
+
             android:textColor="#69f0ae"
             android:textColorHint="#00838f" />
 
@@ -127,7 +130,7 @@
         android:layout_alignParentTop="true"
         android:background="#2bbd7e"
         android:fontFamily="@font/roboto_slab_bold"
-        android:text="Register"
+        android:text=">> Register"
         android:textAppearance="@android:style/TextAppearance.Large"
         android:textColor="#ffffff"
         android:textSize="25sp" />
@@ -135,16 +138,37 @@
     <Button
         android:id="@+id/register"
         android:layout_width="196dp"
+
+
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="53dp"
+
         android:background="#00838f"
         android:fontFamily="@font/noto_serif"
         android:onClick="onClickAction"
         android:text=">> Sign Up "
         android:textColor="#ffffff"
         android:textSize="20sp" />
+
+      <!--  android:background="#4fb3bf"
+        android:fontFamily="@font/roboto"
+        android:text="Sign Up"
+        android:textAllCaps="false"
+        android:textColor="#ffffff" /> -->
+       <!-- android:backgroundTint="ColorStateList"
+        android:elevation="12dp"
+        android:fontFamily="@font/roboto"
+        android:lineSpacingExtra="8sp"
+        android:onClick="onClickAction"
+        android:text=">> Sign Up"
+        android:textAllCaps="false"
+        android:textColor="#9fffe0"
+        android:textSize="20sp"
+        android:visibility="visible" />
+        -->
+
 
     <EditText
         android:id="@+id/username"
