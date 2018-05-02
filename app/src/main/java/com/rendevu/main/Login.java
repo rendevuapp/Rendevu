@@ -209,8 +209,11 @@ public class Login extends UncaughtExceptionActivity {
     public void onBackPressed() {
         // Add the Back key handler here.
         FirebaseAuth.getInstance().signOut();
+        //overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         Intent intent = new Intent(Login.this, MainActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 500);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        //startActivity(intent);
         finish();
     }
 
