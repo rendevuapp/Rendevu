@@ -382,55 +382,22 @@ import java.lang.NullPointerException;
 
                 rDatabase.addChildEventListener(new ChildEventListener() {
 
-                    int inChildInner = 0;    // if current user is in other user's inner circle
-
-                    int inChildOuter = 0;    // if current user is in other user's outer circle
-
-                    int childAvailInner = 0; // if other user wishes only to display online
-                                             // status to inner circle only, outer only, or
-                                             // both. 0 = unavailable, 1 = inner only,
-                                             // 2 = outer only, 3 = online to all
-
-
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     final String uid = user.getUid();
                     int isInCircle = 0;
                     String circle;
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                       final String available = dataSnapshot.child("avail").getValue(String.class);
+                        String available = dataSnapshot.child("avail").getValue(String.class);
                         MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_green_scaled));
 
-                        final String key = dataSnapshot.getKey();
-
+                        String key = dataSnapshot.getKey();
 
                         rDatabase.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                String cirVal = dataSnapshot.child(uid).child("CircleMember").child(key).child("circle").getValue(String.class);
-                                if (cirVal == "InnerCircle")
-                                {
-                                    inChildInner = 1;
-                                }
-                                else if (cirVal == "OuterCircle")
-                                {
-                                    inChildOuter = 1;
-                                }
-                                childAvailInner = Integer.parseInt(available);
-
-
-                                final DatabaseReference cirRef = rDatabase.child(uid);
-                                cirRef.orderByChild("CircleMembers").equalTo(key).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        circle = dataSnapshot.child("Circle").getValue(String.class);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
+                                circle = dataSnapshot.child("Circle").getValue(String.class);
+                                isInCircle = 1;
                             }
 
                             @Override
@@ -438,14 +405,13 @@ import java.lang.NullPointerException;
 
                             }
                         });
-                        if(childAvailInner > 0 && inChildInner == 1)
-                        {
-                            if (childAvailInner == 1 || childAvailInner == 3)
-                            {
+
+                        try {
+                            if(available.equals("true") && isInCircle == 1 ) {
                                 String lat = dataSnapshot.child("lat").getValue(String.class);
                                 String lng = dataSnapshot.child("lng").getValue(String.class);
                                 String displayName = dataSnapshot.child("fullname").getValue(String.class);
-                                String circle = dataSnapshot.child("Circle").getValue(String.class);
+                                String circle = dataSnapshot.child("Circle").getValue().toString();
                                 Double dLat = Double.parseDouble(lat);
                                 Double dLng = Double.parseDouble(lng);
 
@@ -458,43 +424,13 @@ import java.lang.NullPointerException;
                                 markerOptions.snippet(circle);
                                 Marker mMarker = mMap.addMarker(markerOptions);
                                 markers.put(dataSnapshot.getKey(), mMarker);
-                            }
-                            else if(markers.containsValue(dataSnapshot.getKey())) {
+                            }else if(markers.containsValue(dataSnapshot.getKey())){
                                 Marker marker = markers.get(dataSnapshot.getKey());
                                 marker.remove();
-                            }
+                            }//added to remove marker if unavailable
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
                         }
-                        else if (childAvailInner > 0 && inChildOuter == 1 )
-                        {
-                            if (childAvailInner == 2 || childAvailInner == 3)
-                            {
-                                String lat = dataSnapshot.child("lat").getValue(String.class);
-                                String lng = dataSnapshot.child("lng").getValue(String.class);
-                                String displayName = dataSnapshot.child("fullname").getValue(String.class);
-                                String circle = dataSnapshot.child("Circle").getValue(String.class);
-                                Double dLat = Double.parseDouble(lat);
-                                Double dLng = Double.parseDouble(lng);
-
-                                LatLng newLocation = new LatLng(dLat, dLng);
-
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
-
-                                markerOptions.position(newLocation);
-                                markerOptions.title(displayName);
-                                markerOptions.snippet(circle);
-                                Marker mMarker = mMap.addMarker(markerOptions);
-                                markers.put(dataSnapshot.getKey(), mMarker);
-                            }
-                            else if(markers.containsValue(dataSnapshot.getKey()))
-                            {
-                                Marker marker = markers.get(dataSnapshot.getKey());
-                                marker.remove();
-                            }
-                        }
-                        else if(markers.containsValue(dataSnapshot.getKey())){
-                            Marker marker = markers.get(dataSnapshot.getKey());
-                            marker.remove();
-                        }//added to remove marker if unavailable
                     }
 
                     @Override
