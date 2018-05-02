@@ -198,6 +198,6 @@
         android:layout_height="147dp"
         android:layout_below="@+id/login"
         android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/logo_noback" />
+        app:srcCompat="@drawable/logo_newback" />
 
 </RelativeLayout>
