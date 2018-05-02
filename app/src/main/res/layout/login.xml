@@ -9,7 +9,7 @@ Alexander Mann
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#f1f8e9">
+    android:background="#ffffff">
 
     <RelativeLayout
         android:id="@+id/rl"
@@ -143,6 +143,6 @@ Alexander Mann
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="101dp"
-        app:srcCompat="@drawable/logo_noback" />
+        app:srcCompat="@drawable/logo_newback" />
 
 </RelativeLayout>
