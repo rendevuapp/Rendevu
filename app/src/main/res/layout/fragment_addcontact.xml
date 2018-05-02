@@ -23,7 +23,7 @@ Josh
         android:background="#00838f"
         android:fontFamily="@font/roboto"
         android:text="Enter New Contact Code"
-        android:elevation="10dp"
+        android:elevation="7dp"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="#ffffff"
