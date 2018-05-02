@@ -96,7 +96,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="50dp"
-            android:background="@drawable/show" />
+            android:background="@drawable/show" />  <!-- This is an image that is clickable -->
 
         <EditText
             android:id="@+id/password"
@@ -142,7 +142,11 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="53dp"
         android:background="#4fb3bf"
-        android:backgroundTint="ColorStateList"
+        android:fontFamily="@font/roboto"
+        android:text="Sign Up"
+        android:textAllCaps="false"
+        android:textColor="#ffffff" />
+       <!-- android:backgroundTint="ColorStateList" -->
         android:elevation="12dp"
         android:fontFamily="@font/roboto"
         android:lineSpacingExtra="8sp"

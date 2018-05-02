@@ -1,11 +1,10 @@
 <!---
     Josh Davenport
 -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/construct">
+    android:background="#ffffff">
 
     <ImageButton
         android:id="@+id/w_image"
@@ -17,16 +16,17 @@
 
     <TextView
         android:id="@+id/w_welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="[Welcome!]"
-        android:textColor="#DAA520"
-        android:textSize="35sp"
-        android:gravity="center"
-        android:background="#0700"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_marginTop="103dp"
+        android:layout_width="375dp"
+        android:layout_height="114dp"
         android:layout_below="@+id/w_image"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:background="#2bbd7e"
+        android:fontFamily="@font/roboto"
+        android:gravity="center"
+        android:text="Welcome To Rendevu"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffff"
+        android:textSize="35sp" />
 
 </RelativeLayout>
