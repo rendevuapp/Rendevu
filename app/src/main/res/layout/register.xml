@@ -25,8 +25,8 @@
         android:inputType="none"
         android:maxLength="30"
         android:textAlignment="center"
-        android:textColor="#2bbd7e"
-        android:textColorHint="?attr/colorAccent">
+        android:textColor="#69f0ae"
+        android:textColorHint="#00838f">
 
     </EditText>
 
@@ -43,8 +43,8 @@
         android:hint="Email Address"
         android:inputType="textEmailAddress"
         android:maxLength="40"
-        android:textColor="?attr/colorAccent"
-        android:textColorHint="?attr/colorAccent">
+        android:textColor="#69f0ae"
+        android:textColorHint="#00838f">
 
     </EditText>
 
@@ -52,15 +52,14 @@
         android:id="@+id/userPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/username"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:ems="10"
         android:fontFamily="@font/noto_serif"
         android:hint="Phone No."
         android:inputType="phone"
         android:maxLength="10"
-        android:textColor="?attr/colorAccent"
-        android:textColorHint="?attr/colorAccent" />
+        android:textColor="#69f0ae"
+        android:textColorHint="#00838f" />
 
     <EditText
         android:id="@+id/fullname"
@@ -73,8 +72,8 @@
         android:hint="Full Name"
         android:inputType="textPersonName"
         android:maxLength="30"
-        android:textColor="?attr/colorAccent"
-        android:textColorHint="?attr/colorAccent">
+        android:textColor="#69f0ae"
+        android:textColorHint="#00838f">
 
     </EditText>
 
@@ -114,8 +113,8 @@
             android:maxLength="40"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="?attr/colorAccent"
-            android:textColorHint="?attr/colorAccent" />
+            android:textColor="#69f0ae"
+            android:textColorHint="#00838f" />
 
     </RelativeLayout>
 
@@ -130,20 +129,21 @@
         android:fontFamily="@font/roboto_slab_bold"
         android:text="Register"
         android:textAppearance="@android:style/TextAppearance.Large"
-        android:textColor="#9fffe0"
+        android:textColor="#ffffff"
         android:textSize="25sp" />
 
     <Button
         android:id="@+id/register"
-        android:layout_width="wrap_content"
+        android:layout_width="196dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="53dp"
-        android:fontFamily="@font/roboto_italic"
+        android:background="#00838f"
+        android:fontFamily="@font/noto_serif"
         android:onClick="onClickAction"
-        android:text="Sign Up >>"
-        android:textColor="#2bbd7e"
+        android:text=">> Sign Up "
+        android:textColor="#ffffff"
         android:textSize="20sp" />
 
     <EditText
@@ -156,8 +156,8 @@
         android:fontFamily="@font/noto_serif"
         android:hint="Username"
         android:inputType="textPersonName"
-        android:textColor="?attr/colorAccent"
-        android:textColorHint="?attr/colorAccent" />
+        android:textColor="#69f0ae"
+        android:textColorHint="#00838f" />
 
     <ProgressBar
         android:id="@+id/progressBar"
