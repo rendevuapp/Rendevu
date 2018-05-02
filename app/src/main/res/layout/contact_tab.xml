@@ -31,8 +31,7 @@
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#f1f8e9"
-            >
+            android:background="#69f0ae">
 
             <!--  app:layout_constraintEnd_toStartOf="@+id/addContactActivityButton" -->
 
