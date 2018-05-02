@@ -9,7 +9,7 @@ Alexander Mann
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ffffff">
+    android:background="#f1f8e9">
 
     <RelativeLayout
         android:id="@+id/rl"

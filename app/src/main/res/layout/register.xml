@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ffffff">
+    android:background="#f1f8e9">
 
 
     <EditText
@@ -153,12 +153,12 @@
         android:textColor="#ffffff"
         android:textSize="20sp" />
 
-      <!--  android:background="#4fb3bf"
+    <!--  android:background="#4fb3bf"
         android:fontFamily="@font/roboto"
         android:text="Sign Up"
         android:textAllCaps="false"
         android:textColor="#ffffff" /> -->
-       <!-- android:backgroundTint="ColorStateList"
+    <!-- android:backgroundTint="ColorStateList"
         android:elevation="12dp"
         android:fontFamily="@font/roboto"
         android:lineSpacingExtra="8sp"
