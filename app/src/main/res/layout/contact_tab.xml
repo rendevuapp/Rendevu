@@ -2,6 +2,15 @@
 <!---
     Ricardo Cantu
 -->
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -137,18 +146,11 @@
 
             app:rippleColor="#4fb3bf"
             tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="264dp" />
-
-        <LinearLayout
-            android:layout_width="144dp"
-            android:layout_height="157dp"
-            android:layout_marginStart="8dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="8dp"
-            tools:ignore="MissingConstraints"></LinearLayout>
+            tools:layout_editor_absoluteX="132dp" />
 
     </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>
+
+
+</RelativeLayout>

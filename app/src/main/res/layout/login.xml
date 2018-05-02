@@ -5,6 +5,7 @@ Alexander Mann
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -30,7 +31,8 @@ Alexander Mann
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="4dp"
-            android:background="@drawable/show" />
+            android:background="@drawable/show"
+            tools:ignore="NotSibling" />
 
     </RelativeLayout>
 
@@ -131,5 +133,13 @@ Alexander Mann
         android:text="Create New Account"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="@android:color/holo_blue_bright" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="217dp"
+        android:layout_above="@+id/email_id2"
+        android:layout_alignParentStart="true"
+        app:srcCompat="@drawable/logo_noback" />
 
 </RelativeLayout>

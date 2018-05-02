@@ -13,7 +13,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="103dp">
 
         <Button
             android:id="@+id/register"
@@ -21,7 +22,7 @@
             android:layout_height="60dp"
             android:layout_weight="0.90"
             android:background="#4fb3bf"
-            android:elevation="@dimen/cast_expanded_controller_ad_background_layout_height"
+            android:elevation="16dp"
             android:fontFamily="@font/noto_sans"
             android:onClick="login_register"
             android:text="Register"
@@ -35,6 +36,7 @@
             android:layout_height="60dp"
             android:layout_weight="1.00"
             android:background="#4fb3bf"
+            android:elevation="16dp"
             android:fontFamily="@font/noto_sans"
             android:onClick="login_register"
             android:text="Log In"
@@ -67,11 +69,12 @@
         android:layout_width="match_parent"
         android:layout_height="252dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/text"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="198dp"
         android:adjustViewBounds="true"
         android:alpha="1"
         android:scaleType="fitXY"
-        android:src="@drawable/logo_main"
+        android:src="@drawable/logo_noback"
         android:visibility="visible" />
 
 </RelativeLayout>

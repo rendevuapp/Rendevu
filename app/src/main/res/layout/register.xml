@@ -4,6 +4,7 @@
     Modern design using Google's Material standard
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -190,5 +191,13 @@
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="20dp"
         android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="240dp"
+        android:layout_height="147dp"
+        android:layout_below="@+id/login"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/logo_noback" />
 
 </RelativeLayout>

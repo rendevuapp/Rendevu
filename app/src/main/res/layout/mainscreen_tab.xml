@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!---
     Tamim Alekozai
+
+
+    UI design Alex
 -->
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#2bbd7e">
+
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,6 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
+        android:gravity="top"
         android:orientation="vertical"
         android:weightSum="1">
 
@@ -43,106 +56,115 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="8dp"
                 android:text="Friends"
                 android:textSize="10sp"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="8dp"
                 app:layout_constraintLeft_toRightOf="@+id/textView3"
-                android:layout_marginLeft="0dp" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <CheckBox
                 android:id="@+id/checkBox2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
                 android:text="Besties"
                 android:textSize="10sp"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="8dp"
                 app:layout_constraintLeft_toRightOf="@+id/checkBox"
-                android:layout_marginLeft="8dp" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <CheckBox
                 android:id="@+id/checkBox3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
                 android:text="Friends"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="3dp"
-                app:layout_constraintLeft_toRightOf="@+id/textView4"
-                android:layout_marginLeft="8dp" />
+                app:layout_constraintLeft_toRightOf="@+id/textView4" />
 
             <CheckBox
                 android:id="@+id/checkBox4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginLeft="0dp"
                 android:text="Besties"
                 android:textSize="10sp"
-                app:layout_constraintLeft_toRightOf="@+id/checkBox3"
-                android:layout_marginLeft="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="3dp" />
+                app:layout_constraintLeft_toRightOf="@+id/checkBox3" />
 
             <ToggleButton
                 android:id="@+id/toggleButton2"
                 android:layout_width="0dp"
                 android:layout_height="59dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
+                android:fontFamily="@font/noto_sans"
                 android:text="ToggleButton"
+                android:textColor="#ffffff"
+                android:background="#005662"
                 android:textOff="Unavailable"
                 android:textOn="Available"
-                android:textSize="9sp"
+                android:textSize="12sp"
+
+                android:elevation="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                android:layout_marginRight="0dp"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/checkBox4"
-                android:layout_marginLeft="8dp" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/textView4"
-                android:layout_width="67dp"
-                android:layout_height="15dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
+                android:layout_width="66dp"
+                android:layout_height="30dp"
+
+                android:fontFamily="@font/noto_sans"
                 android:text="Location"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginLeft="8dp"
                 app:layout_constraintLeft_toLeftOf="parent" />
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="67dp"
-                android:layout_height="15dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+
+                android:fontFamily="@font/noto_sans"
+
                 android:text="Availability"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
                 android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/textView4"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginLeft="8dp"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintVertical_bias="1.0" />
 
         </android.support.constraint.ConstraintLayout>
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             map:uiRotateGestures="true"
             map:uiScrollGestures="true"
             map:uiTiltGestures="true"
             map:uiZoomControls="true"
-            map:uiZoomGestures="true"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-             />
+            map:uiZoomGestures="true" />
 
     </LinearLayout>
 </ScrollView>
+
+</RelativeLayout>
