@@ -10,6 +10,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Space
+        android:layout_width="24dp"
+        android:layout_height="wrap_content" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -20,21 +24,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:background="#4fb3bf"
+            android:backgroundTint="#4fb3bf"
             android:clickable="true"
-            android:fontFamily="monospace"
+            android:elevation="12dp"
+            android:fontFamily="@font/noto_sans"
             android:onClick="onLogoutClick"
             android:text="@string/logout"
+
+
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
             android:textSize="10sp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/addContactActivityButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        <!--  app:layout_constraintEnd_toStartOf="@+id/addContactActivityButton" -->
 
-        <Button
+
+        <!--    <Button
             android:id="@+id/addContactActivityButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -48,6 +59,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sendCodeButton"
             app:layout_constraintTop_toTopOf="parent" />
+            -->
 
         <Button
             android:id="@+id/sendCodeButton"
@@ -56,9 +68,13 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="monospace"
+            android:background="#4fb3bf"
+            android:elevation="12dp"
+            android:fontFamily="@font/noto_sans"
             android:onClick="onClick"
             android:text="@string/send_code"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sendInvitesButton"
@@ -71,9 +87,13 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="monospace"
+            android:background="#4fb3bf"
+            android:elevation="12dp"
+            android:fontFamily="@font/noto_sans"
             android:onClick="onInviteClicked"
             android:text="@string/send_invite"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,8 +103,52 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="513dp">
 
     </android.support.v7.widget.RecyclerView>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/linearlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <!--   <Space
+            android:layout_width="248dp"
+            android:layout_height="119dp"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="0dp" />
+            -->
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addContactActivityButton"
+            android:layout_width="107dp"
+            android:layout_height="91dp"
+            android:clickable="true"
+            android:fontFamily="@font/roboto_slab_bold"
+            android:onClick="onClick"
+            android:text="+"
+            android:textColor="#ffffff"
+            android:textSize="14sp"
+
+            app:backgroundTint="#00838f"
+            app:elevation="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            app:rippleColor="#4fb3bf"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="264dp" />
+
+        <LinearLayout
+            android:layout_width="144dp"
+            android:layout_height="157dp"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="8dp"
+            tools:ignore="MissingConstraints"></LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>
