@@ -17,26 +17,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Login" />
+        <activity android:name=".Login" android:screenOrientation="portrait"/>
         <!-- &gt;</activity> -->
-        <activity android:name=".Register" />
+        <activity android:name=".Register" android:screenOrientation="portrait"/>
         <!-- &gt;</activity> -->
-        <activity android:name=".Welcome" />
-        <activity android:name=".ResetPassword" />
+        <activity android:name=".Welcome" android:screenOrientation="portrait"/>
+        <activity android:name=".ResetPassword" android:screenOrientation="portrait"/>
         <!-- &gt;</activity> -->
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <!--<activity android:name=".InvitationClass" />-->
-        <activity android:name=".UncaughtExceptionActivity" />
+        <activity android:name=".UncaughtExceptionActivity"
+            android:screenOrientation="portrait"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

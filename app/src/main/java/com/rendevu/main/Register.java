@@ -288,8 +288,8 @@ public class Register extends UncaughtExceptionActivity {
         try {
             // Add the Back key handler here.
             FirebaseAuth.getInstance().signOut();
-            startActivity(intent);
-            finish();
+            startActivityForResult(intent, 500);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             //throw new RuntimeException("this will cause a crash");//for testing purposes
         } catch (Exception e) {
             ExceptionHandler.makeExceptionAlert(Register.this, e);

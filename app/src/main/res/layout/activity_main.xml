@@ -2,75 +2,124 @@
 <!---
     Josh Davenport
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/background_home" >
+    android:background="@drawable/background_home">
+
+    <TextView
+        android:id="@+id/marquee"
+        android:layout_width="364dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="8dp"
+        android:background="#71000000"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:freezesText="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="           Press register to create an account, or press log in to enter.                 "
+        android:textAppearance="@android:style/TextAppearance.Holo.Widget.TextView"
+        android:textColor="@android:color/holo_green_light"
+        android:textSize="18sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/log_in"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="372dp"
+        android:layout_height="597dp"
         android:alpha="1"
         android:contentDescription="smoke"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/cast_expanded_controller_actionbar_bg_gradient_light" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="7dp"
+        android:background="#1b1e1e"
+        android:fontFamily="@font/fjord_one"
+        android:onClick="login_register"
+        android:text="Register"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/log_in"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="1.0" />
 
-        <Button
-            android:id="@+id/register"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:layout_weight="0.90"
-            android:background="#1b1e1e"
-            android:fontFamily="@font/fjord_one"
-            android:onClick="login_register"
-            android:text="Register"
-            android:textColor="@android:color/holo_blue_dark"
-            android:textSize="20sp" />
+    <Button
+        android:id="@+id/log_in"
+        android:layout_width="177dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="#1b1e1e"
+        android:fontFamily="@font/fjord_one"
+        android:onClick="login_register"
+        android:text="Log In"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="1.0" />
 
-        <Button
-            android:id="@+id/log_in"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:layout_weight="1.00"
-            android:background="#1b1e1e"
-            android:fontFamily="@font/fjord_one"
-            android:onClick="login_register"
-            android:text="Log In"
-            android:textColor="@android:color/holo_blue_dark"
-            android:textSize="20sp" />
-
-    </LinearLayout>
 
     <TextView
         android:id="@+id/text"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_marginBottom="8dp"
         android:background="#0700"
         android:fontFamily="cursive"
         android:gravity="center"
         android:text="Welcome to,"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/holo_blue_dark"
-        android:textSize="@dimen/cast_intro_overlay_button_margin_bottom" />
+        android:textSize="@dimen/cast_intro_overlay_button_margin_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.004" />
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/text"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
         android:alpha="0.5"
         android:scaleType="fitXY"
         android:src="@drawable/logo_noback"
-        android:visibility="visible" />
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/marquee"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text"
+        app:layout_constraintVertical_bias="0.0" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
