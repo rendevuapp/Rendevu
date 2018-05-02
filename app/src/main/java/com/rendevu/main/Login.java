@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 import java.util.NoSuchElementException;
@@ -30,6 +31,7 @@ public class Login extends UncaughtExceptionActivity {
     private FirebaseAuth auth;
     private ImageView hidePass=null;
     private boolean flag=false;
+    private int retryCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,9 +151,22 @@ public class Login extends UncaughtExceptionActivity {
                                     // the auth state listener will be notified and logic to handle the
                                     // signed in user can be handled in the listener.
                                     //progressBar.setVisibility(View.GONE);
+                                    /*
+                                    *
+                                    * User has 5 chances to
+                                    * */
+
                                     if (!task.isSuccessful()) {
                                         try {
-
+                                            retryCount++;
+                                            if (retryCount==4){
+                                                Toast.makeText(Login.this, "Exceeded allowable login attempts. Please register.", Toast.LENGTH_LONG).show();
+                                                Intent intent = new Intent(Login.this, Register.class);
+                                                startActivityForResult(intent, 500);
+                                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                                //startActivity(intent);
+                                                finish();
+                                            }
                                             if (password.length() < 6) {
                                                 loginPass.setError("Invalid Password!");
                                                 loginPass.setText(null);
@@ -166,14 +181,14 @@ public class Login extends UncaughtExceptionActivity {
                                         } catch(FirebaseAuthInvalidCredentialsException e) {
                                             ExceptionHandler.makeExceptionAlert(Login.this, e);
                                             loginPass.setText(null);
-                                            loginEmail.setText(null);
-                                            loginEmail.setError(getString(R.string.error_invalid_email));
-                                            loginEmail.requestFocus();
-                                        } catch(FirebaseAuthUserCollisionException e) {
+                                            //loginEmail.setText(null);
+                                            loginPass.setError(getString(R.string.error_invalid_pass));
+                                            loginPass.requestFocus();
+                                        } catch(FirebaseAuthInvalidUserException e) {
                                             ExceptionHandler.makeExceptionAlert(Login.this, e);
                                             loginPass.setText(null);
                                             loginEmail.setText(null);
-                                            loginEmail.setError(getString(R.string.error_user_logged_in));
+                                            loginEmail.setError(getString(R.string.error_user_invalid_email));
                                             loginEmail.requestFocus();
                                         } catch(Exception e) {
                                             ExceptionHandler.makeExceptionAlert(Login.this, e);//added this
@@ -181,6 +196,8 @@ public class Login extends UncaughtExceptionActivity {
                                             /*Toast.makeText(Register.this, "Registration failed." + task.getException(),
                                                     Toast.LENGTH_SHORT).show();*/
                                         }
+
+
                                          /*else {
                                             Toast.makeText(Login.this, "Authentication failed, check your email or password...", Toast.LENGTH_LONG).show();
                                         }*/

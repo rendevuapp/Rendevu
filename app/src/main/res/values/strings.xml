@@ -114,11 +114,14 @@
     <string name="NullPointerException">Null Pointer to Object!</string>
     <string name="NumberFormatException">Invalid Number Format!</string>
     <string name="RuntimeException">Runtime Error!</string>
-    <string name="Exception">General Exception</string>
+    <string name="Exception">General Exception: Seek help IMMEDIATELY!</string>
     <string name="error_close">Close</string>
     <string name="FirebaseAuthWeakPasswordException">Password must be longer than 6 characters!</string>
     <string name="FirebaseAuthInvalidCredentialsException">The email you have entered is invalid!</string>
     <string name="FirebaseAuthUserCollisionException">A user with this email address already exists!</string>
     <string name="ActivityNotFoundException">Requested activity does not exist!</string>
     <string name="error_user_logged_in">A user with this email is already logged in!</string>
+    <string name="FirebaseAuthInvalidUserException">No account exists for the email you have entered!</string>
+    <string name="error_invalid_pass">Enter password again.</string>
+    <string name="error_user_invalid_email">Please enter registered email.</string>
 </resources>

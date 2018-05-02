@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 /*
 * Josh
@@ -48,6 +49,9 @@ public class ExceptionHandler {
         } else if (ex instanceof FirebaseAuthUserCollisionException) {
             headerText = context.getText(R.string.error).toString();
             messageText = context.getText(R.string.FirebaseAuthUserCollisionException).toString();
+        } else if (ex instanceof FirebaseAuthInvalidUserException) {
+            headerText = context.getText(R.string.error).toString();
+            messageText = context.getText(R.string.FirebaseAuthInvalidUserException).toString();
         } else {
             headerText = context.getText(R.string.error).toString();
             messageText = context.getText(R.string.Exception).toString();
@@ -57,7 +61,7 @@ public class ExceptionHandler {
 
     private static void showErrorDialog(Context context, String titletext,
                                         String messagetext) {
-        new AlertDialog.Builder(context)
+        new AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(titletext)
                 .setMessage(messagetext)
@@ -91,6 +95,8 @@ public class ExceptionHandler {
             } else if (ex instanceof FirebaseAuthInvalidCredentialsException) {
                 throw ex;
             } else if (ex instanceof FirebaseAuthUserCollisionException) {
+                throw ex;
+            } else if (ex instanceof FirebaseAuthInvalidUserException) {
                 throw ex;
             } else {
                 throw ex;
