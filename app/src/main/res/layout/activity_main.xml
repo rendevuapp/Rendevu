@@ -6,30 +6,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/construct" >
+    android:background="#ffffff">
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+	android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="103dp"
+
+         >
 
         <Button
             android:id="@+id/register"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:layout_weight="0.90"
-            android:background="@android:color/darker_gray"
+	    android:layout_weight="0.90"
+	    android:layout_width="101dp"
+            android:layout_height="60dp"
+            android:background="#4fb3bf"
+            android:elevation="16dp"
+	    android:fontFamily="@font/noto_sans"
             android:onClick="login_register"
             android:text="Register"
-            android:textSize="20sp" />
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/log_in"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
+            android:layout_height="60dp"
             android:layout_weight="1.00"
-            android:background="@android:color/darker_gray"
-            android:onClick="login_register"
+            android:background="#4fb3bf"
+            android:elevation="16dp"
+            android:fontFamily="@font/noto_sans"
+	    android:onClick="login_register"
+            android:textAllCaps="false"
             android:text="Log In"
             android:textSize="20sp" />
 
@@ -37,29 +48,35 @@
 
     <TextView
         android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#0700"
-        android:text=" [Under Construction] "
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#DAA520"
-        android:textSize="30sp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="83dp"
+	android:layout_alignParentLeft="true"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:background="#2bbd7e"
+        android:fontFamily="@font/roboto"
+        android:gravity="center"
+        android:text="Welcome to Rendevu"
+        android:textColor="#ffffff"
+        android:textSize="30sp"
+
+        />
+
+
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_height="252dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="198dp"
         android:adjustViewBounds="true"
-        android:alpha="0.4"
         android:scaleType="fitXY"
         android:visibility="visible"
         android:src="@drawable/logo_main" />

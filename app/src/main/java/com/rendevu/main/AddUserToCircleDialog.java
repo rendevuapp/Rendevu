@@ -9,12 +9,9 @@ package com.rendevu.main;
 
 import android.app.AlertDialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +21,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -65,8 +61,8 @@ public class AddUserToCircleDialog extends DialogFragment {
             userDatabaseReference = database.getReference().child("UserData").child(uid);
             quarryDatabaseReference = database.getReference().child("UserData");
 
-            // getting the view layount from fragment_addcontact
-            view = inflater.inflate(R.layout.fragment_addcontact, container);
+            // getting the view layount from dialog_addcontact
+            view = inflater.inflate(R.layout.dialog_addcontact, container);
 
             // defining a text field for user input, and referencing ot from the layout
             codeEditText = (EditText) view.findViewById(R.id.addCode);

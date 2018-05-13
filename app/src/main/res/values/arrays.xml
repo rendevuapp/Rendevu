@@ -11,4 +11,13 @@
         <item>InnerCircle</item>
         <item>OuterCircle</item>
     </string-array>
+
+    <string-array name="visibility_array">
+        <item>No one</item>
+        <item>My inner circle</item>
+        <item>My outer circle</item>
+        <item>My work circle</item>
+        <item>Everyone in my circles</item>
+
+    </string-array>
 </resources>

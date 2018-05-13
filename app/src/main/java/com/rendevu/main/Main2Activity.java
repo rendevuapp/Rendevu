@@ -363,22 +363,61 @@ public class Main2Activity extends AppCompatActivity implements ActivityCompat.O
                 manager.beginTransaction().remove(frag).commit();
             }
             switch (view.getId()) {
+
+                /**
+                 *
+                 * Code to execute addUserToCircleDialog when addContactActivityButton
+                 * is pressed.
+                 *
+                 */
                 case R.id.addContactActivityButton:
                     AddUserToCircleDialog addUserToCircleDialog = new AddUserToCircleDialog();
                     addUserToCircleDialog.show(manager, "Add_Contact");
                     break;
 
-                //generic alert fragment
+                /**
+                 *
+                 * Code to execute MyAlertDialogFragment when showAlertDialogFragment
+                 * is pressed.
+                 *
+                 */
                 case R.id.showAlertDialogFragment:
                     MyAlertDialogFragment myAlertDialogFragment = new MyAlertDialogFragment();
                     myAlertDialogFragment.show(manager, "Logout");
                     break;
-                //
+
+                /**
+                 *
+                 * Code to execute SendUserCircleCode when sendCodeButton
+                 * is pressed.
+                 *
+                 */
                 case R.id.sendCodeButton:
                     SendUserCircleCode sendUserCircleCode = new SendUserCircleCode();
                     sendUserCircleCode.show(manager, "Send_Circle_Code");
                     break;
 
+                /**
+                 *
+                 * Code to execute SetVisibility when availabilityButton
+                 * is pressed.
+                 *
+                 */
+                case R.id.availabilityButton:
+                    SetVisibility setVisibility = new SetVisibility();
+                    setVisibility.show(manager, "Set_Visibility");
+                    break;
+
+                /**
+                 *
+                 * Code to execute setDisplayCircle when displayButton
+                 * is pressed.
+                 *
+                 */
+                case R.id.displayButton:
+                    setDisplayCircle setDisplayCircle = new setDisplayCircle();
+                    setDisplayCircle.show(manager, "Set_Display_Circle");
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();

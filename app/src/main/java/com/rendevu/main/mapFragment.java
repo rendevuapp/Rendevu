@@ -2,6 +2,7 @@ package com.rendevu.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -138,7 +140,7 @@ import java.lang.NullPointerException;
                 rootView = inflater.inflate(R.layout.mainscreen_tab, container, false);
                 //LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
-                ToggleButton saveLocButton = rootView.findViewById(R.id.toggleButton2);
+                ToggleButton saveLocButton = rootView.findViewById(R.id.avail_toggle);
 
                 saveLocButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -410,18 +412,84 @@ import java.lang.NullPointerException;
                             if(available.equals("true") && isInCircle == 1 ) {
                                 String lat = dataSnapshot.child("lat").getValue(String.class);
                                 String lng = dataSnapshot.child("lng").getValue(String.class);
-                                String displayName = dataSnapshot.child("fullname").getValue(String.class);
-                                String circle = dataSnapshot.child("Circle").getValue().toString();
+                                final String displayName = dataSnapshot.child("fullname").getValue(String.class);
+                                Long phoneNumber = dataSnapshot.child("phoneNumber").getValue(Long.class);
+
                                 Double dLat = Double.parseDouble(lat);
                                 Double dLng = Double.parseDouble(lng);
 
-                                LatLng newLocation = new LatLng(dLat, dLng);
+                                final String phoneNum = phoneNumber.toString();
 
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+                                LatLng newLocation = new LatLng(dLat, dLng);
 
                                 markerOptions.position(newLocation);
                                 markerOptions.title(displayName);
-                                markerOptions.snippet(circle);
+                                markerOptions.snippet(phoneNum);
+
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+
+                                /**
+                                 *
+                                 * This section converts the marker text into an info window.
+                                 * By having an info window, more information can be displayed,
+                                 * and event listeners can be applied.  In this case, only the
+                                 * name is displayed on the info window. A dialog window is
+                                 * triggered when the info window is clicked which displays
+                                 * the name and phone number of the person.
+                                 */
+                                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                                    @Override
+                                    public View getInfoWindow(Marker marker) {
+
+                                        View view = getLayoutInflater().inflate(R.layout.mapmarker_infowindow, null);
+
+                                        TextView title = (TextView) view.findViewById(R.id.infowindow_name);
+                                        title.setText(marker.getTitle());
+
+                                        /**
+                                         *
+                                         * This is the click listener.  It displays the person's name
+                                         * as well as their phone number.  The phone number can be
+                                         * highlighted and longcicked.  This allows the user the ability
+                                         * to make a call or send a text message.
+                                         */
+                                        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                                            @Override
+                                            public void onInfoWindowClick(Marker marker) {
+
+                                                Dialog dialog = new Dialog(getActivity());
+
+                                                dialog.setContentView(R.layout.dialog_mapmarker);
+
+                                                TextView nameText = (TextView) dialog.findViewById(R.id.mapmarkerdialog_name);
+                                                nameText.setText(displayName);
+
+                                                TextView phoneText = (TextView) dialog.findViewById(R.id.mapmarkerdialog_phonenumber);
+                                                /**
+                                                 *
+                                                 * This bit of code brakes up the phone numberstring so that
+                                                 * it can be formatted nicely on the output window.
+                                                 */
+                                                String areaCode = phoneNum.substring(0, 3);
+                                                String prefix = phoneNum.substring(3, 6);
+                                                String rest = phoneNum.substring(6);
+
+                                                phoneText.setText(areaCode + "-" + prefix + "-" + rest);
+                                                dialog.show();
+                                            }
+                                        });
+
+                                        return view;
+                                    }
+
+                                    @Override
+                                    public View getInfoContents(Marker marker) {
+                                        return null;
+                                    }
+                                });
+
+
+
                                 Marker mMarker = mMap.addMarker(markerOptions);
                                 markers.put(dataSnapshot.getKey(), mMarker);
                             }else if(markers.containsValue(dataSnapshot.getKey())){
@@ -436,13 +504,12 @@ import java.lang.NullPointerException;
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-
-
-      //will test this area
-//                      if(markers.containsValue(dataSnapshot.getKey())){
-//                          Marker marker = markers.get(dataSnapshot.getKey());
-//                          marker.remove();
-//                      }//removes previous marker
+                        // will test this area
+                        // if(markers.containsValue(dataSnapshot.getKey())){
+                        // Marker marker = markers.get(dataSnapshot.getKey());
+                        // marker.remove();
+                        // }
+                        // removes previous marker
 
                         String available = dataSnapshot.child("avail").getValue(String.class);
                         MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_green_scaled));
@@ -475,17 +542,83 @@ import java.lang.NullPointerException;
                             if (available.equals("true") && isInCircle == 1) {
                                 String lat = dataSnapshot.child("lat").getValue(String.class);
                                 String lng = dataSnapshot.child("lng").getValue(String.class);
-                                String displayName = dataSnapshot.child("fullname").getValue(String.class);
+                                final String displayName = dataSnapshot.child("fullname").getValue(String.class);
+                                Long phoneNumber = dataSnapshot.child("phoneNumber").getValue(Long.class);
+
                                 Double dLat = Double.parseDouble(lat);
                                 Double dLng = Double.parseDouble(lng);
 
-                                LatLng newLocation = new LatLng(dLat, dLng);
+                                final String phoneNum = phoneNumber.toString();
 
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+                                LatLng newLocation = new LatLng(dLat, dLng);
 
                                 markerOptions.position(newLocation);
                                 markerOptions.title(displayName);
                                 markerOptions.snippet(circle);
+
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+
+                                /**
+                                 *
+                                 * This section converts the marker text into an info window.
+                                 * By having an info window, more information can be displayed,
+                                 * and event listeners can be applied.  In this case, only the
+                                 * name is displayed on the info window. A dialog window is
+                                 * triggered when the info window is clicked which displays
+                                 * the name and phone number of the person.
+                                 */
+                                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                                    @Override
+                                    public View getInfoWindow(Marker marker) {
+
+                                        View view = getLayoutInflater().inflate(R.layout.mapmarker_infowindow, null);
+
+                                        TextView title = (TextView) view.findViewById(R.id.infowindow_name);
+                                        title.setText(marker.getTitle());
+
+                                        /**
+                                         *
+                                         * This is the click listener.  It displays the person's name
+                                         * as well as their phone number.  The phone number can be
+                                         * highlighted and longcicked.  This allows the user the ability
+                                         * to make a call or send a text message.
+                                         */
+                                        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                                            @Override
+                                            public void onInfoWindowClick(Marker marker) {
+
+                                                Dialog dialog = new Dialog(getActivity());
+
+                                                dialog.setContentView(R.layout.dialog_mapmarker);
+
+                                                TextView nameText = (TextView) dialog.findViewById(R.id.mapmarkerdialog_name);
+                                                nameText.setText(displayName);
+
+                                                TextView phoneText = (TextView) dialog.findViewById(R.id.mapmarkerdialog_phonenumber);
+
+                                                /**
+                                                 *
+                                                 * This bit of code brakes up the phone numberstring so that
+                                                 * it can be formatted nicely on the output window.
+                                                 */
+                                                String areaCode = phoneNum.substring(0, 3);
+                                                String prefix = phoneNum.substring(3, 6);
+                                                String rest = phoneNum.substring(6);
+
+                                                phoneText.setText(areaCode + "-" + prefix + "-" + rest);
+                                                dialog.show();
+                                            }
+                                        });
+
+                                        return view;
+                                    }
+
+                                    @Override
+                                    public View getInfoContents(Marker marker) {
+                                        return null;
+                                    }
+                                });
+
                                 Marker mMarker = mMap.addMarker(markerOptions);
                                 markers.put(dataSnapshot.getKey(), mMarker);
                             }else if(markers.containsValue(dataSnapshot.getKey())){

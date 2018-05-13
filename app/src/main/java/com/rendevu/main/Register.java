@@ -265,7 +265,7 @@ public class Register extends UncaughtExceptionActivity {
         userDatRef.child(userId).child("avail").setValue("false");
         userDatRef.child(userId).child("lat").setValue("0");
         userDatRef.child(userId).child("lng").setValue("0");
-        userDatRef.child(userId).child("CircleCodes");
+        userDatRef.child(userId).child("phoneNumber").setValue(phoneNumber);
     }
 
     @Override
@@ -301,6 +301,4 @@ public class Register extends UncaughtExceptionActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
-
 }
-
