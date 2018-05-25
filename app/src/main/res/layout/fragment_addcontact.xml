@@ -23,8 +23,12 @@ Josh
         android:text="Enter New Contact Code"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:fontFamily="monospace"
+        android:background="#00838f"
+        android:fontFamily="@font/roboto"
         android:textSize="20sp"
+        android:elevation="7dp"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -39,8 +43,12 @@ Josh
         android:layout_marginTop="8dp"
         android:cursorVisible="true"
         android:hint="Circle Code"
-        android:fontFamily="monospace"
+        android:background="#00838f"
+        android:fontFamily="@font/roboto"
+        android:elevation="7dp"
         android:imeOptions="actionDone"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
         android:inputType="textPersonName"
         android:singleLine="true"
         android:textAlignment="center"
@@ -64,27 +72,33 @@ Josh
         android:layout_width="126dp"
         android:layout_height="53dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="60dp"
+        android:background="#f1f8e9"
+        android:elevation="8dp"
         android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:text="CANCEL"
         android:fontFamily="monospace"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circle_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/circle_spinner"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/addContactButton"
         android:layout_width="126dp"
         android:layout_height="53dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="48dp"
         android:layout_marginTop="8dp"
         android:text="ADD CONTACT"
+        android:background="#f1f8e9"
+        android:elevation="8dp"
         android:fontFamily="monospace"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circle_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/circle_spinner"
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>
 
